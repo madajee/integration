@@ -1,0 +1,15 @@
+<div class = "container-fluid mt-2">
+    <div class="row">
+        <integration-side-menu></integration-side-menu>
+        <div class="col-md-10">
+            <h6 class="text-center">INTEGRATION 107</h6>
+            <h3>Mule Starter</h3>
+            <p>Let's do a quick starter on mule. When you create your first hello world mule application in studio, you will create a localhost enpoint with a configured URI like hello and use the HTTP connector, logger and payload components. One can observe the start-up logs in the studio console and access the listener endpoint in the browser or postman client.</p>
+            <p>In mule projects, developers usually end up creating multiple mule configuration files, however a common pattern is to create common configuration in global file (global.xml), create different environment properties file and use global property for env key so that appropriate properties file is loaded in an environment. We are also required to secure the environment properties usually with Mule Secure Configuration module and Blowfish algorithm.</p>
+            <p>Mule API Lifecycle requires you to take top-down approach to API, so designers are required to create and publish the API spec in Anypoint Platform (Design Center, Exchange). API Developers have to create API Id in API Manager so that deployed API can be managed and governed centrally from API Manager. Developers should enable autodiscovery on the deployed APIs so that appropritae policies from API Manager can be downloaded and enabled on deployed API by gateway runtime.</p>
+            <p>Most APIs in client environments are protected with Client ID enforcement policy, and consumers apps are onboared with a easy registration process to obtain client ID and secret and apps can make authenticated calls to the APIs. There are provisions to enable OAuth & SAML usecases with identity & authorization platforms like OKTA, AWS Congnito, Microsoft Active Directory and many more.</p>
+            <p>Though eariler multiple Mule 3 Apps were deployed in a mule server with community or enterprise edition, but as we have progressed to Mule 4, Mule Deployments have mostly progressed in  worker based deployment model. CloudHub is PAAS platform that provides configurable options to choose the mule runtime and allows developers to upload the mule application as a JAR file. Behind the scene appropriate cloud infrastructure is provisioned with on-demand AWS instances, and then mule runtime and mule code is deployed on the provisioned resources. With the advent of Microservices architecture as a mainstream approach, Anypoint Platform offers Runtime Fabric that transforms the uploaded Jar file in an immutable container image and deployes it on the fabric layer that leverages the container runtime like docker and orchestration engine like Kubernetes.</p>
+        </div>
+    </div>
+</div>
+<custom-footer authorname='Jeetan' linkurl='https://www.linkedin.com/in/jeetan-madaan-37aaa113/'></custom-footer>
