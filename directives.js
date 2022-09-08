@@ -43,3 +43,20 @@ app.directive("homeTimeline", function(){
         replace: true
     }
 });
+
+
+app.directive("panelGroup", function(){
+    return {
+        restrict: 'E',
+        templateUrl: 'pages/directives/panel-group.html',
+        replace: true,
+        scope:{
+            title1:"@",
+            text1:"@",
+            title2:"@",
+            text2:"@",
+            title3:"@",
+            text3:"@"
+        }
+    }
+});
