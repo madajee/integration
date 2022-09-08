@@ -35,3 +35,11 @@ app.directive("integrationSideMenu", function(){
         replace: true
     }
 });
+
+app.directive("homeTimeline", function(){
+    return {
+        restrict: 'E',
+        templateUrl: 'pages/directives/home-timeline.html',
+        replace: true
+    }
+});
