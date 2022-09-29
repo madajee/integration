@@ -1,0 +1,23 @@
+<div class = "container-fluid mt-2">
+    <div class="row">
+        <integration-side-menu></integration-side-menu>
+        <div class="col-md-10">
+            <h6 class="text-center">INTEGRATION 112</h6>
+            <h3>Mule Walker</h3>
+            <p>Though Dataweave is now in 2.4 release, it was released with Mule 3.7 as DWL 1.0 and was designed from ground up to providing next generation transformation capabilities at speed and scale. A DataWeave script consists of a header and a body, separated by three dashes (---). One can define functions in the script, use function modules as part of the runtime. Dataweave follows the core principles of functional programming, including pure functions, first-class functions, high-order functions, function composition, lambda expressions, and immutable data. Some of the higher order functions like map, mapObject, reduce allow you to simplify complex transformations on large dataset with few lines of DWL. An example script from mule docs uses multi-value selector, define custom type for format.</p>
+            <pre>
+                <code> 
+                %dw 2.0
+                output application/json
+                type Currency = String { format: "\$#,###.00"}
+                ---
+                books: payload.items.*item map
+                    book:
+                        price: $.price as Currency
+                </code>                    
+            </pre> 
+            <p>One of the guiding principle of Restful architecture is uniform constraint and API specification languages like RAML or OAS along with API Designer in Mulesoft Design Center allows you to create and model API resources with methods like GET, POST, PUT, DELETE and PATCH. An inbuilt mocking service can simulate API responses for the different requests and allows you to refine your APIs along with requirements produced by analyst and business owners. In the build phase muleys can scaffold the implementation mule flows based on the API Spec which uses the APIkit router component. In case the TDD approach is followed, munit can be created before the implementation logc is developed using core compoenents and connectors and in other cases munits should be added to achieve test coverage as per devops piplelines. Anypoint Exchange is a registry portal where API specs are published along with versions and spec owners. Based on the deployment topology, one can choose to deploy mule apps on-premise servers in client managed datacenters or in mulesoft provided fully cloud service on Cloudhub.</p>
+        </div>
+    </div>
+</div>
+<custom-footer authorname='Jeetan' linkurl='https://www.linkedin.com/in/jeetan-madaan-37aaa113/'></custom-footer>
