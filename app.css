@@ -104,3 +104,20 @@ body {
   ul.space_list li { margin-bottom: 1em; }
 
   .tab { margin-left: 40px; }
+
+  .w3r-dot {
+    width: 1300px;
+    height: 7 0px;
+    border-style: groove;
+    margin: 0.5px;
+    margin-left: 25px;
+    padding: 20px;
+    text-align: center;
+    background-color: #ccc;
+    background-image: radial-gradient(#000 10%, transparent 11%),
+      radial-gradient(#e53935 10%, transparent 11%);
+    background-size: 50px 50px;
+    background-position: 0 0, 30px 30px;
+    background-repeat: repeat;
+  }
+  .groove {border-style: groove; text-align: center; text-shadow: 2px 2px red; background-color:pink;}
