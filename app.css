@@ -121,3 +121,23 @@ body {
     background-repeat: repeat;
   }
   .groove {border-style: groove; text-align: center; text-shadow: 2px 2px red; background-color:pink;}
+  .pagecover1 {
+    background-image: linear-gradient(to left,pink,orange);
+    border-style: groove;
+    border-color: green;
+  }
+
+  .pagecover2{
+    background-image: linear-gradient(135deg, orange 60%, cyan);
+  }
+
+  .pagecover3 {
+    background-image: linear-gradient(
+      to right,
+      red 20%,
+      orange 20% 40%,
+      yellow 40% 60%,
+      green 60% 80%,
+      blue 80%
+    );
+  }
