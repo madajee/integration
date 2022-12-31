@@ -141,3 +141,13 @@ body {
       blue 80%
     );
   }
+
+  .integrationsidemenu {
+    background: repeating-linear-gradient(
+      135deg,
+      #00B8D4 20px,
+      #00BFA5 60px,
+      #00C853 100px,
+      #FFD600 240px
+    );
+  }
