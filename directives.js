@@ -36,6 +36,14 @@ app.directive("integrationSideMenu", function(){
     }
 });
 
+app.directive("projectSideMenu", function(){
+    return {
+        restrict: 'E',
+        templateUrl: 'pages/directives/project-side-menu.html',
+        replace: true
+    }
+});
+
 app.directive("homeTimeline", function(){
     return {
         restrict: 'E',

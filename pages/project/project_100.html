@@ -1,0 +1,82 @@
+<div class = "container-fluid mt-2">
+    <div class="row">
+        <project-side-menu></project-side-menu>
+        <div class="col-md-10">
+            <h6 class="text-center">PROJECT 100<span class="alignright"><a href="https://madajee.github.io/greetings/" target="_blank">View</a></span></h6>
+            <div class="grooveborder">
+                <h3>Greeting API</h3>
+                <p>In this globally connected planet, we should able to greet each other with Hello, Good Morning in the language that other person unbderstands! We will develop a Greeting API that will request you to pass in 2 params, greeting in English like hello | good morning and language like es (spanish) | hi (hindi) | de (german).
+                    <ul>
+                        <li>Sceanrio 1: Requestor will pass in hello and es. A response with hola and spanish is expected.</li>
+                        <li>Scenario 2: Requestor will pass in good morning and es. A response with buenos dias and spanish is expected.</li>
+                        <li>Scenario 3: Requestor will pass in hello and de. A response with hallo and german is expected.</li>
+                        <li>Scenario 4: Requestor will pass in good morning and de. A response with guten morgen is expected.</li>
+                        <li>Scenario 5: Requestor will pass in hello and hi. A response with namaste and hindi is expected.</li>
+                        <li>Scenario 6: Requestor will pass in good morning and hi. A response with shubh prabhat and hindi is expected.</li>
+                    </ul>
+                We will design a API specification with greeting resource with a get method and 2 query parameters of greet and lang. We also need 2 enum datatypes for greeting and language inputs. We can have start with enum for greet as hello | good morning and enum for lang as en | es | hi. The response from the API can be something like  {greeting: hola, lang: spanish}.
+                </p>
+                <p>RAML</p>
+                <pre>
+                    <code>
+                        <h3>greetinglib.raml</h3>
+                        #%RAML 1.0 Library
+                        types:
+                        greet:
+                            type: string
+                            enum:
+                            - hello
+                            - good morning
+                        lang:
+                            type: string
+                            enum:
+                            - en
+                            - es
+                            - hi
+                    </code>                    
+                </pre>
+                <pre>
+                    <code>
+                        <h3>spanish-hello.raml</h3>
+                        #%RAML 1.0 NamedExample
+                        {
+                            greeting: hola,
+                            language: Spanish
+                        }
+                    </code>                    
+                </pre>
+                <pre>
+                    <code>
+                        <h3>greeting-api.raml</h3>
+                        #%RAML 1.0
+                        title: greeting-api
+
+                        uses:
+                        greetingLib: datatypes/greetinglib.raml
+
+                        /greeting:
+                        get:
+                            description: greeting
+                            queryParameters:
+                            greet:
+                                description: greeting
+                                type: greetingLib.greet
+                                required: false
+                            lang:
+                                description: language
+                                type: greetingLib.lang
+                                required: false
+                            responses:
+                            200:
+                                body:
+                                application/json:
+                                    type: object
+                                    examples:
+                                    spanish-hello: !include examples/spanish-hello.raml
+                    </code>                    
+                </pre>
+            </div>
+        </div>
+    </div>
+</div>
+<custom-footer authorname='Jeetan' linkurl='https://www.linkedin.com/in/jeetan-madaan-37aaa113/'></custom-footer>

@@ -17,6 +17,16 @@ app.config(function ($routeProvider) {
         },
         controller: 'integrationController'
     })
+    .when('/project', {
+        templateUrl: 'pages/project/project_100.html',
+        controller: 'projectController'
+    })
+    .when('/project/:projectid', {
+        templateUrl: function (param) {
+            return 'pages/project/project_' + param.projectid + '.html'
+        },
+        controller: 'projectController'
+    })
     .
     otherwise('/');
     
