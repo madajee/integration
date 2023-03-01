@@ -168,3 +168,8 @@ body {
   .alignright {
     float: right;
   }
+
+.gridborder {
+    background:  #cee7eb;
+    border: 1px solid;
+  }
