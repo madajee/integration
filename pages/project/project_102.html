@@ -1,0 +1,25 @@
+<div class = "container-fluid mt-2">
+    <div class="row">
+        <project-side-menu></project-side-menu>
+        <div class="col-md-10">
+            <h6 class="text-center">PROJECT 102<span class="alignright"><a href="https://github.com/madajee/practice-dwl/" target="_blank">practice-dataweave</a></span></h6>
+            <div class="grooveborder">
+                <h3>Dataweave (DWL)</h3>
+                <p>check out dwl repository <a href="https://github.com/madajee/practice-dwl/" target="_blank">practice-dwl</a>. )</p>
+                <pre>
+                    <code>
+                        <h6 class="text-center">DWL-10</h6>
+                        <ul>
+                            <li>Transform customers object that is an array of field/value pair of customer attributes into array of customer object using map(), mapobject() and use the upper() so that keys of customer attribute are in uppercase.</li>
+                            <li>Transform customers object into customergroup for a region using groupBy() on region. Each customergroup object should have a customers object which should list customers in that region identified by customer name.</li>
+                            <li>Tranform customers so that orders for each customer formats orderDate (MM-dd-uuuu to dd-MMM-uuuu) and orderTotal (as {format: "$sign###.00"}).</li>
+                            <li>Filter customer orders that have order type, and then rename orderDate as deliveryDate for web order type.</li>
+                            <li>Transform customers object that is an array of field/value pair of customer attributes into customer object with fields as name, region and ordertotal in uppercase and ordertotal is sum of orderTotal of all orders for a customer. Use the reduce() to accumulate the ordertotal.</li>
+                        </ul>
+                    </code>                    
+                </pre>
+            </div>
+        </div>
+    </div>
+</div>
+<custom-footer authorname='Jeetan' linkurl='https://www.linkedin.com/in/jeetan-madaan-37aaa113/'></custom-footer>
