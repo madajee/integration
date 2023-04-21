@@ -15,6 +15,11 @@
                             <li>Tranform customers so that orders for each customer formats orderDate (MM-dd-uuuu to dd-MMM-uuuu) and orderTotal (as {format: "$sign###.00"}).</li>
                             <li>Filter customer orders that have order type, and then rename orderDate as deliveryDate for web order type.</li>
                             <li>Transform customers object that is an array of field/value pair of customer attributes into customer object with fields as name, region and ordertotal in uppercase and ordertotal is sum of orderTotal of all orders for a customer. Use the reduce() to accumulate the ordertotal.</li>
+                            <li>Transform customers object into array of customer object and join the name and region to create a customerdesc. Use pluck() and joinBy().</li>
+                            <li>Transform customers object into a customers xml.</li>
+                            <li>Extract the orders for all the customers from customer object into an array of order object. Add customer name in the each order object.</li>
+                            <li>Extract the orders for all the customers from customer object into list of order element with root element as orders in an XML. Just like in learndwl_8.dwl, Add customer name in the each order object.</li>
+                            <li>Transform customers object into an object that specifies orderTotal rolling up for each customer with key being the name.</li>
                         </ul>
                     </code>                    
                 </pre>
