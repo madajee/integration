@@ -1,0 +1,10 @@
+<table style="width:100%">
+    <tr>
+      <th ng-repeat="item in data.headList">{{ item.name }}</th>
+    </tr>
+    <tr ng-repeat="item in data.rowList">
+      <td>{{ item.topic }}</td>
+      <td>{{ item.input }}</td> 
+      <td>{{ item.output }}</td>
+    </tr>
+  </table>
