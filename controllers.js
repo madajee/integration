@@ -4,8 +4,8 @@ app.controller('integrationController', ['$scope',
     $scope.data = {
       headList: [{ name: 'Topic' }, { name: 'Input' }, { name: 'Output' }],
       rowList: [
-                { topic: 'REST API with Node.js and Express', input: 'https://blog.postman.com/how-to-create-a-rest-api-with-node-js-and-express/', output: 'https://github.com/madajee/integration.git'},
-                { topic: 'test', input: 'test', output: 'test' }
+                { topic: 'REST API with Node.js and Express', input: 'https://blog.postman.com/how-to-create-a-rest-api-with-node-js-and-express/', output: 'https://github.com/madajee/e-store-express.git'},
+                { topic: 'REST API with Mule', input: 'https://blog.postman.com/how-to-create-a-rest-api-with-node-js-and-express/', output: 'https://github.com/madajee/e-store-express-mule.git' }
                ]
    }
   }]);
