@@ -79,3 +79,16 @@ app.directive("tableDirective", function(){
         }
     }
 });
+
+app.directive("projectCard", function(){
+    return {
+        restrict: 'E',
+        templateUrl: 'pages/directives/project-card.html',
+        replace: true,
+        scope:{
+            title:"@",
+            text:"@",
+            linkurl: "@"
+        }
+    }
+});
