@@ -2,17 +2,18 @@
     <div class="row">
         <project-side-menu></project-side-menu>
         <div class="col-md-10">
-            <h6 class="text-center">PROJECT 104<span class="alignright"><strong>github repository: </strong><a href="https://github.com/madajee/e-store-express-mule.git" target="_blank">e-store-express-mule</a></span></h6>
+            <h6 class="text-center">PROJECT 104<span class="alignright"><strong>github repository: </strong><a href="https://github.com/madajee/estoreexpress-subscriberapi-mule.git" target="_blank">estoreexpress-subscriberapi-mule</a></span></h6>
             <div class="grooveborder">
-                <h3>User Subscriber Service in Mule</h3>
-                <p>Continuing on the Idea to create a e-store-express mule app, we need to do few things in sprint 2. Tools: [Anypoint Studio, Postman]<br>
+                <a href="#!/integration/119" class="nav-link">Integration-119</a>
+                <h3>estoreexpress-subscriberapi-mule: <i>cola.f1</i></h3>
+                <p>As a system api, I should able persist the user registration in users table.<br>Tools: [Anypoint Studio, Postman]<br>
                     <h4>Features: [Register, Login]</h4>
                     <ul>
-                        <li><strong>Story-1: </strong>Scaffold an e-store-express-mule application using standard muledev practices with 3 mule configuration files, one with APIkit router that gets generated from RAML API specification, second for the global configuration and third for authentication and supporting flows.</li>
-                        <li><strong>Story-2: </strong>Add the POST for register endpoint and use the mule generate flow feature (APIkit router) to generate the interface flow. We also need to test the generated flow with the request and response in the raml api spec. Request can be as simple as a username, password and name.</li>
-                        <li><strong>Story-3: </strong>Add the POST for login endpoint and use the mule generate flow feature (APIkit router) to generate the interface flow. Test the generated flow. Request can be as simple as a username, password.</li>
-                        <li><strong>Story-4: </strong>POC with Mule 4 OAuth2 provider with provider config, 2 default object store for client, token. Understand the provider operations like create client, delete client, validate token.</li>
-                        <li><strong>Story-5: </strong>Create a collection for e-store-express-mule with login and register endpoint.</li>
+                        <li><strong>Card-1: </strong>Add a non persistent user queue and enable pub-sub with mule vm connector. Use msgtype as register, login. This will require artifact created in the prior sprint: <a href="#!/project/103" class="nav-link">Project-103</a></li>
+                        <li><strong>Card-2: </strong>Setup postgres or the database of choice like mysql in the local environment. Create an e-store-express database and a user table.</li>
+                        <li><strong>Card-3: </strong>Create the CRUD raml for the users table and scaffold a mule project as estoreexpress-subscriberapi-mule. Use the apikit router and raml to generate the api interface</li>
+                        <li><strong>Card-4: </strong>Use the mule DB connector and test the create and read for a user in the users table.</li>
+                        <li><strong>Card-5: </strong>Create a collection for estoreexpress-subscriberapi-mule for the createuser endpoint.</li>
                     </ul>
                 </p>
                 <img ng-src="images/e-store-express-mule-1.png" alt="e-store-express-mule-1" width="1000" height="400">
