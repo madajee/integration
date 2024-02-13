@@ -2,12 +2,21 @@
     <div class="row">
         <project-side-menu></project-side-menu>
         <div class="col-md-10">
-            <h6 class="text-center">PROJECT 104<span class="alignright"><strong>github repository: </strong><a href="https://github.com/madajee/estoreexpress-subscriberapi-mule.git" target="_blank">estoreexpress-subscriberapi-mule</a></span></h6>
+            <h6 class="text-center">PROJECT 105<span class="alignright"><strong>github repository: </strong><a href="https://github.com/madajee/e-store-express-mule.git" target="_blank">e-store-express-mule</a></span></h6>
             <div class="grooveborder">
                 <a href="#!/integration/119" class="nav-link">Integration-119</a>
-                <h3>Mule Applications Coverage: <i>fanta.f2</i></h3>
-                <h4>Hosting Options (VirtualMuleys#13 - Deployment Strategies - On-prem to CloudHub Migration path
-                </h4>
+                <h3>e-store-express-mule: <i>fanta.f2</i></h3>
+                <p>Keeping POC aside, effort should also go into learning with online community videos.<br>Tools: [Anypoint Studio, mule community channels]<br>
+                    <h4>Features: [Deployment Options, Error Handling]</h4>
+                    <ul>
+                        <li><strong>Card-1: </strong>[Mule Applications Coverage]: Advance mule coverage understanding by watching mule community videos, training session. Add short notes in each sprint.</li>
+                        <li><strong>Card-2: </strong>Create a common error handler that can be copied and tailored across projects. Scaffold the flow with multiple Error Propage scope for few error types and the bottom one should be for ANY Error Type.</li>
+                        <li><strong>Card-3: </strong>Create a canonical error dwl that should create a error payload using the error object.</li>
+                        <li><strong>Card-4: </strong>Create the configuration element to specify common error handler as default error handler and test for couple of error on the OAuth components.</li>
+                        <li><strong>Card-5: </strong>Create the errorq for error payload along with common publish subflow which can be referenced from On Error Propagate scopes of Common Error Handler.</li>
+                    </ul>
+                </p>
+                <h4>Deployment Options with VirtualMuleys#13 on youtube free tier</h4>
                 <img ng-src="images/mule-deployment-options.png" alt="estoreexpress-subscriberapi-mule" width="600" height="200">
                 <p>
                     In the context of Anypoint Platform, there is a runtime plane and control plane. Products and features that let you create, manage and discover mule applications without local setup are included in control plane like Design Center, Exchange, Management Center. Runtime plane is mule runtime along with services like connectors, extensions. Anypoint Studio includes the non-licensed / non-clustered setup of mule runtime in the studio for developers.
