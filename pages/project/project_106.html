@@ -17,16 +17,20 @@
                         <li><strong>Card-5: </strong>Start dev in NodeJS by scaffolding e-store-express with npm init; require express module; log port in the callback function of express app listen method. Use require on config file to read the port property.</li>
                     </ul>
                 </p>
-                <div class="grooveborder">
-                    <h4>Architecture Coverage</h4>
-                    <h6><strong>Approach:</strong>Search related topics, follow Avatar Architects and understand their content.</h6>
-                    <div class="row">
-                        <ul>
-                            <li>Architects sugget to broadly understand application classification as monoliths and distributed. Monoliths are single deployable unit whereas distributed are multiple deployable units in application context. Monoliths implementations are somewhat simple, less expensive as compared to distributed because of complexity in cross cutting concern and how the application is designed for architecture characterstics (eg: scalability, availability etc).</li>
-                            <li>Architects favor parallel workstream for devOps and development in implementation programs for fast release cycles and require technical teams to increase technical breadth in relevant areas that may not fall into the core skills.</li>
-                        </ul>
-                    </div>
+            </div>
+            <div class="grooveborder">
+                <h4>Architecture Coverage</h4>
+                <h6><strong>Approach:</strong>Search related topics, follow Avatar Architects and understand their content.</h6>
+                <div class="row">
+                    <ul>
+                        <li>Architects sugget to broadly understand application classification as monoliths and distributed. Monoliths are single deployable unit whereas distributed are multiple deployable units in application context. Monoliths implementations are somewhat simple, less expensive as compared to distributed because of complexity in cross cutting concern and how the application is designed for architecture characterstics (eg: scalability, availability etc).</li>
+                        <li>Architects favor parallel workstream for devOps and development in implementation programs for fast release cycles and require technical teams to increase technical breadth in relevant areas that may not fall into the core skills.</li>
+                    </ul>
                 </div>
+            </div>
+            <div class="grooveborder">
+                <h4>Mule Error Handling_POV_2</h4>
+                <p>Generally in projects, there are common error handlers which are developed and maintained as a common mule artifact (usually as a separate repository) and included as a dependency. We also rely on tracing transaction logs in ELK stacks along with kibana dashboards when the error crosses transaction boundaries and propagates across mule services in separate layers. We also persist some business errors that occur at application layer in middle-tier DB tables or with customizations in saas business applications like salesforce. We also rely on notifications by configuring alerts to manage outage and other error situations. In POCs, I took a simplified approach of creating common utility mule configuration file which can be copied in different mule applications.</p>
             </div>
         </div>
     </div>
