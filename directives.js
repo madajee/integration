@@ -92,3 +92,20 @@ app.directive("projectCard", function(){
         }
     }
 });
+
+app.directive("projectReferenceCard", function(){
+    return {
+        restrict: 'E',
+        templateUrl: 'pages/directives/project-reference-card.html',
+        replace: true,
+        scope:{
+            month:"@",
+            title1:"@",
+            linkurl1: "@",
+            title2:"@",
+            linkurl2: "@",
+            title3:"@",
+            linkurl3: "@"
+        }
+    }
+});
