@@ -44,6 +44,14 @@ app.directive("projectSideMenu", function(){
     }
 });
 
+app.directive("sprintSideMenu", function(){
+    return {
+        restrict: 'E',
+        templateUrl: 'pages/directives/sprint-side-menu.html',
+        replace: true
+    }
+});
+
 app.directive("homeTimeline", function(){
     return {
         restrict: 'E',

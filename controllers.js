@@ -14,3 +14,8 @@ app.controller('integrationController', ['$scope',
   function($scope) {
     $scope.sidemenu = "project";
   }]);
+
+  app.controller('sprintController', ['$scope',
+  function($scope) {
+    $scope.sidemenu = "sprint";
+  }]);

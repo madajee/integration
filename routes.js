@@ -27,6 +27,16 @@ app.config(function ($routeProvider) {
         },
         controller: 'projectController'
     })
+    .when('/sprint', {
+        templateUrl: 'pages/sprint/sprint_1.html',
+        controller: 'sprintController'
+    })
+    .when('/sprint/:sprintid', {
+        templateUrl: function (param) {
+            return 'pages/sprint/sprint_' + param.sprintid + '.html'
+        },
+        controller: 'sprintController'
+    })
     .
     otherwise('/');
     
