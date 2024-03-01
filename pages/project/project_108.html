@@ -1,0 +1,55 @@
+<div class = "container-fluid mt-2">
+    <div class="row">
+        <project-side-menu></project-side-menu>
+        <div class="col-md-10">
+            <h6 class="text-center">E-STORE-EXPRESS (AGILE DOC)<span class="alignright"><strong>github repository: </strong><a href="https://github.com/madajee/e-store-express-mule.git" target="_blank">e-store-express-mule</a></span></h6>
+            <a href="#!/integration/119" class="nav-link">Integration-119</a>
+            <div class="grooveborder">
+                <h3><i>sprite.j1 (e-store-express-mule)</i></h3>
+                <img ng-src="images/e-store-express-mule-1.png" alt="e-store-express-mule-1" width="1000" height="400">
+            </div>
+            <div class="grooveborder">
+                <h3><i>cola.f1 (estoreexpress-subscriberapi-mule)</i></h3>
+                <img ng-src="images/estoreexpress-subscriberapi-mule.png" alt="estoreexpress-subscriberapi-mule" width="1000" height="400">
+            </div>
+            <div class="grooveborder">
+                <h3><i>fanta.f2</i></h3>
+                <h4>AC_1: Architecture Coverage with on youtube free tier</h4>
+                <img ng-src="images/mule-deployment-options.png" alt="estoreexpress-subscriberapi-mule" width="600" height="200">
+                <p>
+                    In the context of Anypoint Platform, there is a runtime plane and control plane. Products and features that let you create, manage and discover mule applications without local setup are included in control plane like Design Center, Exchange, Management Center. Runtime plane is mule runtime along with services like connectors, extensions. Anypoint Studio includes the non-licensed / non-clustered setup of mule runtime in the studio for developers.
+                </p>
+                <p>
+                    In the On-perm model, the control plane is hosted with Mulesoft for the customer org, mule agent connects mule applications running on VMs in  customer datacenter to the control plane. In this setup, there are several mule applications run in a single JVM / mule server.
+                </p>
+                <p>
+                    Cloud model is when both  control and runtime plane hosted with Mulesoft with an iPaas cloudhub offering which is built on  AWS Infrastructure as a Service offering. Mulesoft Cloudhub Offering provides different options like Cloudhub 1.0 (Cloud Workers), Cloudhub 2.0 (Cloud Containers), Runtime Fabric (On-perm containers).
+                </p>
+                <p>
+                    In the migration journeys, there is a hybrid deployment model when the mule applications are deployed both in customer data center and in cloudhub.
+                </p>
+            </div>
+            <div class="grooveborder">
+                <h3><i>fanta.f2</i></h3>
+                <h4>Mule Error Handling_POV_1</h4>
+                <p>Mulesoft Teams have enabled muleys in implementation projects with options when it comes to Error Handling with streamlined approach to Mule 4 Error Handling with core components of On Error Continue, On Error Propagate, Error Handler, Raise Error. Error Handling is enabled with Mule Default Error Handler, Application Level Error Handlers, Flow Level Error Handlers, Processor Level Error Handlers. One should go through scenarios explained based on calling flow (parent) and called flow (child flow) in the Mule Fundamentals course and Lightboard series videos.</p>
+            </div>
+            <div class="grooveborder">
+                <h3><i>latte.m1</i></h3>
+                <h4>AC_2: Architecture Coverage</h4>
+                <h6><strong>Approach:</strong>Search related topics, follow Avatar Architects and understand their content.</h6>
+                <div class="row">
+                    <ul>
+                        <li>Architects sugget to broadly understand application classification as monoliths and distributed. Monoliths are single deployable unit whereas distributed are multiple deployable units in application context. Monoliths implementations are somewhat simple, less expensive as compared to distributed because of complexity in cross cutting concern and how the application is designed for architecture characterstics (eg: scalability, availability etc).</li>
+                        <li>Architects favor parallel workstream for devOps and development in implementation programs for fast release cycles and require technical teams to increase technical breadth in relevant areas that may not fall into the core skills.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="grooveborder">
+                <h3><i>latte.m1</i></h3>
+                <h4>Mule Error Handling_POV_2</h4>
+                <p>Generally in projects, there are common error handlers which are developed and maintained as a common mule artifact (usually as a separate repository) and included as a dependency. We also rely on tracing transaction logs in ELK stacks along with kibana dashboards when the error crosses transaction boundaries and propagates across mule services in separate layers. We also persist some business errors that occur at application layer in middle-tier DB tables or with customizations in saas business applications like salesforce. We also rely on notifications by configuring alerts to manage outage and other error situations. In POCs, I took a simplified approach of creating common utility mule configuration file which can be copied in different mule applications.</p>
+            </div>
+        </div>
+    </div>
+</div>
