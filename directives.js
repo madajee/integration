@@ -107,7 +107,6 @@ app.directive("projectReferenceCard", function(){
         templateUrl: 'pages/directives/project-reference-card.html',
         replace: true,
         scope:{
-            month:"@",
             title1:"@",
             linkurl1: "@",
             title2:"@",

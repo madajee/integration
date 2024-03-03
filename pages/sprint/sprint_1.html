@@ -2,9 +2,9 @@
     <div class="row">
         <sprint-side-menu></sprint-side-menu>
         <div class="col-md-10">
-            <h6 class="text-center">ESTORE-SPRITE-J1<span class="alignright"><strong>github repository: </strong><a href="https://github.com/madajee/e-store-express-mule.git" target="_blank">e-store-express-mule</a></span></h6>
+            <a href="#!/integration/119" class="nav-link">Integration-119</a>
             <div class="grooveborder">
-                <a href="#!/integration/119" class="nav-link">Integration-119</a>
+                <h6 class="text-center">ESTORE-SPRITE-J1<span class="alignright"><strong>github repository: </strong><a href="https://github.com/madajee/e-store-express-mule.git" target="_blank">e-store-express-mule</a></span></h6>
                 <h3>e-store-express-mule: <i>sprite.j1</i></h3>
                 <p>As a experience api, I should able to register and login with this Mule API. Let's just start with a POC guy velocity of about 18 points.<br>Tools: [Anypoint Studio, Postman]<br>
                     <h4>Features: [Register, Login]</h4>
@@ -14,6 +14,49 @@
                         <li><strong>Card-3: </strong>Add the POST for login endpoint and use the mule generate flow feature (APIkit router) to generate the interface flow. Test the generated flow. Request can be as simple as a username, password.</li>
                         <li><strong>Card-4: </strong>POC with Mule 4 OAuth2 provider with provider config, 2 default object store for client, token. Understand the provider operations like create client, delete client, validate token.</li>
                         <li><strong>Card-5: </strong>Create a collection for e-store-express-mule with login and register endpoint.</li>
+                    </ul>
+                </p>
+            </div>
+            <div class="grooveborder">
+                <h6 class="text-center">ESTORE-COLA-F1<span class="alignright"><strong>github repository: </strong><a href="https://github.com/madajee/estoreexpress-subscriberapi-mule.git" target="_blank">estoreexpress-subscriberapi-mule</a></span></h6>
+                <h3>estoreexpress-subscriberapi-mule: <i>cola.f1</i></h3>
+                <p>As a system api, I should able persist the user registration in users table.<br>Tools: [Anypoint Studio, Postman]<br>
+                    <h4>Features: [Register, Login]</h4>
+                    <ul>
+                        <li><strong>Card-1: </strong>Add a non persistent user queue and enable pub-sub with mule vm connector. Use msgtype as register, login for messages in userq.</li>
+                        <li><strong>Card-2: </strong>Setup postgres or the database of choice like mysql in the local environment. Create an e-store-express database and a user table.</li>
+                        <li><strong>Card-3: </strong>Create the CRUD raml for the users table and scaffold a mule project as estoreexpress-subscriberapi-mule. Use the apikit router and raml to generate the api interface</li>
+                        <li><strong>Card-4: </strong>Use the mule DB connector and test CRUD api for users.</li>
+                        <li><strong>Card-5: </strong>Create a collection for estoreexpress-subscriberapi-mule for the createuser endpoint.</li>
+                    </ul>
+                </p>
+            </div>
+            <div class="grooveborder">
+                <h6 class="text-center">ESTORE-FANTA-F2<span class="alignright"><strong>github repository: </strong><a href="https://github.com/madajee/estoreexpress-subscriberapi-mule.git" target="_blank">estoreexpress-subscriberapi-mule</a></span></h6>
+                <h3>e-store-express-mule: <i>fanta.f2</i></h3>
+                <p>Keeping POC aside, effort should also go into learning with online community videos.<br>Tools: [Anypoint Studio, mule community channels]<br>
+                    <h4>Features: [Deployment Options, Error Handling]</h4>
+                    <ul>
+                        <li><strong>Card-1: </strong>[Mule Applications Coverage]: Advance mule coverage understanding by watching mule community videos, training session. Add short notes in each sprint.</li>
+                        <li><strong>Card-2: </strong>Create a common error handler that can be copied and tailored across projects. Scaffold the flow with multiple Error Propage scope for few error types and the bottom one should be for ANY Error Type.</li>
+                        <li><strong>Card-3: </strong>Create a canonical error dwl that should create a error payload using the error object.</li>
+                        <li><strong>Card-4: </strong>Create the configuration element to specify common error handler as default error handler and test for couple of error on the OAuth components.</li>
+                        <li><strong>Card-5: </strong>Create the errorq for error payload along with common publish subflow which can be referenced from On Error Propagate scopes of Common Error Handler.</li>
+                    </ul>
+                </p>
+            </div>
+            <div class="grooveborder">
+                <h6 class="text-center">ESTORE-LATTE-M1<span class="alignright"><strong>github repository: </strong><a href="https://github.com/madajee/estoreexpress-subscriberapi-mule.git" target="_blank">estoreexpress-subscriberapi-mule</a></span></h6>
+                <h3>e-store-express-mule: <i>latte.m1</i></h3>
+                <p>Focus on videos with architecture content.<br>Tools: [Anypoint Studio, NodeJS, YouTube videos]<br>
+                    <h4>Features: [Architecture Coverage, Error Handling]</h4>
+                    <ul>
+                        <li><strong>Card-1: </strong>[Architecture Coverage]: Advance architecture understanding by listening to videos that has architecture asides. Similar to [Mule Coverage] card started in fanta.f2, cards like these will follow continum style of moving across sprints.</li>
+                        <li><strong>Card-2: </strong>Add the correlationId in the e-store-express-mule app. First test with mapping correlationId to TransactionId in the response for one of the endpoint. Explore configuration to generate custom correlationId and also use the tracing module vm publish flow to add username along with correlationId while mapping to transactionId.</li>
+                        <li><strong>Card-3: </strong>n the e-store-express-mule app, we will get an error when the register endpoint is called twice with the same username as the first call will create the client in the OAuth provider. [Error Type: OAUTH2-PROVIDER:CLIENT_ALREADY_EXISTS, Message: The client with ID: test1 is already registered]. Publish the error to the errorq with the transactionId (set as correlationId) and msgtype (set as register).
+                        {"transactionId":"9e56521b.ec30.4709.b477.c743f3854063","msgtype":"register","transactionstatus":"Failed","error":{"description":"The client with ID: test1 is already registered","type":"APPERROR:CLIENT_ALREADY_EXISTS","cause":"The client with ID: test1 is already registered"}}</li>
+                        <li><strong>Card-4: </strong>In the “estoreexpress-subscriberapi-mule”, add the listener flow for the errorq and test for "transactionId":"9e56521b.ec30.4709.b477.c743f3854063" from card-4. Log the error with the logger component but as we move along we will have to persist these kind of errors from the queue.</li>
+                        <li><strong>Card-5: </strong>Start dev in NodeJS by scaffolding e-store-express with npm init; require express module; log port in the callback function of express app listen method. Use require on config file to read the port property.</li>
                     </ul>
                 </p>
             </div>
