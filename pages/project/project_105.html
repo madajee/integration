@@ -10,7 +10,9 @@
                 <ul>
                     <li>Step 1: Scaffold a node app with express module. Serve the index page in the app folder.Test the server is listening on port 3000.</li>
                     <li>Step 2: Create the Authorization route on the root path. Also create the Authorization Controller. Test the GET /ping and POST /login route. To start with use the express features functions of Router() to return status of 200 and JSON object with status of running for /ping and status of login for /login. We will also scaffold function of ping and login in controller file in this step.</li>
-                    <li>Step 3: Create a login schema with username, password as required properties. Add the middleware to validate the body of login route before calling into the controller method.</li>
+                    <li>Step 3: Create a login schema and regisiter schema. Use the express middleware features and ajv node module to validate the payload body with the schema for both routes.</li>
+                    <li>Step 4: Establish db connectivity by requiring sequelize, pg node module and connect with the datastore. create an index.js in the commons folder and export the pooled sequelize instance. One can also establish connectivity to file rdms db with sqlite3 node module in poc mode.</li>
+                    <li>Step 5: Create user model that will be required for Authorization Controller. [{properties: id, username, password, role}, {functions: initialise, createUser, findUser, updateUser, findAllUsers, deleteUser}].</li>
                 </ul>
             </div>
         </div>
