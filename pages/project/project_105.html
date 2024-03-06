@@ -13,6 +13,7 @@
                     <li>Step 3: Create a login schema and regisiter schema. Use the express middleware features and ajv node module to validate the payload body with the schema for both routes.</li>
                     <li>Step 4: Establish db connectivity by requiring sequelize, pg node module and connect with the datastore. create an index.js in the commons folder and export the pooled sequelize instance. One can also establish connectivity to file rdms db with sqlite3 node module in poc mode.</li>
                     <li>Step 5: Create user model that will be required for Authorization Controller. [{properties: id, username, password, role}, {functions: initialise, createUser, findUser, updateUser, findAllUsers, deleteUser}].</li>
+                    <li>Step 6: Create the encryptPassword and generateAccessToken utility function with require on native crypto and jsonwebtoken module. Register the user using both the utility methods and createUser method on UserModel. Login the user with findUser method on UserModel and add the user not found and password check. User should get an accesstoken for success on register and login.</li>
                 </ul>
             </div>
         </div>
