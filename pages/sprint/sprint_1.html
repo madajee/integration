@@ -65,6 +65,23 @@
                     </ul>
                 </p>
             </div>
+            <div class="grooveborder">
+                <h6 class="text-center">ESTORE-MOCHA-M2<span class="alignright"><strong>github repository: </strong><a href="https://github.com/madajee/e-store-express.git" target="_blank">e-store-express-node</a>
+                    <a href="https://github.com/madajee/estoreexpress-errorapi-mule.git" target="_blank">estoreexpress-errorapi-mule</a></span></h6>
+                <h3>e-store-express: <i>mocha.m2</i></h3>
+                <p>user routes and controller in nodejs and mule error-api.<br>Tools: [Anypoint Studio, NodeJS]<br>
+                    <h4>Features: [nodejs, mule error-api]</h4>
+                    <ul>
+                        <li><strong>Card-1: </strong>Now that we have express server listening in estore node app, develop the signup and login routes and controllers. Both register and login are post and payload should be validated using the ajv (another json validator) and check() method should be called as an express middleware.</li>
+                        <li><strong>Card-2: </strong>Use sequelize ORM module along with pg to connect to estore database and initialize the user model.</li>
+                        <li><strong>Card-3: </strong>Create utility method in authorization controller for generateAccessToken() and encryptPassword() using jsonwebtoken and crypto modules. Initialize the User model and persist the user with createuser() in the signup route with encrypted password and return the token in response.</li>
+                        <li><strong>Card-4: </strong>In the login controller, retrieve the user, perform password validation and in case of successful validation, return the token in reposne, else throw an error. Add the user associated with generated token in the request.</li>
+                        <li><strong>Card-5: </strong>Create and test the [/user/all] route with user route and controller js files which will chain getAllUsers() in controller layer to findAllUsers() in the model layer.</li>
+                        <li><strong>Card-6: </strong>Scaffold an estoreexpress-errorapi-mule and write errors in a errors db table and estoreexpress-errors.csv.</li>
+                        <li><strong>Card-7: </strong>About 10 days between Mar 31 to Apr 13.</li>
+                    </ul>
+                </p>
+            </div>
         </div>
     </div>
 </div>
