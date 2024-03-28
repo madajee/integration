@@ -8,6 +8,13 @@ app.controller('integrationController', ['$scope',
                 { topic: 'REST API with Mule', input: 'https://blog.postman.com/how-to-create-a-rest-api-with-node-js-and-express/', output: 'https://github.com/madajee/e-store-express-mule.git' }
                ]
    }
+   $scope.dataazurelearn = {
+    headList: [{ name: 'Learning Path' }, { name: 'Module' }, { name: 'Status and Time' }],
+    rowList: [
+              { topic: 'Microsoft Azure Fundamentals', input: '[cloud concepts; architecture and services; management and governance]', output: '[Done; about 6 hr]'},
+              { topic: 'AZ-400 Devops (part 1)', input: '[Devops Transformation Journey; ]', output: '[Not Started; About 4 hr]' }
+             ]
+ }
   }]);
 
   app.controller('projectController', ['$scope',
