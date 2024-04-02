@@ -12,7 +12,7 @@ app.controller('integrationController', ['$scope',
     headList: [{ name: 'Learning Path' }, { name: 'Module' }, { name: 'Status and Time' }],
     rowList: [
               { topic: 'Microsoft Azure Fundamentals', input: '[cloud concepts; architecture and services; management and governance]', output: '[Done; about 6 hr]'},
-              { topic: 'AZ-400 Devops (part 1)', input: '[Devops Transformation Journey; ]', output: '[Not Started; About 4 hr]' }
+              { topic: 'AZ-400 Devops (part 1)', input: '[Devops Transformation Journey; ]', output: '[In Progress; About 4 hr]' }
              ]
  }
   }]);
