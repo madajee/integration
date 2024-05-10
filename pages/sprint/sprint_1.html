@@ -3,8 +3,7 @@
         <sprint-side-menu></sprint-side-menu>
         <div class="col-md-10">
             <a href="#!/integration/119" class="nav-link">Integration-119</a>
-            <a target= "_blank" href="https://www.youtube.com/watch?v=1EJ2aRlfXUM" class="nav-link">demo-1</a>
-            <a target= "_blank" href="https://www.youtube.com/watch?v=T0uiBeYtGgw" class="nav-link">demo-2</a>
+            <a target= "_blank" href="https://www.youtube.com/watch?v=1EJ2aRlfXUM&list=PLMEYlt-BRJcJUUFSUjULJSSUZRbvFALhQ" class="nav-link">demo-playlist</a>
             <a href="#!/project/103" class="nav-link">project-estoreexpress</a>
             <div class="grooveborder">
                 <h6 class="text-center">ESTORE-SPRITE-J1<span class="alignright"><strong>github repository: </strong><a href="https://github.com/madajee/e-store-express-mule.git" target="_blank">e-store-express-mule</a></span></h6>
@@ -112,6 +111,73 @@
                         </li>
                         <li><strong>Card-4: </strong>In the estoreexpress-subscriberapi-mule, add the estoreexpress-services-product.xml file and create the products crud api.</li>
                         <li><strong>Card-5: </strong>About 10 days between Apr 21 to May 4.</li>
+                    </ul>
+                </p>
+            </div>
+            <div class="grooveborder">
+                <h6 class="text-center">ESTORE-SCHWEPPES-M(X)1<span class="alignright"><strong>github repository: </strong><a href="https://github.com/madajee/e-store-express.git" target="_blank">e-store-express-node</a>
+                    <a href="https://github.com/madajee/estoreexpress-subscriberapi-mule.git" target="_blank">estoreexpress-subscriberapi-mule</a></span></h6>
+                <h3>e-store-express: <i>schweppes.mx1</i></h3>
+                <p><strong>Context:</strong>We have covered quite a bit of ground on both node and mule side with user tokens in register and login, pub-sub and api driven calls, persisting sample product to db, but now we want to push a bit on order feature.<p>
+                    <h4>Features: [order and orderitems]</h4>
+                    <ul>
+                        <li><strong>Card-1: </strong>On the node side, create the controller and routes for orders and orderitems, and we should able to create an order for the user. <pre>
+                            <code> 
+                            // Order model relations
+                            Order.belongsTo(User);
+                            Order.belongsToMany(Product, {through: OrderItem});
+                            Product.belongsToMany(Order, {through: OrderItem});
+                            </code>                    
+                        </pre> 
+                        <pre>
+                            <code> 
+                              POST /order { "userId": "1"}
+                            </code>                    
+                        </pre></li>
+                        <li><strong>Card-2: </strong>On the node side, after the order is created for the user, add routes for add product to an order and removing product from an order.<pre>
+                            <code> 
+                                POST /order/addorderproduct {"quantity": "3", "productId": "2"}
+                            </code>                    
+                        </pre>
+                        <pre>
+                            <code> 
+                                POST /order/removeorderproduct {"productId": "2"}
+                            </code>                    
+                        </pre></li>
+                        <li><strong>Card-3: </strong>On the mule side, create the order and orderitems table.<br>order: [id primary key, orderidentifier varchar unique not null, customername varchar not null, ordertype varchar not null, servicetype varchar not null, status varchar not null, startdate timestamp not null, enddate timestamp not null, audit fields]<br>orderitems: [id primary key, quantity integer, orderid as foreign key on orders, productid as foreignkey on products, unique(productid, orderid) audit fields]</li>
+                        <li><strong>Card-4: </strong>On the mule side, create order which should persist order and orderitems records. Use bulk insert for order items. Enclose Both order and orderitems persistence in a transaction boundary with a TRY. 
+                        <pre>
+                            <code> 
+                                POST /order
+                                {
+                                    "customername": "John Doe",
+                                    "ordertype": "WEB",
+                                    "servicetype": "Azure",
+                                    "userid": "1",
+                                    "orderitems": [
+                                        {
+                                            "productId": "1",
+                                            "quantity": "1"
+                                        },
+                                        {
+                                            "productId": "2",
+                                            "quantity": "1"
+                                        }
+                                    ]
+                                }
+                            </code>                    
+                        </pre></li>
+                        <li><strong>Card-5: </strong>On the mule side, create a /orderdestroy endpoint which should delete the order and orderitems by passing in the orderidentifier. 
+                        <pre>
+                            <code> 
+                                POST /orderdestroy
+                                {
+                                    "orderidentifier": "2fad1639-5fcb-4a15-a6c1-5a620cbce680"
+                                }
+                            </code>                    
+                        </pre></li>
+                        <li><strong>Card-6: </strong>Add the VM queue interface for orderq and test create order by publishing the message to the queue.</li>
+                        <li><strong>Card-7: </strong>About 10 days between May 12 to May 25.</li>
                     </ul>
                 </p>
             </div>
