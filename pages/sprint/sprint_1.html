@@ -181,6 +181,66 @@
                     </ul>
                 </p>
             </div>
+            <div class="grooveborder">
+                <h6 class="text-center">ESTORE-DIETCOKE-J(X)1<span class="alignright"><strong>github repository: </strong><a href="https://github.com/madajee/estore-sfdc-system-api.git" target="_blank">estore-sfdc-system-api</a></h6>
+                <h3>e-store-express: <i>dietcoke.jx1</i></h3>
+                <p><strong>Context: </strong>With Level 1 view, we understand that store channel is self service style of customer onboarding and order capture but Sales Cloud in Salesforce has Lead To Cash process through which agents creates customers by converting leads and quotes in CPQ allows them to manage a deal before order capture stage. 
+                    <ul>
+                        <li><a href="#!/sprint/2" target="_blank">Level-1 view</a></li>
+                        <li><a href="https://trailhead.salesforce.com/content/learn/projects/manage-products-prices-quotes-orders" target="_blank">manage-products-prices-quotes-orders</a></li>
+                    </ul>
+                <p>
+                <h4>Features: [lead automation and conversion]</h4>
+                <ul>
+                    <li><strong>Card-1: </strong>On the mule side, we are going to scaffold estore-sfdc-system-api, and establish the connectivity using the mule connector with the sandbox org and salesforce provides with the signup using a personal email address.</li>  
+                    <li><strong>Card-2: </strong>Create an endpoint with lead resource and POST method so that we can create the lead in the sfdc org with the create operation in salesforce connector.
+                        <pre>
+                            <code> 
+                                POST /lead
+                                [
+                                    {
+                                        "firstname": "John",
+                                        "lastname": "Doe",
+                                        "company": "XYZEnterprise",
+                                        "status": "Open",
+                                        "title": "Account Executive"
+                                    },
+                                    {
+                                        "firstname": "Jane",
+                                        "lastname": "Doe",
+                                        "company": "XYZEnterprise",
+                                        "status": "Open",
+                                        "title": "Account Analyst"
+                                    },
+                                    {
+                                        "firstname": "Jack",
+                                        "lastname": "Doe",
+                                        "company": "XYZEnterprise",
+                                        "status": "Open",
+                                        "title": "Account Developer"
+                                    }
+                                ]
+                            </code>                    
+                        </pre>
+                    </li>
+                    <li><strong>Card-3: </strong>Add another endpoint on the lead resource and GET method with couple of query params as leadname and company. Use the connector Query operation to query the created leads with company or leadname. When both query params are null, retrieve the 10 leads with LIMIT 10.</li>
+                    <li><strong>Card-4: </strong>Add deleteleads resource with a POST method and input as an array of IDs and use the delete operation of the connector to delete the leads.</li>
+                    <li><strong>Card-5: </strong>Add the convertlead resource with a POST method which will query the lead with a leadname and uses the Convert Lead operation of the connector to create the account and contacts. Optionally an opportunity can be created with a doNotCreateOpportunity flag. Also test with a delete resource where you pass in the converted account id and all dependent objects are deleted.
+                        <pre>
+                            <code> 
+                                POST /convertlead
+                                {
+                                    "name": "John Doe",
+                                    "leadsource": "web",
+                                    "doNotCreateOpportunity": true
+                                }
+                            </code>                    
+                        </pre>
+                    </li>
+                    <li><strong>Card-6: </strong>Create a trailhead playground for the trailhead project of manage products, prices, quotes and orders and test connectivity in mule salesforce connector to playground org along with sandbox org.</li>
+                    <li><strong>Card-7: </strong>About 10 days between June 2 to June 15.</li>
+                </ul>
+            </div>
         </div>
     </div>
 </div>
