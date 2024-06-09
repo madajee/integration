@@ -1,0 +1,185 @@
+<div class = "container-fluid mt-2">
+    <div class="row">
+        <sprint-side-menu></sprint-side-menu>
+        <div class="col-md-10">
+            <a href="#!/integration/119" class="nav-link">Integration-119</a>
+            <a target= "_blank" href="https://www.youtube.com/watch?v=1EJ2aRlfXUM&list=PLMEYlt-BRJcJUUFSUjULJSSUZRbvFALhQ" class="nav-link">demo-playlist</a>
+            <a href="#!/project/103" class="nav-link">project-estoreexpress</a>
+            <h6 class="text-center">Dataweave with map, function and filter<span class="alignright"><strong>github repository: </strong><a href="https://github.com/madajee/estore-sfdc-system-api.git" target="_blank">estore-sfdc-system-api</a></span></h6>
+            <h6>Scenario: <i>Get Quotes by Opportunity</i></h6>
+            <div class="grooveborder">
+                <p>We have an Opportunity: Saito - Ground-mounted Panels with 2 products:
+                    <ul>
+                        <li><strong>Product-1: </strong>SunPower Ground.</li>
+                        <li><strong>Product-2: </strong>GreenSun Ground.</li>
+                    </ul>
+                    <img ng-src="images/get-quotes-for-opportunity-dwl/image10.png" alt="opportunity-with-products" width="900" height="300">
+                </p>
+            </div>
+            <div class="grooveborder">
+                <p>There are 2 quotes on the opportunity:
+                    <ul>
+                        <li><strong>Quote-1: </strong>60 Cell Ground-mounted Panels.</li>
+                        <li><strong>Quote-2: </strong>80 Cell Ground-mounted Panels.</li>
+                    </ul>
+                    <img ng-src="images/get-quotes-for-opportunity-dwl/image2.png" alt="opportunity-with-quotes" width="900" height="300">
+                </p>
+            </div>
+            <div class="grooveborder">
+                <p>Quote with Lines:
+                    <ul>
+                        <p>
+                            <li><strong>Quote-1: </strong>60 Cell Ground-mounted Panels. Quote line item with 10 quantity of Green Sun Ground</li>
+                            <img ng-src="images/get-quotes-for-opportunity-dwl/image6.png" alt="quote-1" width="900" height="300">
+                        </p>
+                        <p>
+                            <li><strong>Quote-2: </strong>80 Cell Ground-mounted Panels. Quote line item with 35 quantity of SunPower Ground. Quote line item with 20 quantity of GreenSun Ground.
+                            </li>
+                            <img ng-src="images/get-quotes-for-opportunity-dwl/image5.png" alt="quote-2" width="900" height="300">
+                        </p>
+                    </ul>
+                </p>
+            </div>
+            <div class="grooveborder">
+                <p>Query against Salesforce Playground Org:
+                    <ul>
+                        <p>
+                            <li><strong>Opportunity Record with name: </strong>Retrieve opportunity record by opportunity name.</li>
+                            <img ng-src="images/get-quotes-for-opportunity-dwl/image8.png" alt="opportunity-with-quotes" width="900" height="300">
+                        </p>
+                        <p>
+                            <li><strong>Quotes with Opportunity Id: </strong>Retrieve both the quotes with opportunity Id.</li>
+                            <img ng-src="images/get-quotes-for-opportunity-dwl/image3.png" alt="opportunity-with-quotes" width="900" height="300">
+                        </p>
+                        <p>
+                            <li><strong>Quote Lines with both quotes of Opportunity: </strong>Retrieve quote lines with both the quotes for an opportunity.</li>
+                            <img ng-src="images/get-quotes-for-opportunity-dwl/image4.png" alt="quote-with-quotelines" width="900" height="300">
+                        </p>                       
+                    </ul>
+                </p>
+            </div>
+            <img ng-src="images/get-quotes-for-opportunity-dwl/image7.png" alt="opportunity-with-products" width="1100" height="10">
+            <div class="grooveborder">
+                <p>Mule Flow Image: get-opportunityquoteSubFlow:
+                    <img ng-src="images/get-quotes-for-opportunity-dwl/image9.png" alt="opportunity-with-products" width="900" height="300">
+                </p>
+            </div>
+            <img ng-src="images/get-quotes-for-opportunity-dwl/image7.png" alt="opportunity-with-products" width="1100" height="10">
+            <div class="grooveborder">
+                <p>One can clone the mule repository, connect to the trailhead playground, and set up the data in their trailhead playground for Opportunity, Quotes and Quotes Lines:
+                    <a href="https://github.com/madajee/estore-sfdc-system-api.git" target="_blank">estore-sfdc-system-api</a> Mule Configuration File: opportunity-obj; Mule Subflow: get-opportunityquoteSubFlow
+<pre>
+    <code> 
+curl --location 'http://localhost:8081/api/opportunity/quote?opportunityname=Saito%20-%20Ground-mounted%20Panels'
+    </code>                    
+</pre>
+<pre>
+    <code> 
+{"response":{"message":"get quote by opportunity successful","payload":[{"name":"80 Cell Ground-mounted Panels","opportunityname":"Saito - Ground-mounted Panels","quoteId":"0Q0bm0000003JpJCAU","quotelines":[{"productname":"SunPower Ground","quantity":"35.0"},{"productname":"GreenSun Ground","quantity":"20.0"}]},{"name":"60 Cell Ground-mounted Panels","opportunityname":"Saito - Ground-mounted Panels","quoteId":"0Q0bm0000003LO5CAM","quotelines":[{"productname":"GreenSun Ground","quantity":"10.0"}]}]}}
+    </code>                    
+</pre>
+                </p>
+            </div>
+            <div class="grooveborder">
+                <p><strong>DWLs:</strong>
+                    <ul>
+                        <p>
+                            <li><strong>Opportunity Record: </strong>Save it in vars.opportunityrecord.</li>
+<pre>
+    <code> 
+SELECT ID, Name, Amount, CurrencyIsoCode, Pricebook2Id, TotalOpportunityQuantity, ExpectedRevenue from Opportunity where name = 'Saito - Ground-mounted Panels'
+    </code>                    
+</pre>
+<pre>
+    <code> 
+[{"TotalOpportunityQuantity":"55.0","ExpectedRevenue":"474750.0","Amount":"4747500.0","Pricebook2Id":"01sbm0000027kY1AAI","Id":"006bm000001oXt3AAE","type":"Opportunity","CurrencyIsoCode":"JPY","Name":"Saito - Ground-mounted Panels"}]
+    </code>                    
+</pre>
+                        </p>
+                        <p>
+                            <li><strong>Quote Records for an Opportunity:: </strong>Save in  vars.opportunityquotes. We use the value of Id from the Opportunity Response to fetch the Quote records for the opportunity.</li>
+<pre>
+    <code> 
+select Id, name, opportunityId, Opportunity.name from Quote Where OpportunityId = '006bm000001oXt3AAE' 
+    </code>                    
+</pre>
+<pre>
+    <code> 
+%dw 2.0
+output application/java
+var condition1 = "select Id, name, opportunityId, Opportunity.name from Quote Where OpportunityId = " ++ "'" ++ 	vars.opportunityrecord[0].Id as String ++ "'"
+---
+{
+	"query" : condition1
+}
+    </code>                    
+</pre>
+<pre>
+    <code> 
+[{"OpportunityId":"006bm000001oXt3AAE","Opportunity":{"Id":null,"type":"Opportunity","Name":"Saito - Ground-mounted Panels"},"Id":"0Q0bm0000003JpJCAU","type":"Quote","Name":"80 Cell Ground-mounted Panels"},{"OpportunityId":"006bm000001oXt3AAE","Opportunity":{"Id":null,"type":"Opportunity","Name":"Saito - Ground-mounted Panels"},"Id":"0Q0bm0000003LO5CAM","type":"Quote","Name":"60 Cell Ground-mounted Panels"}]
+    </code>                    
+</pre>
+                        </p> 
+                        <p>
+                            <li><strong>QuoteLine Records for both the Opportunity: </strong>Save in  vars.opportunityquotelines.</li>
+<pre>
+    <code> 
+select Id, Product2.name, Quantity, QuoteId from QuoteLineItem Where QuoteId IN ('0Q0bm0000003JpJCAU','0Q0bm0000003LO5CAM')
+    </code>                    
+</pre>
+<pre>
+    <code> 
+%dw 2.0
+output application/java
+var condition1 = "select Id, Product2.name, Quantity, QuoteId from QuoteLineItem Where QuoteId IN "
+var condition2 = "(" ++ ((vars.opportunityquotes map () -> "'" ++ $.Id ++ "'") joinBy (",")) ++ ")"
+---
+{
+    "query" : condition1 ++ condition2
+}        
+    </code>                    
+</pre>
+<pre>
+    <code> 
+[{"Product2":{"Id":null,"type":"Product2","Name":"SunPower Ground"},"QuoteId":"0Q0bm0000003JpJCAU","Quantity":"35.0","Id":"0QLbm0000001dddGAA","type":"QuoteLineItem"},{"Product2":{"Id":null,"type":"Product2","Name":"GreenSun Ground"},"QuoteId":"0Q0bm0000003JpJCAU","Quantity":"20.0","Id":"0QLbm0000001ddeGAA","type":"QuoteLineItem"},{"Product2":{"Id":null,"type":"Product2","Name":"GreenSun Ground"},"QuoteId":"0Q0bm0000003LO5CAM","Quantity":"10.0","Id":"0QLbm0000001eUsGAI","type":"QuoteLineItem"}]
+    </code>                    
+</pre>
+                        </p>
+                        <p>
+                            <li><strong>Response: get-quote-by-opportunity-response.dwl</strong>Quote Records for both the Opportunity. See the use of map, filter and function:</li>
+<pre>
+    <code> 
+%dw 2.0
+output application/json
+fun getQuotelines(quoteId) = vars.opportunityquotelines filter ($.QuoteId == quoteId)
+---
+if (vars.opportunityrecord[0].Id != null)
+{
+    response: {
+        message: "get quote by opportunity successful",
+        payload:  vars.opportunityquotes map() -> {
+            name: $.Name,
+            opportunityname: $.Opportunity.Name,
+            quoteId: $.Id,
+            quotelines: getQuotelines($.Id) map() -> {
+                productname: $.Product2.Name,
+                quantity: $.Quantity
+            }
+        }
+    }
+} as Object {encoding: "UTF-8", mediaType: "application/json"}
+else {
+    response: {
+        message: "Opporutnity with name: " ++ vars.queryparameters.opportunityname as String ++ " doesnot exists, please check.",
+        }
+} 	as Object {encoding: "UTF-8", mediaType: "application/json"}
+    </code>                    
+</pre>
+<img ng-src="images/get-quotes-for-opportunity-dwl/image1.png" alt="opportunity-with-products" width="900" height="300">
+                        </p>                         
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
