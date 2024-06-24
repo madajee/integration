@@ -1,0 +1,35 @@
+<div class = "container-fluid mt-2">
+    <div class="row">
+        <sprint-side-menu></sprint-side-menu>
+        <div class="col-md-10">
+            <a href="#!/integration/119" class="nav-link">Integration-119</a>
+            <a target= "_blank" href="https://www.youtube.com/watch?v=1EJ2aRlfXUM&list=PLMEYlt-BRJcJUUFSUjULJSSUZRbvFALhQ" class="nav-link">demo-playlist</a>
+            <a href="#!/project/103" class="nav-link">project-estoreexpress</a>
+            <h4 class="text-center">USER STORIES - LEAD TO CASH<span class="alignright"><strong>github repository: </strong><a href="https://github.com/madajee/estore-sfdc-system-api.git" target="_blank">estore-sfdc-system-api</a></span></h4>
+            <div class="grooveborder">
+                <h5>LEAD FEATURE</h5>
+                <p>As a Lead to Cash Stakeholder, I would like to see that all the Leads that are qualified in our Marketing Application should be created in Salesforce Sales Cloud within an hour. I also require that when Sales Rep convert the lead to create account, contacts and opportunities, we should have an extensible Lead Conversion Engine that relies on standard salesforce Convert Lead feature of Salesforce. Mulesoft API Implementation Flows should allow us to build Conversion Engine with enterpise specific requirements, rules and processes that we can evolve as we scale and integrate within the realm of enterprise applications for our clients.  All these automation should be triggered through a Mulesoft API resource so that external calls to the Salesforce Lead Object from all internal and external applications should be unified and standardized through an API Layer.</p>
+                <p>In the initial sprint, the acceptance criteria is to have a system level API application with Create Lead, Convert Lead and Delete Lead resources. Delete Lead is only for clean-up and should be protected with a special username / password if we are using basic auth or with a special scope if we are using token based auth schemes.</p>
+                <p>In subsequent sprints, we will have to build process level API resources:
+                    <ul>
+                        <li>
+                            Automation to create leads run every hour that will call on Create Lead system level resource.
+                        </li>
+                        <li>
+                            Implement all the business rules in the Lead Conversion Engine that will call on Convert Lead system level resource.
+                        </li>
+                        <li>
+                            Both automation should use common batch framework that we have to build and test as we integrate system level resources in process layer. We have different approaches and mule components that support Batch processing like Pub-Sub patterns, Mule Batch componenet with Asynchronous Parallel Processing, Parallel For Each so we have to apply fit for purpose analysis which can be backed with solution views, POCs and then use the one that gets approved in specific implementations.
+                        </li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="grooveborder">
+    <ul><h6 class="text-center">Helpful Links<span class="alignright"></h6>
+        <li><a href="https://www.youtube.com/watch?v=rvigMkg8MYo" target="_blank">Agile Scrum Sessions with Dr. Jeff Sutherland | Value Stream Management</a></li>
+        <li><a href="https://www.youtube.com/watch?v=Yto8nUeki-s" target="_blank">What is Value Stream Management? (Eric, IBM Cloud)</a></li>
+    </ul>   
+</div>
