@@ -24,6 +24,22 @@
                     </ul>
                 </p>
             </div>
+            <div class="grooveborder">
+                <h5>PRODUCT AND PRICEBOOK FEATURE</h5>
+                <p>As a Senior Executive, I would like to mention that we sell both internationally and in US, so our Salesforce Admin has activated multiple currencies in Salesforce Org Admin has added <i>GBP - British Pound, EUR - Euro, JPY - Japanese Yen,SGD - Singapore Dollar </i> along with <i>USD - US Dollar</i> but the corporate currency is <i>USD - US Dollar</i>. Our product group creates and mantain product sheets to discuss product codes, pricing and other market level product configurations. I would like Automation team to pick up the product sheets on hourly schedule and create / and update products in the Product2 salesforce object and also create the associated pricebook entries in PricebookEntry salesforce object. The pricebook in Pricebook2 salesforce object are created and managed by the product architect manually through salesforce UI. Please take a note that Product Code is how we are going to uniquely idenfiy each product. 
+                </p>
+                <p>In the initial sprint, the acceptance criteria is to have a system level API implementation for Create Product, Retrieve Product and Delete Product resources.  Also we require Create., Retrieve and Delete for Pricebook Entry. Delete resources are required only for clean and should be protected with special access.</p>
+                <p>In subsequent sprints, we will have to build process level API resources:
+                    <ul>
+                        <li>
+                            Automation to create products should run every hour and process level composition should call on both product and pricebook system level resources to setup the product code along with unit price in the salesforce org.
+                        </li>
+                        <li>
+                            Any Errors related to setup issues like missing Pricebook should sent an alert to product group immediately. If the same error is picked in the next hourly run, the notfication alert counter should be incremented as well.
+                        </li>
+                    </ul>
+                </p>
+            </div>
         </div>
     </div>
 </div>
