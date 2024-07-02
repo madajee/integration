@@ -5,6 +5,7 @@
             <a href="#!/integration/119" class="nav-link">Integration-119</a>
             <a target= "_blank" href="https://www.youtube.com/watch?v=1EJ2aRlfXUM&list=PLMEYlt-BRJcJUUFSUjULJSSUZRbvFALhQ" class="nav-link">demo-playlist</a>
             <a href="#!/project/103" class="nav-link">project-estoreexpress</a>
+            <a href="https://trailhead.salesforce.com/content/learn/projects/manage-products-prices-quotes-orders" target="_blank">Trail: Manage Products, Prices, Quotes, and Orders</a>
             <h4 class="text-center">USER STORIES - LEAD TO CASH<span class="alignright"><strong>github repository: </strong><a href="https://github.com/madajee/estore-sfdc-system-api.git" target="_blank">estore-sfdc-system-api</a></span></h4>
             <div class="grooveborder">
                 <h5>LEAD FEATURE</h5>
@@ -36,6 +37,61 @@
                         </li>
                         <li>
                             Any Errors related to setup issues like missing Pricebook should sent an alert to product group immediately. If the same error is picked in the next hourly run, the notfication alert counter should be incremented as well.
+                        </li>
+                    </ul>
+                </p>
+            </div>
+            <div class="grooveborder">
+                <h5>OPPORTUNTIY AND OPPORTUNITY PRODUCT FEATURE</h5>
+                <p>As a Lead to Cash Stakeholder, I would like to see that when we convert both the leads (John Doe and Jane Doe), we should have accounts, opportunity and contact gets created through our extensible Lead Conversion Engine. After the conversion on both leads, we should have both the opportunities: BSofSW - Ground-mounted Panels; Saito - Ground-mounted Panels in our Salesforce Org.
+                </p>
+                <p>As a Automation Team Lead, I need the capability to update the pricebook, currency and amount on the opportunity. I should then able to add the products to the opportunity with an API resource by passing in the opportunity name along with product list. Product in the list should require product code and quantity whereas the API implementation should pick up the unit price from the price book entry.
+                </p>
+                <p>In the initial sprint, the acceptance criteria is to leverage on Convert Lead system level API resource to create an opportunity; create implementation for Retrieve Opportunity, Update Opportunity, Create Opportunity Product and Remove Opportunity Product resources.</p>
+                <p>In subsequent sprints, we will have to build process level API resources to refine the business processes with Opportunity object and generate business outcomes as per stakeholder reviews.
+                </p>
+            </div>
+            <div class="grooveborder">
+                <h4>TEST PLAN</h4>
+                <h5 class="text-center">LEAD</h5>
+                <p>
+                    <ul>
+                        <li>
+                            Create a Lead John Doe who is an account executive with Boy Scouts of the Southwest. Create another Lead Jane Doe who is an account executive with Saito Family Laundromats. Both Leads can be created in a single invocation to Create Lead API resource.
+                        </li>
+                    </ul>
+                </p>
+                <h5 class="text-center">PRODUCT AND PRICEBOOK</h5>
+                <p>
+                    <ul>
+                        <li>
+                            Create a Solar Panel Cleaning Residential service package product with product code as SPC-R01 and 2 panel products; SunPower Ground with product code as SPG-01 and GreenSun Ground with product code as SPG-02.
+                        </li>
+                        <li>
+                            Create pricebook entry for service package and both the panels with Standard Price Book and all 5 currencies of USD, EUR, GBP, SGD, JPY.
+                        </li>
+                        <li>
+                            Create pricebook entry for both the panel with Enterprise Price Book in JPY and SGD currency.
+                        </li>
+                        <li>
+                            Create pricebook entry for both the panel with Nonprofit Price Book in USD and GBP currency.
+                        </li>
+                    </ul>
+                </p>
+                <h5 class="text-center">OPPORTUNTIY AND OPPORTUNITY PRODUCT</h5>
+                <p>
+                    <ul>
+                        <li>
+                            Convert John Doe who works for ‘Boy Scouts of the Southwest’ by passing in opportunity name as ‘BSofSW - Ground-mounted Panels’. Validate that account, opportunity and contact is created through conver lead automation step.
+                        </li>
+                        <li>
+                            Convert Jane Doe who works for ‘Saito Family Laundromats’ by passing in opportunity name as ‘Saito - Ground-mounted Panels’. Validate that account, opportunity and contact is created through convert lead automation step.
+                        </li>
+                        <li>
+                            Update ‘BSofSW - Ground-mounted Panels’ opportunity with Nonprofit pricebook and opportunity amount of 20000 USD. Then use automation to add 20 quantity of GreenSun Ground to the opportunity. 
+                        </li>
+                        <li>
+                            Update account currency for ‘Saito Family Laundromats’ account to ‘JPY’. Then update ‘Saito - Ground-mounted Panels’ opportunity with Enterprise pricebook and opportunity amount of 4200000 JPY. Then use automation to add 35 quantity of SunPower ground and 20 quantity of GreenSun Ground to the opportunity.
                         </li>
                     </ul>
                 </p>
