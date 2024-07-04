@@ -8,116 +8,22 @@
             <a href="#!/project/103" class="nav-link">project-estoreexpress</a>
             <a href="https://trailhead.salesforce.com/content/learn/projects/manage-products-prices-quotes-orders" target="_blank">Trail: Manage Products, Prices, Quotes, and Orders</a>
             <div class="grooveborder">
-                <h6 class="text-center">BACKLOG-ZONE-1<span class="alignright"><strong>github repository: </strong><a href="https://github.com/madajee/estore-sfdc-system-api.git" target="_blank">estore-sfdc-system-api</a></span></h6>
-                <h6>Dev Complete Trageted by: <i>Mid July</i></h3>
+                <h6 class="text-center">BACKLOG-ZONE-JULY-1<span class="alignright"><strong>github repository: </strong><a href="https://github.com/madajee/estore-sfdc-system-api.git" target="_blank">estore-sfdc-system-api</a></span></h6>
+                <h6>Dev Complete Trageted by: <i>Mid July</i>for [Card: 1, 2, 3]</h3>
                 <h6>Release planned in : <i>End July</i></h3>
                 <h4>Features: [Products, Pricebook]</h4>
-                <strong>Context: </strong>In dietcoke sprint, we developed mule integration with lead object and the automation allow us to create lead and the /convertlead endpoint enable has to create account, contact and opportunities. We will now work on automating the products and pricebooks. As we follow trailhead project: <a target= "_blank" href="https://trailhead.salesforce.com/content/learn/projects/manage-products-prices-quotes-orders" class="nav-link">Manage Products, Prices, Quotes, and Orders</a> the automation on product and pricebook will enable us to verify trailstep: <i>Create and Customize Products,</i> <i>Create Custom Price Books</i> with mule integration.
-                    <ul>
-                        <li>
-                            Product2 is the salesforce object for persisting product records.
-                        </li>
-                        <li>
-                            Pricebooks is created with header-detail object style with header object as Pricebook2 and pricebook entries in detail object as PricebookEntry.
-                        </li>
-                        <li>
-                            Pricebook entries are identified with PricebookId, product code and currency code. We can retrieved the pricenookId from header table pricebook name (eg: Standard Price Book, Entperprise, Nonprofit)
-                        </li>
-                    </ul>
-                    <ul>
-                        <li><strong>Card-1: </strong>Spec for the trail step mentions 3 prodcuts [{Product Name: UMS Solar Panel Cleaning Residential, Product Code: SPC-R01},  {Product Name: SunPower Ground, Product Code: SPG-01}, {Product Name: GreenSun Ground, Product Code: SPG-02}] . Create a mule configuration file  product-obj in estore-sfdc-system-api and implement the resource POST /product.
-                            <pre>
-                                <code>
-                                    [
-                                    {
-                                        "name": "UMS Solar Panel Cleaning Residential",
-                                        "description": "Residential solar panel cleaning service package",
-                                        "family": "Service Packages",
-                                        "productcode": "SPC-R01",
-                                        "productcurrency": "USD",
-                                        "active": true
-                                
-                                    },
-                                    {
-                                        "name": "SunPower Ground",
-                                        "description": "80-cell ground-mounted solar panel",
-                                        "family": "Panels",
-                                        "productcode": "SPG-01",
-                                        "productcurrency": "USD",
-                                        "active": true,
-                                        "groundmount": true
-                                    },
-                                    {
-                                        "name": "GreenSun Ground",
-                                        "description": "60-cell ground-mounted solar panel",
-                                        "family": "Panels",
-                                        "productcode": "SPG-02",
-                                        "productcurrency": "USD",
-                                        "active": true,
-                                        "groundmount": true
-                                    }
-                                ]
-                                 </code>
-                            </pre>
-                        </li>
-                        <li><strong>Card-2: </strong>Add the following get endpoints
-                        <ul>
-                            <li>
-                                Retrieve products with Id
-                            </li>
-                            <li>
-                                Retrieve products with product code list : Create the dynamic query with SQL IN operator in WHERE clause to pass the product codes and the value for IN clause can be created with dwl functions like map(), join() and  “++” operator.
-                                <pre>
-                                    <code>
-product code list: ["SPC-R01","SPG-01","SPG-02"] <br>
-%dw 2.0
-output application/java
-var condition = "(" ++ ((payload.productcodelist map () -> "'" ++ $ ++ "'") joinBy (",")) ++ ")"
-\---
-{
-	"query" : "SELECT ID, Name, Description, Family, ProductCode, CurrencyIsoCode, IsActive FROM product2 where ProductCode IN "  ++ condition
-}
-                                     </code>
-                                </pre> 
-                            </li>
-                        </ul>
-                        </li>
-                        <li><strong>Card-3: </strong>Add deleteleads resource with a  POST method and input as an array of IDs  and use the delete operation of the connector to delete the products.</li>
-                    </ul>
                 </p>
             </div>
             <div class="grooveborder">
-                <h6 class="text-center">BACKLOG-ZONE-2<span class="alignright"><strong>github repository: </strong><a href="https://github.com/madajee/estore-sfdc-system-api.git" target="_blank">estore-sfdc-system-api</a></span></h6>
-                <h6>Dev Complete Trageted by: <i>third week July</i></h3>
+                <h6 class="text-center">BACKLOG-ZONE-JULY-2<span class="alignright"><strong>github repository: </strong><a href="https://github.com/madajee/estore-sfdc-system-api.git" target="_blank">estore-sfdc-system-api</a></span></h6>
+                <h6>Dev Complete Trageted by: <i>third week July</i>for [Card: 4, 5, 6]</h3>
                 <h6>Release planned in : <i>End July</i></h3>
                 <h4>Features: [Products, Pricebook]</h4>
-                    <ul>
-                        <li><strong>Card-1: </strong>We require Admin to create the Pricebook records but we expose an resource to create the pricebookentry. The request payload for pricebookentry object requires a Product2Id and Pricebook2Id. We require 2 lookup query, one to retrieve the pricebook2Id with pricebook name and other to retrieve the product2Id with Product Code.</li>
-                        <li><strong>Card-2: </strong>Add the following get endpoints to retrieve the pricebook entry based on pricebook, product and currency code. This will be used to get the correct unit price as same product can have different price in different pricebook. Use the following dwl to create the dynamic query:
-                            <pre>
-                                <code>
-%dw 2.0
-output application/json
-var condition1 = "select Id, Name, CurrencyIsoCode, UnitPrice, ProductCode, Pricebook2.Name from PricebookEntry"
-var condition2 = " WHERE Pricebook2Id = " ++ "':pricebookid'"
-var condition3 = " AND ProductCode = " ++ "':productcode'"
-var condition4 = " AND CurrencyIsoCode = " ++ "':currencycode'"
-var condition5 = " LIMIT 10"
-var condition = condition1 ++ (if (vars.pricebook[0].Id != null) condition2 else '') ++ (if (vars.queryparameters.productcode != null) condition3 else '') ++ (if (vars.queryparameters.currencycode != null) condition4 else '') ++ (if (vars.queryparameters.productcode == null and vars.queryparameters.currencycode == null) condition5 else '')
----
-{
-	"query" : condition
-}
-                                 </code>
-                            </pre>
-                        </li>
-                        <li><strong>Card-3: </strong>With these resources implemented, one should able to understand and finish both the trail steps: <i>Create and Customize Products,</i> <i>Create Custom Price Books</i>  and complete the verification step in the trailhead playground.</li>
-                    </ul>
                 </p>
             </div>
             <div class="grooveborder">
-                <h6 class="text-center">BACKLOG-ZONE-3<span class="alignright"><strong>github repository: </strong><a href="https://github.com/madajee/estore-sfdc-system-api.git" target="_blank">estore-sfdc-system-api</a></span></h6>
-                <h6>Dev Complete Trageted by: <i>Augusgt-1</i></h3>
+                <h6 class="text-center">BACKLOG-ZONE-AUGUST-1<span class="alignright"><strong>github repository: </strong><a href="https://github.com/madajee/estore-sfdc-system-api.git" target="_blank">estore-sfdc-system-api</a></span></h6>
+                <h6>Dev Complete Trageted by: <i>August-1</i></h3>
                 <h6>Release planned in : <i>August</i></h3>
                 <h4>Features: [Opportunity, Opportunity Products]</h4>
                 <strong>Context: </strong>In diet-coke, walking-jogger sprint, we created an account: Ursa Major Solar, Inc with lead object automation and also created a service package and 2 panels with product2 object automation that sales teams at UMS will sell. Along with standard pricebooks, we created Nonprofit and Enterprise pricebook and created pricebook entries in USD and JPY. The next step in the <a target= "_blank" href="https://trailhead.salesforce.com/content/learn/projects/manage-products-prices-quotes-orders" class="nav-link">Manage Products, Prices, Quotes, and Orders</a> is to automate <i>updates on opportunity,</i> <i>by adding opportunity products</i> with mule integration.
@@ -290,7 +196,7 @@ curl --location 'http://localhost:8081/api/opportunity/removeproduct' \
                 </p>
             </div>
             <div class="grooveborder">
-                <h6 class="text-center">BACKLOG-ZONE-4<span class="alignright"><strong>github repository: </strong><a href="https://github.com/madajee/estore-sfdc-system-api.git" target="_blank">estore-sfdc-system-api</a></span></h6>
+                <h6 class="text-center">BACKLOG-ZONE-AUGUST-2<span class="alignright"><strong>github repository: </strong><a href="https://github.com/madajee/estore-sfdc-system-api.git" target="_blank">estore-sfdc-system-api</a></span></h6>
                 <h6>Dev Complete Trageted by: <i>Augusgt-2</i></h3>
                 <h6>Release planned in : <i>August</i></h3>
                 <h4>Features: [Quote, Quote Lines]</h4>
