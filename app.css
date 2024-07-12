@@ -183,3 +183,9 @@ body {
     background:  #cee7eb;
     border: 1px solid;
   }
+
+.no-bullets {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }

@@ -1,0 +1,100 @@
+<div class = "container-fluid mt-2">
+    <div class="row">
+        <sprint-side-menu></sprint-side-menu>
+        <div class="col-md-10">
+            <a href="#!/integration/119" class="nav-link">Integration-119</a>
+            <a target= "_blank" href="https://www.youtube.com/watch?v=1EJ2aRlfXUM&list=PLMEYlt-BRJcJUUFSUjULJSSUZRbvFALhQ" class="nav-link">demo-playlist</a>
+            <a href="#!/project/103" class="nav-link">project-estoreexpress</a>
+            <h6><strong>Salesforce CPQ Trailhead with Subscription Products, Amendments and  Renewals</strong><span class="alignright"><strong>cpq trailhead: </strong><a href="https://trailhead.salesforce.com/content/learn/projects/simplify-home-security-subscription-renewals" target="_blank">simplify-home-security-subscription-renewals</a></span></h6>
+            <h6><i>Opportunity, Quote, Order, Asset , Contract, Subscriptions, Amendments, Renewals</i></h6>
+            <div class="grooveborder">
+                <div>
+                    <h5><strong>Step-1: </strong>Sign Up for a Trailhead Playground with Salesforce CPQ</h5>
+                    <img ng-src="images/simplify-home-security-subscription-renewals/trailhead-playground-with-salesforce-cpq.png" alt="trailhead-playground-with-salesforce-cpq" width="900" height="300">
+                </div>
+            </div>
+            <div class="grooveborder">
+                <div>
+                    <h5><strong>Step-2: </strong>Create a Quote with Subscription Products</h5>
+                    <h6><strong>Salesforce Objects: </strong>[Product2, Opportunity, OpportunityLineItem, SBQQ__Quote__c, SBQQ__QuoteLineGroup__c]</h6>
+                    <p>Sales Rep is working with Klein Manor account and Home security system with exterior cameras opportunity. The primary quote Q-00013  for the opportunity is available as part of setup data in CPQ Playground.</p>
+                    <p>
+                        Few notable points:
+                        <ul>
+                            <li>Home Security Installation is an installation and don’t need to be tracked as an Asset.</li>
+                            <li>Each Exterior Camera will have a unique serial, so we need the asset record for each unit.</li>
+                            <li>Quote is segregated as 2 groups as One-time Purchases and Ongoing Services.</li>
+                            <li>CPQ will create orders for each quote line group.</li>
+                        </ul>
+                        <img ng-src="images/simplify-home-security-subscription-renewals/create-quote-with-subscription-products-1.png" alt="create-quote-with-subscription-products-1" width="900" height="300">
+                    </p>
+                    <p>We will query the records for salesforce objects that were created / or updated in this trail step.</p>
+                    <p>
+                        <h6><strong>Salesforce Object: </strong>[Product2]</h6>
+<pre>
+    <code> 
+select Id, Name, Family, SBQQ__AssetConversion__c from Product2 where Name in ('Exterior Camera', 'Home Security Console', 'Door Sensor', 'Window Sensor', 'Home Security Installation', 'Home Security Monitoring', 'Mobile Monitoring App', 'Offsite Video Storage 1GB', 'Warranty')
+    </code>                    
+</pre>
+                    <img ng-src="images/simplify-home-security-subscription-renewals/Product2-Query.png" alt="Product2-Query" width="900" height="300">
+                    <h6><strong>Salesforce Object: </strong>[Opportunity and Opportunity Products]</h6>
+<pre>
+    <code> 
+Select Id, Name, TotalOpportunityQuantity, ExpectedRevenue from Opportunity where Name = 'Home security system with exterior cameras'
+    </code>                    
+</pre>
+                    <img ng-src="images/simplify-home-security-subscription-renewals/Opportunity-Query.png" alt="Opportunity-Query" width="900" height="300">
+<pre>
+    <code> 
+Select Id, Name, TotalOpportunityQuantity, ExpectedRevenue from Opportunity where Name = 'Home security system with exterior cameras'
+    </code>                    
+</pre>
+                    <img ng-src="images/simplify-home-security-subscription-renewals/OpportunityLineItem-Query.png" alt="OpportunityLineItem-Query" width="900" height="300">
+                    <h6><strong>Salesforce Object: </strong>[Quotes, QuoteLineGroup, QuoteLine]</h6>
+<pre>
+    <code> 
+Select Id, Name, SBQQ__Ordered__c, SBQQ__Account__r.Name, SBQQ__Opportunity2__r.Name, SBQQ__PriceBook__r.Name, SBQQ__PrimaryContact__r.Name, SBQQ__CustomerAmount__c from SBQQ__Quote__c where Name = 'Q-00013'
+    </code>                    
+</pre>
+                    <img ng-src="images/simplify-home-security-subscription-renewals/SBQQ__Quote__c-Query.png" alt="SBQQ__Quote__c-Query" width="900" height="300">
+<pre>
+    <code> 
+Select Id, Name, SBQQ__NetTotal__c from SBQQ__QuoteLineGroup__c where Name in ('One-time Purchases','Ongoing Services')
+    </code>                    
+</pre>
+                    <img ng-src="images/simplify-home-security-subscription-renewals/SBQQ__QuoteLineGroup__c-Query.png" alt="SBQQ__QuoteLineGroup__c-Query" width="900" height="300">
+<pre>
+    <code> 
+Select Id, Name, SBQQ__EffectiveQuantity__c, SBQQ__NetPrice__c, SBQQ__Group__r.Name, SBQQ__Product__r.Name from SBQQ__QuoteLine__c  where SBQQ__Quote__c = 'a0qbm0000005QkJAAU' and SBQQ__Group__r.Name in ('One-time Purchases', 'Ongoing Services')
+    </code>                    
+</pre>
+                    <img ng-src="images/simplify-home-security-subscription-renewals/SBQQ__QuoteLine__c-Query.png" alt="SBQQ__QuoteLineGroup__c-Query" width="900" height="300">
+                    </p>
+                </div>
+            </div>
+            <div class="grooveborder">
+                <div>
+                    <h5><strong>Step-3: </strong>Create a Quote with Subscription Products</h5>
+                    <h6><strong>Salesforce Objects: </strong>[Order, OrderItem]</h6>
+                    <p>Sales Rep is working with Klein Manor account and Home security system with exterior cameras opportunity. The primary quote Q-00013  for the opportunity is available as part of setup data in CPQ Playground.</p>
+                    <p>
+                        Few notable points:
+                        <ul>
+                            <li>CPQ automates the order generation with an ordered checkbox on the quote.</li>
+                            <li>CPQ automates the generation of contract, subscriptions for an order with on-going subscription products with a contracted checkbox.</li>
+                            <li>CPQ automates the generation of assets for an order with hardware and other non-subscription products with a contracted checkbox.</li>
+                        </ul>
+                        <ul class="no-bullets">
+                            <li>order-contract-subscription-asset: <br/><img ng-src="images/simplify-home-security-subscription-renewals/order-contract-subscription-asset.png" alt="order-contract-subscription-asset" width="900" height="300"></li>
+                            <li>order-and-contract: <br/><img ng-src="images/simplify-home-security-subscription-renewals/order-and-contract.png" alt="order-and-contract" width="900" height="300"></li>
+                            <li>asset-and-subscriptions: <br/><img ng-src="images/simplify-home-security-subscription-renewals/asset-and-subscriptions.png" alt="asset-and-subscriptions" width="900" height="300"></li>
+                            <li>contract-with-subscriptions: <br/><img ng-src="images/simplify-home-security-subscription-renewals/contract-with-subscriptions.png" alt="contract-with-subscriptions" width="900" height="300"></li>
+                        </ul>
+                    </p>
+                    <p>We will query the records for salesforce objects that were created / or updated in this trail step.</p>
+                    <p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
