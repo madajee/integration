@@ -74,9 +74,9 @@ Select Id, Name, SBQQ__EffectiveQuantity__c, SBQQ__NetPrice__c, SBQQ__Group__r.N
             </div>
             <div class="grooveborder">
                 <div>
-                    <h5><strong>Step-3: </strong>Create a Quote with Subscription Products</h5>
-                    <h6><strong>Salesforce Objects: </strong>[Order, OrderItem]</h6>
-                    <p>Sales Rep is working with Klein Manor account and Home security system with exterior cameras opportunity. The primary quote Q-00013  for the opportunity is available as part of setup data in CPQ Playground.</p>
+                    <h5><strong>Step-3: </strong>Generate Orders, Assets, Contracts, and Subscription</h5>
+                    <h6><strong>Salesforce Objects: </strong>[Order, OrderItem, Contracts, Subscriptions]</h6>
+                    <p>Sales Rep is handing over the quote to Sales Ops for Order generation and fulfillment.</p>
                     <p>
                         Few notable points:
                         <ul>
@@ -93,6 +93,43 @@ Select Id, Name, SBQQ__EffectiveQuantity__c, SBQQ__NetPrice__c, SBQQ__Group__r.N
                     </p>
                     <p>We will query the records for salesforce objects that were created / or updated in this trail step.</p>
                     <p>
+                    <p>
+                        <h6><strong>Salesforce Object: </strong>[Order and OrderItem]</h6>
+<pre>
+    <code> 
+Select Id, OrderNumber, SBQQ__OrderBookings__c, Status, SBQQ__Contracted__c from Order where SBQQ__Quote__r.name = 'Q-00013'
+    </code>                    
+</pre>
+                    <img ng-src="images/simplify-home-security-subscription-renewals/Order-Query.png" alt="Order-Query" width="900" height="300">
+                    <h6><strong>Salesforce Object: </strong>[Order Items for One-time Purchases]</h6>
+<pre>
+    <code> 
+Select Id, Product2.Name, SBQQ__OrderedQuantity__c, SBQQ__OrderProductBookings__c, SBQQ__Asset__r.name from OrderItem where Order.OrderNumber = '00000107'
+    </code>                    
+</pre>
+                    <img ng-src="images/simplify-home-security-subscription-renewals/OrderItem-One-time-Query.png" alt="OrderItem-One-time-Query" width="900" height="300">
+                    <h6><strong>Salesforce Object: </strong>[Order Items for Ongoing Services]</h6>
+<pre>
+    <code> 
+Select Id, Product2.Name, SBQQ__OrderedQuantity__c, SBQQ__OrderProductBookings__c, SBQQ__Asset__r.name from OrderItem where Order.OrderNumber = '00000108'
+    </code>                    
+</pre>
+                    <img ng-src="images/simplify-home-security-subscription-renewals/OrderItem-Ongoing-Query.png" alt="OrderItem-Ongoing-Query" width="900" height="300">
+                    <h6><strong>Salesforce Object: </strong>[Contract and Subscriptions]</h6>
+<pre>
+    <code> 
+Select Id, Name, SBQQ__Account__r.Name, SBQQ__ProductName__c, SBQQ__QuoteLine__r.Name  from SBQQ__Subscription__c where SBQQ__Contract__r.ContractNumber = '00000106'
+    </code>                    
+</pre>
+                    <img ng-src="images/simplify-home-security-subscription-renewals/Subscriptions-contract-Query.png" alt="Subscriptions-contract-Query" width="900" height="300">
+                    <h6><strong>Salesforce Object: </strong>[Asset]</h6>
+<pre>
+    <code> 
+Select Id, Name, Product2.Name, SBQQ__ListPrice__c from Asset where Account.Name = 'Klein Manor'
+    </code>                    
+</pre>
+                    <img ng-src="images/simplify-home-security-subscription-renewals/Asset-Query.png" alt="Asset-Query" width="900" height="300">
+                    </p>
                 </div>
             </div>
         </div>
