@@ -172,7 +172,7 @@ Select Id, Name, TotalOpportunityQuantity, ExpectedRevenue from Opportunity wher
                 <div>
                     <h5><strong>Step-5: </strong>Amend a Contract for quantity increase and replacement of product</h5>
                     <h6><strong>Salesforce Objects: </strong>[Contract, Amendment Opportunity, Amendment Quote, Amendment Order and OrderItem, Subscriptions]</h6>
-                    <p>As customers request amendments to ongoing contracts, CPQ creates subscription to the existing contract and also keep renewals in sync. Customer called and would like to order extra 3GB of additional video storage effective 6 months from now, so Sales Rep has to amend the existing contract.                    </p>
+                    <p>As customers request amendments to ongoing contracts, CPQ creates subscription to the existing contract and also keep renewals in sync. Customer called and would like to order extra 3GB of additional video storage effective 6 months from now, so Sales Rep has to amend the existing contract.</p>
                     <p>
                         Few notable points:
                         <ul>
@@ -218,9 +218,33 @@ Select Id, Name, TotalOpportunityQuantity, ExpectedRevenue, SBQQ__AmendedContrac
                     </p>
                     <h5><strong>Step-5.1: </strong>Amend a Contract to replace a product</h5>
                     <p>
-                        Customer called and would like to remove Mobile Monitoring App and add Mobile Control Center App, so Sales Rep will amend the contract. As before, we will have an quote and order. When the order is contracted, we will have a subscription for Mobile Control Center App with quantity of 1 and  Mobile Monitoring App with quantity of -1.
+                        Customer called and would like to remove Mobile Monitoring App and add Mobile Control Center App, so Sales Rep will amend the contract. As before, we will have an quote and order. When the order is contracted, we will have a subscription for Mobile Control Center App with quantity of 1 and  Mobile Monitoring App with quantity of -1.<br>
                         <img ng-src="images/simplify-home-security-subscription-renewals/amend-replace-a-product.png" alt="amend-replace-a-product" width="900" height="300">
                     </p>
+                </div>
+            </div>
+            <div class="grooveborder">
+                <div>
+                    <h5><strong>Step-6: </strong>Create a  Quote for a Renewal  Contract</h5>
+                    <p>When the customer is up for renewal after 2 year term, Sales Rep can now generate a quote for the renewal opportunity that was generated for forecasting by selecting the Renewal Quoted checkbox on the contract</p>
+                    <ul class="no-bullets">
+                        <li>contract-renewal-quoted-checkbox: <br/><img ng-src="images/simplify-home-security-subscription-renewals/contract-renewal-quoted.png" alt="contract-renewal-quoted" width="900" height="300"></li>
+                        <li>renewal-opportunity-qoute: <br/><img ng-src="images/simplify-home-security-subscription-renewals/renewal-opportunity-quote.png" alt="renewal-opportunity-qoute" width="900" height="300"></li>
+                        <li>renewal-opportunity-qoute: <br/><img ng-src="images/simplify-home-security-subscription-renewals/renewal-quote-products.png" alt="renewal-quote-products" width="900" height="300"></li>
+                    </ul>
+                    <h6><strong>Salesforce Object: </strong>[Amended Subscriptions for Quantity]</h6>
+<pre>
+    <code> 
+        Select Id, Name, SBQQ__EffectiveQuantity__c, SBQQ__NetPrice__c, SBQQ__Group__r.Name, SBQQ__Product__r.Name from SBQQ__QuoteLine__c  where SBQQ__Quote__r.Name = 'Q-00064'
+    </code>                    
+</pre>
+                    <img ng-src="images/simplify-home-security-subscription-renewals/RenewalQuoteLines-Query.png" alt="RenewalQuoteLines-Query" width="900" height="300">
+                </div>
+            </div>
+            <div class="grooveborder">
+                <div>
+                    <h5><strong>Trail Completion : </strong>Salesforce CPQ Trailhead with Subscription Products, Amendments and  Renewals</h5>
+                    <img ng-src="images/simplify-home-security-subscription-renewals/simplify-home-security-subscription-renewals-complete.png" alt="simplify-home-security-subscription-renewals-complete" width="900" height="300">
                 </div>
             </div>
         </div>
