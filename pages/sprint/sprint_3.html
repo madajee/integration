@@ -53,6 +53,396 @@
                 <p><strong>Feature: </strong>Contracts and Orders</p>
                 <p><strong>Demo:</strong><a href="https://youtu.be/KzQGuQt_914" target="_blank" class="nav-link">Mule Interface with SFDC Contracts and Orders</a></p>
             </div>
+            <div class="grooveborder">
+                <h6 class="text-center"><a href="https://github.com/madajee/estore-sfdc-system-api.git" target="_blank" class="nav-link">estore-sfdc-system-api</a></h6>
+                <p><strong>Feature: </strong>LeadToOrder-E2E-Endpoint-Curls</p>
+                <div>
+                    <h4>ping</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/ping'
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>get-lead-by-leadname-John</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/lead?leadname=John%20Doe'
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>get-lead-by-leadname-Jane</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/lead?leadname=Jane%20Doe'
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>get-account-by-name-Boyscout</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/account?accountname=Boy%20Scouts%20of%20the%20Southwest'
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>get-account-by-name-Laundromat</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/account?accountname=Saito%20Family%20Laundromats'
+                        </code>
+                    </pre>
+                </div>
+                <hr>            
+                <div>
+                    <h4>get-products-by-productcodelist-UMS</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/productsbyproductcodelist' \
+--header 'Content-Type: application/json' \
+--data '{
+    "productcodelist": [
+        "SPC-R01",
+        "SPG-01",
+        "SPG-02"
+    ],
+    "callsource": "postman"
+}'
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>get-pricebookentry-by-productcode-and-name-Panel</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/pricebookentry?productcode=SPC-R01&pricebookname=Standard%20Price%20Book'
+                        </code>
+                    </pre>
+                </div> 
+                <hr>
+                <div>
+                    <h4>get-opportunity-by-name-BoyScout</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/opportunity?opportunityname=BSofSW%20-%20Ground-mounted%20Panels'
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>get-opportunity-by-name-Laundromats</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/opportunity?opportunityname=Saito%20-%20Ground-mounted%20Panels'
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>delete-acct-and-related-records</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/deleteaccountcontact' \
+--header 'Content-Type: application/json' \
+--data '{
+    "acct_contact_idsfordelete": ["001bm00000CCzP0AAL", "001bm00000CDK21AAH"],
+    "callsource": "postman"
+}'
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>delete-leads</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/deleteleads' \
+--header 'Content-Type: application/json' \
+--data '{
+    "leadidsfordelete": [
+        "00Qbm000002wcN7EAI",
+        "00Qbm000002wcN8EAI"
+    ],
+    "callsource": "postman"
+}'
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>delete-pricebookentry</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/deletepricebookentry' \
+--header 'Content-Type: application/json' \
+--data '{
+    "pricebookentryfordelete": ["01ubm000000hQvJAAU", "01ubm000000hQvKAAU", "01ubm000000hQvLAAU", "01ubm000000hQvMAAU", "01ubm000000hQvNAAU"],
+    "callsource": "postman"
+}'
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>delete-products</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/deleteproducts' \
+--header 'Content-Type: application/json' \
+--data '{
+    "productidsfordelete":["01tbm000003aaAbAAI", "01tbm000003aaAcAAI", "01tbm000003aaAdAAI"],
+    "callsource": "postman"
+}'
+                        </code>
+                    </pre>
+                </div> 
+                <hr>
+                <div>
+                    <h4>create-lead</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/lead' \
+                            --header 'Content-Type: application/json' \
+                            --data '[
+                                {
+                                    "firstname": "John",
+                                    "lastname": "Doe",
+                                    "company": "Boy Scouts of the Southwest",
+                                    "status": "Open",
+                                    "title": "Account Executive"
+                                },
+                                {
+                                    "firstname": "Jane",
+                                    "lastname": "Doe",
+                                    "company": "Saito Family Laundromats",
+                                    "status": "Open",
+                                    "title": "Account Executive"
+                                }
+                            ]'
+                        </code>
+                    </pre>
+                </div> 
+                <hr>
+                <div>
+                    <h4>create-product-UMS</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/lead' \
+                            --header 'Content-Type: application/json' \
+                            --data '[
+                                {
+                                    "firstname": "John",
+                                    "lastname": "Doe",
+                                    "company": "Boy Scouts of the Southwest",
+                                    "status": "Open",
+                                    "title": "Account Executive"
+                                },
+                                {
+                                    "firstname": "Jane",
+                                    "lastname": "Doe",
+                                    "company": "Saito Family Laundromats",
+                                    "status": "Open",
+                                    "title": "Account Executive"
+                                }
+                            ]'
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>create-pricebookentry-Solar-Panel</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/pricebookentry' \
+                            --header 'Content-Type: application/json' \
+                            --data '[
+                                {
+                                    "productcode": "SPC-R01",
+                                    "currency": "USD",
+                                    "pricebookname": "Standard Price Book",
+                                    "price": "450"
+                                },
+                                {
+                                    "productcode": "SPC-R01",
+                                    "currency": "EUR",
+                                    "pricebookname": "Standard Price Book",
+                                    "price": "397"
+                                },
+                                {
+                                    "productcode": "SPC-R01",
+                                    "currency": "GBP",
+                                    "pricebookname": "Standard Price Book",
+                                    "price": "355"
+                                },
+                                {
+                                    "productcode": "SPC-R01",
+                                    "currency": "JPY",
+                                    "pricebookname": "Standard Price Book",
+                                    "price": "52744"
+                                },
+                                {
+                                    "productcode": "SPC-R01",
+                                    "currency": "SGD",
+                                    "pricebookname": "Standard Price Book",
+                                    "price": "637"
+                                }
+                            ]'
+                        </code>
+                    </pre>
+                </div> 
+                <hr>
+                <div>
+                    <h4>create-pricebookentry-SunPower Ground</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/pricebookentry' \
+                            --header 'Content-Type: application/json' \
+                            --data '[
+                                {
+                                    "productcode": "SPG-01",
+                                    "currency": "USD",
+                                    "pricebookname": "Standard Price Book",
+                                    "price": "1200"
+                                },
+                                {
+                                    "productcode": "SPG-01",
+                                    "currency": "EUR",
+                                    "pricebookname": "Standard Price Book",
+                                    "price": "1250"
+                                },
+                                {
+                                    "productcode": "SPG-01",
+                                    "currency": "GBP",
+                                    "pricebookname": "Standard Price Book",
+                                    "price": "1000"
+                                },
+                                {
+                                    "productcode": "SPG-01",
+                                    "currency": "JPY",
+                                    "pricebookname": "Standard Price Book",
+                                    "price": "140000"
+                                },
+                                {
+                                    "productcode": "SPG-01",
+                                    "currency": "SGD",
+                                    "pricebookname": "Standard Price Book",
+                                    "price": "1800"
+                                }
+                            ]'
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>create-pricebookentry-GreenSun Ground</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/pricebookentry' \
+                            --header 'Content-Type: application/json' \
+                            --data '[
+                                {
+                                    "productcode": "SPG-02",
+                                    "currency": "USD",
+                                    "pricebookname": "Standard Price Book",
+                                    "price": "900"
+                                },
+                                {
+                                    "productcode": "SPG-02",
+                                    "currency": "EUR",
+                                    "pricebookname": "Standard Price Book",
+                                    "price": "1900"
+                                },
+                                {
+                                    "productcode": "SPG-02",
+                                    "currency": "GBP",
+                                    "pricebookname": "Standard Price Book",
+                                    "price": "1450"
+                                },
+                                {
+                                    "productcode": "SPG-02",
+                                    "currency": "JPY",
+                                    "pricebookname": "Standard Price Book",
+                                    "price": "250000"
+                                },
+                                {
+                                    "productcode": "SPG-02",
+                                    "currency": "SGD",
+                                    "pricebookname": "Standard Price Book",
+                                    "price": "3200"
+                                }
+                            ]'
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>create-pricebookentry-Enterprise</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/pricebookentry' \
+                            --header 'Content-Type: application/json' \
+                            --data '[
+                                {
+                                    "productcode": "SPG-01",
+                                    "currency": "JPY",
+                                    "pricebookname": "Enterprise",
+                                    "price": "78500"
+                                },
+                                {
+                                    "productcode": "SPG-02",
+                                    "currency": "JPY",
+                                    "pricebookname": "Enterprise",
+                                    "price": "100000"
+                                },
+                                {
+                                    "productcode": "SPG-01",
+                                    "currency": "SGD",
+                                    "pricebookname": "Enterprise",
+                                    "price": "900"
+                                },
+                                {
+                                    "productcode": "SPG-02",
+                                    "currency": "SGD",
+                                    "pricebookname": "Enterprise",
+                                    "price": "1400"
+                                }
+                            ]'
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>create-pricebookentry-nonprofit</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/pricebookentry' \
+                            --header 'Content-Type: application/json' \
+                            --data '[
+                                {
+                                    "productcode": "SPG-01",
+                                    "currency": "GBP",
+                                    "pricebookname": "Nonprofit",
+                                    "price": "701"
+                                },
+                                {
+                                    "productcode": "SPG-02",
+                                    "currency": "USD",
+                                    "pricebookname": "Nonprofit",
+                                    "price": "900"
+                                }
+                            ]'
+                        </code>
+                    </pre>
+                </div>                                                        
+            </div>
         </div>
     </div>
 </div>

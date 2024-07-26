@@ -341,6 +341,180 @@ var condition = condition1 ++ (if (vars.pricebook[0].Id != null) condition2 else
                     <li><strong>Card-8: </strong>About 10 days between July 14 to July 27.</li>
                 </ul>
             </div>
+            <div class="grooveborder">
+                <h6 class="text-center">ESTORE-JUMPING_JOGGER-AX1<span class="alignright"><strong>github repository: </strong><a href="https://github.com/madajee/estore-sfdc-system-api.git" target="_blank">estore-sfdc-system-api</a></h6>
+                <h3>e-store-express: <i>jumpingjogger.ax1</i></h3>
+                <strong>Context: </strong>In diet-coke, walking-jogger sprint, we created an account: Ursa Major Solar, Inc with lead object automation and also created a service package and 2 panels with product2 object automation that sales teams at UMS will sell. Along with standard pricebooks, we created Nonprofit and Enterprise pricebook and created pricebook entries in USD and JPY. The next step in the <a target= "_blank" href="https://trailhead.salesforce.com/content/learn/projects/manage-products-prices-quotes-orders" class="nav-link">Manage Products, Prices, Quotes, and Orders</a> is to automate <i>updates on opportunity,</i> <i>by adding opportunity products</i> with mule integration.
+                <ul>
+                    <li>
+                        Opportunity is the salesforce object for persisting opportunity records and though we can create the opportunity record with UI, we will have an opportunity by converting the lead.
+                    </li>
+                    <li>
+                        OpportunityLineItem is the salesforce object for persisting opportunity product records.
+                    </li>
+                </ul>
+                <h4>Features: [Opportunity, Opportunity Products]</h4>
+                <ul>
+                    <li><strong>Card-0: </strong><a href="#!/sprint/4" class="nav-link">BACKLOG-ZONE-AUGUST-1</a></li>
+                    <li><strong>Card-1: </strong>As per trail spec, we require 2 accounts (Boy Scouts of the Southwest, Saito - Ground-mounted Panels) and each account should have an opportunity.
+                        <ul>
+                            <li>
+                                Boy Scouts of the Southwest will have an opportunity: BSofSW - Ground-mounted Panels.
+                            </li>
+                            <li>
+                                Saito Family Laundromats will have an opportunity: Saito - Ground-mounted Panels.
+                            </li>
+                        </ul>
+                        We will convert a lead: John Doe who works for Boy Scouts by passing in the opportunity name and donotcreateopportunity as false to create the opportunity.
+<pre>
+    <code>
+        curl --location 'http://localhost:8081/api/convertlead' \
+        --header 'Content-Type: application/json' \
+        --data '{
+            "name": "Jane Doe",
+            "leadsource": "web",
+            "doNotCreateOpportunity": false,
+            "opportunityname": "Saito - Ground-mounted Panels"
+        }'
+        </code>
+</pre>
+<pre>
+<code>
+    curl --location 'http://localhost:8081/api/convertlead' \
+    --header 'Content-Type: application/json' \
+    --data '{
+        "name": "John Doe",
+        "leadsource": "web",
+        "doNotCreateOpportunity": false,
+        "opportunityname": "BSofSW - Ground-mounted Panels"
+    }'
+    </code>
+</pre>
+                    </li>
+                    <li><strong>Card-2: </strong>We should able to query the created account and opportunity with lead conversion process. Add the opportunity-obj anc account-obj mule configuration file. Add the following get endpoints:
+                        <ul>
+                            <li>
+                                opportunity by opportunity name
+<pre>
+    <code>
+        curl --location 'http://localhost:8081/api/opportunity?opportunityname=Saito%20-%20Ground-mounted%20Panels'
+        </code>
+</pre>
+                            </li>
+                            <li>
+                                account by account name.
+<pre>
+    <code>
+        curl --location 'http://localhost:8081/api/account?accountname=Saito%20Family%20Laundromats'
+        </code>
+</pre> 
+                            </li>
+                        </ul>
+                        </li>
+                        <li><strong>Card-3: </strong>Saito Family Laundromats is operating as a Enterprise in Japan where as Boy Scout is operating as a Nonprofit, so we need to update the account currency to JPY. As per trail specs, we have enabled multicurrency amd setup JPY, SGD, GBP, EUR along with USD. Create a PUT endpoint to update account currency as JPY.
+<pre>
+    <code>
+        curl --location --request PUT 'http://localhost:8081/api/account/{accountId}' \
+        --header 'Content-Type: application/json' \
+        --data '{
+            "accountcurrency": "JPY"
+        }'
+        </code>
+</pre>     
+                        </li>
+                        <li><strong>Card-4: </strong>Create a PUT endpoint to update opportunity to update the pricebook, currency and opportunity amount.
+<pre>
+    <code>
+        Saito Family Laundromats
+
+        curl --location --request PUT 'http://localhost:8081/api/opportunity/{opportunityId}' \
+        --header 'Content-Type: application/json' \
+        --data '{
+            "opportunitypricebook": "Enterprise",
+            "opportunitycurrency": "JPY",
+            "opportunityamount": "4200000"
+        
+        }'
+        </code>
+</pre>
+<pre>
+    <code>
+        Boy Scout
+
+        curl --location --request PUT 'http://localhost:8081/api/opportunity/006bm000001oXrRAAU' \
+        --header 'Content-Type: application/json' \
+        --data '{
+            "opportunitypricebook": "Nonprofit",
+            "opportunitycurrency": "USD",
+            "opportunityamount": "20000"
+        }'
+        </code>
+</pre>     
+                        </li>
+                        <li><strong>Card-5: </strong>Add a nested resource /product to top level /opportunity resource and add the POST endpoint to create the opportunity products.
+<pre>
+    <code>
+        Saito Family Laundromats
+
+        curl --location 'http://localhost:8081/api/opportunity/product' \
+        --header 'Content-Type: application/json' \
+        --data '{
+            "opportunityname": "Saito - Ground-mounted Panels",
+            "products": [
+                {
+                    "productcode": "SPG-01",
+                    "quantity": 35
+                },
+                {
+                    "productcode": "SPG-02",
+                    "quantity": 20
+                }
+            ]
+        }'
+        </code>
+</pre>
+<pre>
+    <code>
+        Boy Scout
+
+        curl --location 'http://localhost:8081/api/opportunity/product' \
+        --header 'Content-Type: application/json' \
+        --data '{
+            "opportunityname": "BSofSW - Ground-mounted Panels",
+            "products": [
+                {
+                    "productcode": "SPG-02",
+                    "quantity": 20
+                }
+            ]
+        }'
+        </code>
+</pre>     
+                        </li>
+                        <li><strong>Card-6: </strong>Add a removeproduct to /opportunity /product resource and add the POST endpoint to remove  the opportunity products. With this method one can test adding and removing products multiple times from Postman.
+<pre>
+    <code>
+curl --location 'http://localhost:8081/api/opportunity/removeproduct' \
+--header 'Content-Type: application/json' \
+--data '{
+    "opportunityname": "Saito - Ground-mounted Panels",
+    "products": [
+        {
+            "productcode": "SPG-01",
+            "quantity": 35
+        },
+        {
+            "productcode": "SPG-02",
+            "quantity": 20
+        }
+    ]
+}'
+</code>
+</pre>     
+                        </li>
+                        <li><strong>Card-7: </strong>August Release.</li>
+                </ul>
+            </div>
         </div>
     </div>
 </div>
