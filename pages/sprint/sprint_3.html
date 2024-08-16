@@ -441,6 +441,126 @@
                             ]'
                         </code>
                     </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>convertlead-JohnDoe-BoyScout</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/convertlead' \
+                            --header 'Content-Type: application/json' \
+                            --data '{
+                                "name": "John Doe",
+                                "leadsource": "web",
+                                "doNotCreateOpportunity": false,
+                                "opportunityname": "BSofSW - Ground-mounted Panels"
+                            }'
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>convertlead-JaneDoe-Saitto_Laundromats</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/convertlead' \
+                            --header 'Content-Type: application/json' \
+                            --data '{
+                                "name": "Jane Doe",
+                                "leadsource": "web",
+                                "doNotCreateOpportunity": false,
+                                "opportunityname": "Saito - Ground-mounted Panels"
+                            }'
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>update-opportunity-by-id-BoyScout</h4>
+                    <pre>
+                        <code>
+                            curl --location --request PUT 'http://localhost:8081/api/opportunity/006bm000001oXrRAAU' \
+                            --header 'Content-Type: application/json' \
+                            --data '{
+                                "opportunitypricebook": "Nonprofit",
+                                "opportunitycurrency": "USD",
+                                "opportunityamount": "20000"
+                            
+                            }'
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>create-opportunity-product-Boyscout</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/opportunity/product' \
+                            --header 'Content-Type: application/json' \
+                            --data '{
+                                "opportunityname": "BSofSW - Ground-mounted Panels",
+                                "products": [
+                                    {
+                                        "productcode": "SPG-02",
+                                        "quantity": 20
+                                    }
+                                ]
+                            }'                        
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>update-account-by-id</h4>
+                    <pre>
+                        <code>
+                            curl --location --request PUT 'http://localhost:8081/api/account/001bm00000CDK21AAH' \
+                            --header 'Content-Type: application/json' \
+                            --data '{
+                                "accountcurrency": "JPY"
+                            
+                            }'                        
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>update-opportunity-by-id-Laundromats</h4>
+                    <pre>
+                        <code>
+                            curl --location --request PUT 'http://localhost:8081/api/opportunity/006bm000001oXt3AAE' \
+                            --header 'Content-Type: application/json' \
+                            --data '{
+                                "opportunitypricebook": "Enterprise",
+                                "opportunitycurrency": "JPY",
+                                "opportunityamount": "4200000"
+                            
+                            }'                        
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>create-opportunity-product-Laundromats</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/opportunity/product' \
+                            --header 'Content-Type: application/json' \
+                            --data '{
+                                "opportunityname": "Saito - Ground-mounted Panels",
+                                "products": [
+                                    {
+                                        "productcode": "SPG-01",
+                                        "quantity": 35
+                                    },
+                                    {
+                                        "productcode": "SPG-02",
+                                        "quantity": 20
+                                    }
+                                ]
+                            }'                        
+                        </code>
+                    </pre>
                 </div>                                                        
             </div>
         </div>
