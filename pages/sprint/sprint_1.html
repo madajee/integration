@@ -355,7 +355,7 @@ var condition = condition1 ++ (if (vars.pricebook[0].Id != null) condition2 else
                 </ul>
                 <h4>Features: [Opportunity, Opportunity Products]</h4>
                 <ul>
-                    <li><strong>Card-0: </strong><a href="#!/sprint/4" class="nav-link">BACKLOG-ZONE-AUGUST</a></li>
+                    <li><strong>Card-0: </strong><a target= "_blank" href="#!/sprint/4" class="nav-link">BACKLOG-ZONE-AUGUST</a></li>
                     <li><strong>Card-1: </strong>As per trail spec, we require 2 accounts (Boy Scouts of the Southwest, Saito - Ground-mounted Panels) and each account should have an opportunity.
                         <ul>
                             <li>
@@ -514,6 +514,230 @@ curl --location 'http://localhost:8081/api/opportunity/removeproduct' \
                         </li>
                         <li><strong>Card-7: </strong>August Release.</li>
                 </ul>
+            </div>
+            <div class="grooveborder">
+                <h6><span class="alignleft"><span class="text-warning"><strong>SEPTEMBER: </strong></span>ESTORE-SLEEPING_JOGGER-SX1</span><span class="alignright"><strong>github repository: </strong><a href="https://github.com/madajee/estore-sfdc-system-api.git" target="_blank">estore-sfdc-system-api</a></h6>
+                <h3>e-store-express: <i>sleepingjogger.sx1</i></h3>
+                <p>
+                    <strong>Context: </strong>In jumping-jogger sprint, we added products to the opportunity, and  the next step in the Manage Products, Prices, Quotes, and Orders require us automate the generation of quotes and learn to sync them to opportunity.
+                    <ul>
+                        <li>
+                            Quotes can be enabled in the Quote Settings in the Setup menu.
+                        </li>
+                        <li>
+                            Quote is the Salesforce object for persisting the quote record. It relates to the opportunity with the opportunityId field.
+                        </li>
+                        <li>
+                            QuoteLineItem is the Salesforce object for persisting quote lines with quantity and unit price. It relates to product2, Pricebook Entry.
+                        </li>
+                    </ul>
+                </p>
+                <p>
+                    <h4>Features: [Quote, Quote Lines]</h4>
+                    <ul>
+                        <li><strong>Card-0: </strong><a target= "_blank" href="#!/sprint/4" class="nav-link">BACKLOG-ZONE-SEPTEMBER</a></li>
+                        <li>
+                            <strong>Card-1: </strong>As per trail spec, we have 2 opportunities:
+                            <ul>
+                                <li>
+                                    Boy Scouts of the Southwest will have an opportunity: BSofSW - Ground-mounted Panels.
+                                </li>
+                                <li>
+                                    Saito Family Laundromats will have an opportunity: Saito - Ground-mounted Panels.
+                                </li>
+                            </ul>
+                            We will create an resource /opportunity/quote and pass an opportunity name to the get method.  We will query the opportunity record and based   on Opportunity Id, we will create a dynamic query to retrieve quote records.
+<pre>
+    <code>
+%dw 2.0
+output application/java
+var condition1 = "select Id, name, opportunityId, Opportunity.name from Quote Where OpportunityId = " ++ "'" ++ 	vars.opportunityrecord[0].Id as String ++ "'"
+---
+{
+    "query" : condition1
+}
+</code>
+</pre>
+We can then retrieve the quote lines for all the quotes with this dynamic query: 
+<pre>
+    <code>
+%dw 2.0
+output application/java
+var condition1 = "select Id, Product2.name, Quantity, QuoteId from QuoteLineItem Where QuoteId IN "
+var condition2 = "(" ++ ((vars.opportunityquotes map () -> "'" ++ $.Id ++ "'") joinBy (",")) ++ ")"
+---
+{
+    "query" : condition1 ++ condition2
+}
+</code>
+</pre> 
+We can then iterate over the opportunity quotes and for each quote, we can retrieve the quote lines from the quote lines collection using the filtering logic in dwl.
+<pre>
+    <code>
+%dw 2.0
+output application/java
+var condition1 = "select Id, Product2.name, Quantity, QuoteId from QuoteLineItem Where QuoteId IN "
+var condition2 = "(" ++ ((vars.opportunityquotes map () -> "'" ++ $.Id ++ "'") joinBy (",")) ++ ")"
+---
+{
+    "query" : condition1 ++ condition2
+}
+</code>
+</pre> 
+We can then iterate over the opportunity quotes and for each quote, we can retrieve the quote lines from the quote lines collection using the filtering logic in dwl.
+<pre>
+    <code>
+%dw 2.0
+output application/json
+fun getQuotelines(quoteId) = vars.opportunityquotelines filter ($.QuoteId == quoteId)
+---
+if (vars.opportunityrecord[0].Id != null)
+{
+    response: {
+        message: "get quote by opportunity successful",
+        payload:  vars.opportunityquotes map() -> {
+            name: $.Name,
+            opportunityname: $.Opportunity.Name,
+            quoteId: $.Id,
+            quotelines: getQuotelines($.Id) map() -> {
+                productname: $.Product2.Name,
+                quantity: $.Quantity
+            }
+        }
+    }
+} as Object {encoding: "UTF-8", mediaType: "application/json"}
+else {
+    response: {
+        message: "Opporutnity with name: " ++ vars.queryparameters.opportunityname as String ++ " doesnot exists, please check.",
+        }
+}     as Object {encoding: "UTF-8", mediaType: "application/json"}
+</code>
+</pre> 
+We can test it by manually creating quotes from UI as specified in the trail spec. In the next card, we will automate the creation of quote using the opportunity.
+<pre>
+    <code>
+<i>Request:</i> 
+
+curl --location 'http://localhost:8081/api/opportunity/quote?opportunityname=Saito%20-%20Ground-mounted%20Panels'
+</code>
+</pre>
+<pre>
+    <code>
+<i>Response:</i> 
+
+{
+    "response": {
+        "message": "get quote by opportunity successful",
+        "payload": [
+            {
+                "name": "80 Cell Ground-mounted Panels",
+                "opportunityname": "Saito - Ground-mounted Panels",
+                "quoteId": "0Q0bm0000004TY5CAM",
+                "quotelines": [
+                    {
+                        "productname": "SunPower Ground",
+                        "quantity": "35.0"
+                    },
+                    {
+                        "productname": "GreenSun Ground",
+                        "quantity": "20.0"
+                    }
+                ]
+            }
+        ]
+    }
+}
+</code>
+</pre>  
+
+                        </li>
+                        <li>
+                            <strong>Card-2: </strong>Create a post method on /opportunity/quote and the request payload should have opportunityname and quotename.
+<pre>
+<code>
+curl --location 'http://localhost:8081/api/opportunity/quote' \
+--header 'Content-Type: application/json' \
+--data '{
+    "opportunityname": "BSofSW - Ground-mounted Panels",
+    "quotename": "60 Cell Ground-mounted Panels"
+}'
+</code>
+</pre>
+Retrieve the opportunity record with the opportunity name. Use the opportunity Id to retrieve the opportunity products by generating dynamic query with this dwl:
+<pre>
+<code>
+%dw 2.0
+output application/java
+var condition1 = "SELECT ID, Name, Product2Id, ProductCode, Quantity, UnitPrice, TotalPrice from OpportunityLineItem where OpportunityId = " ++ "'" ++ 	vars.opportunityrecord[0].Id as String ++ "'"
+---
+{
+    "query" : condition1
+}
+</code>
+</pre>
+Retrieve the pricebook entries for the all opportunity line items with this dynamic query.
+<pre>
+<code>
+%dw 2.0
+output application/java
+var condition1 = "select Id, Name, CurrencyIsoCode, UnitPrice, ProductCode, Pricebook2.Name from PricebookEntry"
+var condition2 = " WHERE Pricebook2Id = " ++ "'" ++ vars.opportunityrecord[0].Pricebook2Id ++ "'"
+var condition3 = " AND ProductCode IN " ++ "(" ++ ((vars.opportunityproduct map () -> "'" ++ $.ProductCode ++ "'") joinBy (",")) ++ ")"
+var condition4 = " AND CurrencyIsoCode = " ++ "'" ++ vars.opportunityrecord[0].CurrencyIsoCode ++ "'"
+var condition = condition1 ++ condition2 ++ condition3 ++ condition4
+---
+{
+    "query" : condition
+}
+</code>
+</pre>
+Create the opportunity quote record:
+<pre>
+<code>
+%dw 2.0
+output application/java
+---
+[{
+    name: vars.quotename,
+    OpportunityId: vars.opportunityrecord[0].Id
+}]
+</code>
+</pre>
+Create the quote line items with opportunity products with this dwl. In dwl, we use map operator to iterate over opportunity product collection, use the quoteId based on the quote that was created in the prior step and also filter the appropriate pricebook entry id with oppportunity line item product code to the function that iterates over the pricebook entries  that was retrieved in the prior step and returns the correct pricebook entry id.
+<pre>
+<code>
+%dw 2.0
+output application/java
+fun getPricebookentryId(prdcode) = (vars.pricebookentry filter ($.ProductCode == prdcode))[0].Id
+---
+vars.opportunityproduct map() -> {
+    Product2Id: $.Product2Id,
+    Quantity: $.Quantity,
+    UnitPrice: $.UnitPrice,
+    QuoteId: vars.opportunityquote.items[0].payload.id,
+    PricebookEntryId: getPricebookentryId($.ProductCode)
+}
+</code>
+</pre>
+                        </li>
+                        <li>
+                            <strong>Card-3: </strong>Add a /deletequotes with the POST endpoint to remove the quotes by passing the collection of quoteId in the quoteidsfordelete field in the request payload. With this method one can test adding and removing quotes multiple times from Postman.
+<pre>
+<code>
+curl --location 'http://localhost:8081/api/deletequotes' \
+--header 'Content-Type: application/json' \
+--data '{
+    "quoteidsfordelete": [
+        "0Q0bm0000003kj3CAA",
+        "0Q0bm0000003khRCAQ"
+    ],
+    "callsource": "postman"
+}'
+</code>
+</pre>
+                        </li>
+                    </ul>
+                </p>
             </div>
         </div>
     </div>
