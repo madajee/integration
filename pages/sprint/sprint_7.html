@@ -92,7 +92,7 @@
                 <p>
                     <ul>
                         <li>
-                            Convert John Doe who works for ‘Boy Scouts of the Southwest’ by passing in opportunity name as ‘BSofSW - Ground-mounted Panels’. Validate that account, opportunity and contact is created through conver lead automation step.
+                            Convert John Doe who works for ‘Boy Scouts of the Southwest’ by passing in opportunity name as ‘BSofSW - Ground-mounted Panels’. Validate that account, opportunity and contact is created through convert lead automation step.
                         </li>
                         <li>
                             Convert Jane Doe who works for ‘Saito Family Laundromats’ by passing in opportunity name as ‘Saito - Ground-mounted Panels’. Validate that account, opportunity and contact is created through convert lead automation step.
@@ -105,6 +105,23 @@
                         </li>
                     </ul>
                 </p>
+                <h5 class="text-center">QUOTE AND QUOTE LINES</h5>
+                <p>
+                    <ul>
+                        <li>
+                            We have created an opportunity "Saito - Ground-mounted Panels" by converting lead Jane Doe and in this step we will create a quote by passing quotename as "80 Cell Ground-mounted Panels" along with opportunity name to post /opportunity/quote resource.
+                        </li>
+                        <li>
+                            We have created an opportunity "BSofSW - Ground-mounted Panels" by converting lead John Doe and in this step we will create a quote by passing quotename as "60 Cell Ground-mounted Panels" along with opportunity name to post /opportunity/quote resource.
+                        </li>
+                        <li>
+                           We can retrieve the quote by passing in the opportunity name to the get /opportunity/quote resource and check on the quote lines which should be same as opportunity products on the opportunity. 
+                        </li>
+                        <li>
+                           Clean up the quotes by calling on the /deletequotes and passing the quoteidsfordelete.
+                        </li>
+                    </ul>
+                </p>
             </div>
             <div class="grooveborder">
                 <h4>User Story to Delivery</h4>
@@ -114,6 +131,8 @@
                 <a href="#!/sprint/1" class="nav-link"><strong>Sprint: </strong>walkingjogger.jx2; <strong>Features: </strong>[Products, Pricebook]</a>
                 <h5 class="text-center">Opportunity, Opportunity Products <span class="text-warning">[August Sprint]</span></h5>
                 <a href="#!/sprint/1" class="nav-link"><strong>Sprint: </strong>jumpingjogger.ax1; <strong>Features: </strong>[Opportunity, Opportunity Products]</a>
+                <h5 class="text-center">Quote, Quote Lines <span class="text-warning">[September Sprint]</span></h5>
+                <a href="#!/sprint/1" class="nav-link"><strong>Sprint: </strong>sleepingjogger.sx1; <strong>Features: </strong>[Quote, Quote Lines]</a>
             </div>
         </div>
     </div>
