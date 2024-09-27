@@ -118,6 +118,9 @@
                            We can retrieve the quote by passing in the opportunity name to the get /opportunity/quote resource and check on the quote lines which should be same as opportunity products on the opportunity. 
                         </li>
                         <li>
+                           We will pass the quoteId as uri param in the PUT /opportunity/quote and update the quantity and discount for a quote line item by passing in these values in the request payload. We will pass product name in the request which will be used to retrieve the quote line item. 
+                         </li>
+                        <li>
                            Clean up the quotes by calling on the /deletequotes and passing the quoteidsfordelete.
                         </li>
                     </ul>

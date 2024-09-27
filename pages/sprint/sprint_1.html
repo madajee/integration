@@ -736,6 +736,20 @@ curl --location 'http://localhost:8081/api/deletequotes' \
 </code>
 </pre>
                         </li>
+                        <li>
+                            <strong>Card-4: </strong>Add a /opportunity/quote with the PUT endpoint to update quantity and discount on the quote line item. Quote Id will be passed as uri param where as product name will be sent in the request payload along with quantity and discount.
+<pre>
+<code>
+    curl --location --request PUT 'http://localhost:8081/api/opportunity/quote/0Q0bm000000804TCAQ' \
+    --header 'Content-Type: application/json' \
+    --data '{
+        "quantity": 50,
+        "discount": 10,
+        "productname": "GreenSun Ground"
+    }'
+</code>
+</pre>
+                        </li>
                     </ul>
                 </p>
             </div>

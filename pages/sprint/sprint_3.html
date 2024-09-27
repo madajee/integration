@@ -147,6 +147,24 @@
                 </div>
                 <hr>
                 <div>
+                    <h4>get-quote-by-opportunityname-BoyScout</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/opportunity/quote?opportunityname=BSofSW%20-%20Ground-mounted%20Panels'
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>get-quote-by-opportunityname-Laundromats</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/opportunity/quote?opportunityname=Saito%20-%20Ground-mounted%20Panels'
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
                     <h4>delete-acct-and-related-records</h4>
                     <pre>
                         <code>
@@ -199,6 +217,24 @@
 --header 'Content-Type: application/json' \
 --data '{
     "productidsfordelete":["01tbm000003aaAbAAI", "01tbm000003aaAcAAI", "01tbm000003aaAdAAI"],
+    "callsource": "postman"
+}'
+                        </code>
+                    </pre>
+                </div> 
+                <hr>
+                <hr>
+                <div>
+                    <h4>delete-quotes</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/deletequotes' \
+--header 'Content-Type: application/json' \
+--data '{
+    "quoteidsfordelete": [
+        "0QLbm0000003hYHGAY",
+        "0Q0bm0000007tcTCAQ"
+    ],
     "callsource": "postman"
 }'
                         </code>
@@ -600,6 +636,20 @@
                                 "opportunityname": "BSofSW - Ground-mounted Panels",
                                 "quotename": "60 Cell Ground-mounted Panels"
                             }'                        
+                        </code>
+                    </pre>
+                </div>
+                <div>
+                    <h4>update-quote-for-opportunity-BoyScout-60-Cell</h4>
+                    <pre>
+                        <code>
+                            curl --location --request PUT 'http://localhost:8081/api/opportunity/quote/0Q0bm000000804TCAQ' \
+                            --header 'Content-Type: application/json' \
+                            --data '{
+                                "quantity": 3,
+                                "discount": 10,
+                                "productname": "GreenSun Ground"
+                            }'                         
                         </code>
                     </pre>
                 </div>                                                         
