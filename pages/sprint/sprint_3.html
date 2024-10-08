@@ -239,6 +239,40 @@
 }'
                         </code>
                     </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>delete-orders</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/deleteorders' \
+                            --header 'Content-Type: application/json' \
+                            --data '{
+                                "orderidsfordelete": [
+                                    "801bm00000QxvhdAAB",
+                                    "801bm00000QxXa9AAF"
+                                ],
+                                "callsource": "postman"
+                            }'
+                        </code>
+                    </pre>
+                </div> 
+                <hr>
+                <div>
+                    <h4>delete-contracts</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/deletecontracts' \
+                            --header 'Content-Type: application/json' \
+                            --data '{
+                                "contractidsfordelete": [
+                                    "800bm00000GVfgsAAD",
+                                    "800bm00000GVVJIAA5"
+                                ],
+                                "callsource": "postman"
+                            }'
+                        </code>
+                    </pre>
                 </div> 
                 <hr>
                 <div>
@@ -650,6 +684,121 @@
                                 "discount": 10,
                                 "productname": "GreenSun Ground"
                             }'                         
+                        </code>
+                    </pre>
+                </div> 
+                <div>
+                    <h4>create-account-contract-boyscout</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/account/contract' \
+                            --header 'Content-Type: application/json' \
+                            --data '{
+                                "accountname": "Boy Scouts of the Southwest",
+                                "contracts": [
+                                    {
+                                        "contractstartdate": "07-02-2024",
+                                        "contractterm": "12"
+                                    }
+                                ]
+                            }'
+                        </code>
+                    </pre>
+                </div>
+                <div>                    
+                    <h4>create-account-contract-Laundromat</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/account/contract' \
+                            --header 'Content-Type: application/json' \
+                            --data '{
+                                "accountname": "Saito Family Laundromats",
+                                "contracts": [
+                                    {
+                                        "contractstartdate": "07-02-2024",
+                                        "contractterm": "12"
+                                    }
+                                ]
+                            }'
+                        </code>
+                    </pre>
+                </div>
+                <div>                    
+                    <h4>create-order-for-contract-BoyScout</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/order' \
+                            --header 'Content-Type: application/json' \
+                            --data '{
+                                "contractnumber": "00000120",
+                                "opportunityname": "BSofSW - Ground-mounted Panels"
+                            }'
+                        </code>
+                    </pre>
+                </div>
+                <div>                    
+                    <h4>create-order-for-contract-Laundromat</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/order' \
+                            --header 'Content-Type: application/json' \
+                            --data '{
+                                "contractnumber": "00000121",
+                                "opportunityname": "Saito - Ground-mounted Panels"
+                            }'
+                        </code>
+                    </pre>
+                </div>
+                <div>                    
+                    <h4>create-order-product-GreenSun-ForBoyScout</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/order' \
+                            --header 'Content-Type: application/json' \
+                            --data '{
+                                "contractnumber": "00000121",
+                                "opportunityname": "Saito - Ground-mounted Panels"
+                            }'
+                        </code>
+                    </pre>
+                </div>
+                <div>                    
+                    <h4>create-order-product-Laundromat</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/order/product' \
+                            --header 'Content-Type: application/json' \
+                            --data '{
+                                "ordernumber": "00000117",
+                                "products": [
+                                    {
+                                        "productcode": "SPG-01",
+                                        "quantity": 35
+                                    },
+                                    {
+                                        "productcode": "SPG-02",
+                                        "quantity": 20
+                                    }
+                                ]
+                            }'
+                        </code>
+                    </pre>
+                </div> 
+                <div>                    
+                    <h4>remove-order-product-Laundromat-Sunpower</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/order/removeproduct' \
+                            --header 'Content-Type: application/json' \
+                            --data '{
+                                "ordernumber": "00000117",
+                                "products": [
+                                    {
+                                        "productcode": "SPG-01",
+                                        "quantity": 35
+                                    }
+                                ]
+                            }'
                         </code>
                     </pre>
                 </div>                                                         
