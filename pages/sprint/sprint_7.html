@@ -62,6 +62,18 @@
                 </p>
             </div>
             <div class="grooveborder">
+                <h5>ORDER AND ORDER PRODUCT FEATURE</h5>
+                <p>L2C stakeholder mentioned that sales repo close about 200 opportunities on a given day and provisioning group would like to see orders for all the opportunites that are in closed won status. One of the lead account executive will export an excel with the opportunities in closed won status along with the accountname, contract start date and contract term.
+                </p>
+                <p>As a Team Lead, I need an system layer API resource that will create a contract by passing account name and contract details.
+                </p>
+                <p>As a Team Lead, I need another system layer API resource that will create an order by passing in the contract number and opportunity name.
+                </p>
+                <p>We also need to provide the capability to add and remove products from the order so we need anpther 2 system level resources. As this step is done manually by sales rep for the time being, we need a process layer test capability for these 2 resources of adding and removing order products.</p>
+                <p>In subsequent sprints, as the requirements elaborate, we will design the process layer api that will read the daily opportunity extract excel and automates the contract and order creation in a single step by calling on system level resources.
+                </p>
+            </div>
+            <div class="grooveborder">
                 <h4>TEST PLAN</h4>
                 <h5 class="text-center">LEAD</h5>
                 <p>
@@ -125,6 +137,32 @@
                         </li>
                     </ul>
                 </p>
+                <h5 class="text-center">ORDER AND ORDER PRODUCT</h5>
+                <p>
+                    <ul>
+                        <li>
+                            Sales rep has worked with customer and we have primary quote being accepted by the customer for an opportunity. We are ready to create contract and orders. Create a contract for both 'Boy Scouts of the Southwest' and 'Saito Family Laundromats' by calling on resource POST /account/contract.
+                        </li>
+                        <li>
+                            Create an order for an opportunity by calling on resource /order and passing in the opportunity name as 'BSofSW - Ground-mounted Panels' along with the contract number generated for the 'Boy Scouts of the Southwest' account.
+                        </li>
+                        <li>
+                            Create an order for an opportunity by calling on resource /order and passing in the opportunity name as 'Saito - Ground-mounted Panels' along with the contract number generated for the 'Saito Family Laundromats' account.
+                        </li>
+                        <li>
+                            Create GreenSun groud order product with a quantity of 10 for a BoyScout order by calling on resource /order/product.
+                        </li>
+                        <li>
+                            Create SunPower Ground with quantity of 35 and GreenSun groud with a quantity of 20 order products for a Laundromat order by calling on resource /order/product.
+                        </li>
+                        <li>
+                            Test on the /removeproduct endpoint by removing sunpower ground from the laundromat orders.
+                        </li>
+                        <li>
+                            Clean up the orders by calling on the /deleteorders and passing the orderidsfordelete.
+                        </li>
+                    </ul>
+                </p>
             </div>
             <div class="grooveborder">
                 <h4>User Story to Delivery</h4>
@@ -136,6 +174,8 @@
                 <a href="#!/sprint/1" class="nav-link"><strong>Sprint: </strong>jumpingjogger.ax1; <strong>Features: </strong>[Opportunity, Opportunity Products]</a>
                 <h5 class="text-center">Quote, Quote Lines <span class="text-warning">[September Sprint]</span></h5>
                 <a href="#!/sprint/1" class="nav-link"><strong>Sprint: </strong>sleepingjogger.sx1; <strong>Features: </strong>[Quote, Quote Lines]</a>
+                <h5 class="text-center">Contract, Order <span class="text-warning">[October Sprint]</span></h5>
+                <a href="#!/sprint/1" class="nav-link"><strong>Sprint: </strong>runningjogger.sx1; <strong>Features: </strong>[Contract, Order]</a>
             </div>
         </div>
     </div>

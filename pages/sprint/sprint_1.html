@@ -753,6 +753,160 @@ curl --location 'http://localhost:8081/api/deletequotes' \
                     </ul>
                 </p>
             </div>
+            <div class="grooveborder">
+                <h6><span class="alignleft"><span class="text-warning"><strong>OCTOBER: </strong></span>ESTORE-RUNNING_JOGGER-OX1</span><span class="alignright"><strong>github repository: </strong><a href="https://github.com/madajee/estore-sfdc-system-api.git" target="_blank">estore-sfdc-system-api</a></h6>
+                <h3>e-store-express: <i>runningjogger.ox1</i></h3>
+                <p>
+                    <strong>Context: </strong>In jumping-jogger sprint, we added products to the opportunity, and  the next step in the trailhead Manage Products, Prices, Quotes, and Orders require us to automate further and generate the contracts and orders.
+                    <ul>
+                        <li>
+                            When customer has negotiated with the sales rep and accepted the quote, sales rep closes the opportunity with status as closed won and also creates a contract for the account.
+                        </li>
+                        <li>
+                            Order has to be created with the opportunity/quote products and has to be linked to the contract which then proceeds with the provisioning and fulfillment steps. Initially the order is created in the draft status.
+                        </li>
+                        <li>
+                            It is required to pass in following fields while creating an order:
+<pre>
+    <code>
+    %dw 2.0
+    output application/java
+    ---
+    [{
+        "AccountId": vars.contractrecord[0].AccountId,
+        "EffectiveDate": vars.contractrecord[0].StartDate as Date {format: "yyyy-MM-dd"},
+        "ContractId": vars.contractrecord[0].Id,
+        "OpportunityId": vars.opportunityrecord[0].Id,
+        "Pricebook2Id": vars.opportunityrecord[0].Pricebook2Id,
+        "CurrencyIsoCode": vars.opportunityrecord[0].CurrencyIsoCode,
+        "Status": 'Draft'
+    }]
+    </code>
+    </pre>
+                        </li>
+                    </ul>
+                </p>
+                <p>
+                    <h4>Features: [Contract, Order]</h4>
+                    <ul>
+                        <li><strong>Card-0: </strong><a target= "_blank" href="#!/sprint/4" class="nav-link">BACKLOG-ZONE-OCTOBER</a></li>
+                        <li>
+                            <strong>Card-1: </strong>As per trail spec, we have 2 accounts:
+                            <ul>
+                                <li>
+                                    Boy Scouts of the Southwest and Saito Family Laundromats, so we will create contract for both the accounts.
+                                </li>
+                                <li>
+                                    Create a get and post method on /account/contract for querying the contracts on the account and creating a contract for the account.
+<pre>
+    <code>
+        curl --location 'http://localhost:8081/api/account/contract?accountname=Boy%20Scouts%20of%20the%20Southwest'
+    </code>
+</pre>
+<pre>
+    <code>
+        curl --location 'http://localhost:8081/api/account/contract' \
+--header 'Content-Type: application/json' \
+--data '{
+    "accountname": "Boy Scouts of the Southwest",
+    "contracts": [
+        {
+            "contractstartdate": "07-02-2024",
+            "contractterm": "12"
+        }
+    ]
+}'
+    </code>
+</pre>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>Card-2: </strong>We need the capability to query the orders on the contract. Create a /order resource with a get method and pass in the contract number as a query param. Response should be the list of orders on the contract.
+                            <pre>
+                                <code>
+                                    curl --location 'http://localhost:8081/api/order?contractnumber=00000120'
+                                </code>
+                            </pre>
+                        </li>
+                        <li>
+                            <strong>Card-3: </strong>We need the capability to create the order for an opportunity and contract. Add the post method on the order resource and pass the contract number and opportunity name in the request payload.
+                            <pre>
+                                <code>
+                                    curl --location 'http://localhost:8081/api/order' \
+                                    --header 'Content-Type: application/json' \
+                                    --data '{
+                                        "contractnumber": "00000120",
+                                        "opportunityname": "BSofSW - Ground-mounted Panels"
+                                    }'
+                                </code>
+                            </pre>
+                        </li>
+                        <li>
+                            <strong>Card-4: </strong>We need to provide the capability to add and remove order products. Add the nested resource product on the order resource /order/product and pass in the order number along with list of products in the request payload.
+                            <pre>
+                                <code>
+                                    curl --location 'http://localhost:8081/api/order/product' \
+                                    --header 'Content-Type: application/json' \
+                                    --data '{
+                                        "ordernumber": "00000116",
+                                        "products": [
+                                            {
+                                                "productcode": "SPG-02",
+                                                "quantity": 10
+                                            }
+                                        ]
+                                    }'
+                                </code>
+                            </pre>
+                            <pre>
+                                <code>
+                                    curl --location 'http://localhost:8081/api/order/removeproduct' \
+                                    --header 'Content-Type: application/json' \
+                                    --data '{
+                                        "ordernumber": "00000117",
+                                        "products": [
+                                            {
+                                                "productcode": "SPG-01",
+                                                "quantity": 35
+                                            }
+                                        ]
+                                    }'                                
+                                </code>
+                            </pre>
+                        </li>
+                        <li>
+                            <strong>Card-5: </strong>Add the /deleteorders  and /deletecontracts resource to clean up any orphan orders and contract records. Just like in other clean up methods, the request payload should take in the list of salesforce object ids.
+                            <pre>
+                                <code>
+                                    curl --location 'http://localhost:8081/api/deleteorders' \
+                                    --header 'Content-Type: application/json' \
+                                    --data '{
+                                        "orderidsfordelete": [
+                                            "801bm00000QxvhdAAB",
+                                            "801bm00000QxXa9AAF"
+                                        ],
+                                        "callsource": "postman"
+                                    }'                                
+                                </code>
+                            </pre>
+                            <pre>
+                                <code>
+                                    curl --location 'http://localhost:8081/api/deletecontracts' \
+                                    --header 'Content-Type: application/json' \
+                                    --data '{
+                                        "contractidsfordelete": [
+                                            "800bm00000GVP2iAAH",
+                                            "800bm00000GVKFoAAP"
+                                        ],
+                                        "callsource": "postman"
+                                    }'                                
+                                </code>
+                            </pre>
+                        </li>
+                    </ul>
+                </p>
+            </div>
         </div>
     </div>
 </div>
