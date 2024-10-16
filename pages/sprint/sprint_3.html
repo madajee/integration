@@ -16,11 +16,11 @@
                         <li>Query on lead John and Jane Doe with get on lead resource; as we don’t have them in the org, so we will create them in the next step. </li>
                         <li>Create John Doe and Jane Doe with post on lead resource.</li>
                         <li>We have products and pricebook from the trail in the system, so we have to delete them so that we can create them with the automation. We will query the pricebook id for Enterprise, Nonprofit and Standard Pricebook for Solar Panel, Sunpower and GreenSun. We will retrieve the pricebook Id and use the deletepricebookentry resource to delete pricebook entries.
-<pre>
-    <code>
-        select Id, Name, CurrencyIsoCode, UnitPrice, ProductCode from PricebookEntry where Pricebook2.Name = 'Standard Price Book' and ProductCode in ('SPC-R01', 'SPG-01', 'SPG-02')
-    </code>
-</pre>  
+    <pre>
+        <code>
+            select Id, Name, CurrencyIsoCode, UnitPrice, ProductCode from PricebookEntry where Pricebook2.Name = 'Standard Price Book' and ProductCode in ('SPC-R01', 'SPG-01', 'SPG-02')
+        </code>
+    </pre>  
                         </li>
                         <li>We will get on productsbyproductcodelist resource to retrieve the Ids for Solar Panel (SPC-R01), Sunpower (SPG-02) and Greensun (SPG-02). We will then use deleteproducts resource to delete the product entries.</li>
                         <li>Do the get on productsbyproductcodelist resource again to make sure products are deleted and we receive empty list in the response.</li>
