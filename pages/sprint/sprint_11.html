@@ -6,8 +6,11 @@
             <div class="grooveborder">
                     <h4>Maturity Level 0: AI Beginner</h4>
                     <ul>
+                        <li><strong>Artificial intelligence (AI): </strong>A field of study that uses computers to do processes that mimic human behavior.</li>
+                        <li><strong>Machine learning (ML): </strong>A subset of AI. Uses algorithms to learn and improve from training data.</li>
+                        <li><strong>Deep learning (DL): </strong>A subset of ML. Uses multilayer networks to build models that are inspired by the human brain.</li>
+                        <li><strong>MLOPs: </strong>As we train the algorithm with a training data, we have a ML model as an output of training process which can then be used to make predictions through inference and hosting processes. MLOps is a practice of  delivering machine learning models. It begins with development and ends with a finished model in an operational setting. It covers things like supervised learning, unsupervised learning, CI/CD, model registries, API and UIs that expose model operations as a consumption service and ongoing performance monitoring.</li>
                         <li><strong>Roles: </strong><em>AI Engineer</em> operationalize and deploy AI models. Data scientist perform model selection and optimization of deployed models. Data Enginner build pipelines that connect data from different data sources and the unified data is leveraged for all AI/ML related tasks. AI Partners and Consultants bridge the gaps and scale of AI implementation for enterprises.</li>
-                        <li><strong>MLOPs: </strong>Practice of  delivering machine learning models. It begins with development and ends with finished model and operational setting. It covers things like supervised learning, unsupervised learning, CI/CD, model registries, API and UIs that expose model operations as a consumption service and ongoing performance monitoring.</li>
                         <li><strong>ML Pipeline Lifecycle: </strong>The purpose to deliver results to an enterprise for critical decision making on a periodic or on demand basis. All three roles mentioned above enables production delivery of ML pipeline.</li>
                         <img ng-src="images/mlops-org-ml-pipeline.png" alt="mlops-org-ml-pipeline" width="900" height="300"><br>
                         <em class="text-center">Image Reference: https://ml-ops.org/content/mlops-principles</em> 
@@ -25,6 +28,27 @@
                                 <li>Training and Inference process along with runtime environment for different types of model</li>
                             </ul>
                         </p>
+                        </li>
+                        <li><strong>Logging and Metric Selection: </strong>
+                            <p>We understand that AI applications and machine learning operations are solving complex problems and creating new frontiers, but we should be aware of  things like rapid data changes, models becoming stale and losing the predictive power, system performance issues. Logging and Monitoring solutions help us troubleshoot these kind of issues and there are four levels in an AI/ML solution:                            
+                                <ul>
+                                    <li><strong>Data: </strong>We should know the anomalies in the data like new or existing customer, consider data profiling with count on number of records in immutable data set and profiled data set.We should enable logs for features like applying pricing discounts or more advertising to achieve sales target.</li>
+                                    <li><strong>Model: </strong>We may have to externalize features before we deploy the solution as a service, so that we can generate the feedback cycle with data scientist and help them tune the model parameters.</li>
+                                    <li><strong>Predictions: </strong>We will benchmark predictions based on inputs from data scientists and industry standards but we have to log metrics like mean and avg of errors, confidence score to determine things like training loss rate.</li>
+                                    <li><strong>System Performance: </strong>As models get deployed in production, we would have to monitor on memory usage, load and up times, errors and exceptions.</li>
+                                </ul>
+                            </p>
+                            <p>Though in experimental phase, we may use print and log statements which will be useful in upstream environments as well, as we promote to production like environments, we should start using language specifc logging frameworks, requirements and infrastructure driven logging functions and configurations that allow us to alter log levels and logging locations.</p>
+                        </li>
+                        <li><strong>Model and Data Versioning: </strong>
+                            <p>As we go through several iterations in an AI/ML project, we will require versioning in a machine learning workflow for both model and data. For the model, we have to versioning things like hyperparameters, variable selection, algorithm choice and composite models. There can be multiple modalities in the data and size can vary on machine learning dataset depending upon training approach and model size, so we can leverage cloud tools to maintain versions in the dataset.</p>
+                        </li>
+                        <li><strong>Training Artifacts and Model Store: </strong>
+                            <p>Usually there are things like state management in software applications and systems, but in ML system we have a training process which gives the model as runtime engine. We have an input and output artifacts like model code, configurations settings, checkpoints, training data, logs and metrics, visualization charts. We use serialization and deserailization to store and re-instantiate the model, and there are standards like pickle, protobuf, MLeap, ONNEX, H5, Keras. As platform enterprises build developer tools for AI/ML, they create metadata and information about training runs and capabilities are offered to AI Enginner to manage them.</p>
+                            <p>We are require registries to store and retrieve model images, manage model lifecycle, model promotion and versioning. Deployment strategies like Blue/Green and Canary are extended and being recreated for the AI/ML systems.</p>
+                        </li>
+                        <li><strong>Hyperscalers AI: </strong>
+                            <p>Public Cloud providers offer AI capabilities like Image detection and labeling (Amazon Rekognition), Document analysis and text extraction (Amazon Textract), Natural Languarge Processing (Amazon Comprehend), Speech to Text (Amazon Transcribe), Language Translation (Amazon Translate), Conversational Chatbot (Amazon Lex) as API backed with their service delivery model and global infrastructure at scale. Amazon Sagemaker is a fully managed service for preparing, building, training and deploying high quality machine learning models.</p>
                         </li>
                     </ul>
             </div>
