@@ -2,7 +2,7 @@
     <div class="row">
         <integration-side-menu></integration-side-menu>
         <div class="col-md-10">
-            <h6 class="grooveheader">INTEGRATION 106</h6>
+            <h6 class="grooveheader">INTEGRATION 106 - Microservices</h6>
             <div class="grooveborder">
                 <h3>Pace Towards Microservcies</h3>
                 <p>Microservices is a distributed architecture and there is lot of complexity with it but it is an architecture that gives businesses an option to thrive in this modern world.</p>
@@ -54,6 +54,87 @@
                         <strong>Deployability:</strong> refers to how can we push changes to upstream environments without impacting the users. Most teams have CI/CD enablement and DevOps tools to automate the deployments but the frequency or risk of  deployments really vary whether we are building features in monolith which are either designed in layers or comprised of components, creating extensible services in larger SOA landscape or we are developing small independent deployable services in Microservices enterprise. As we push towards micorservices enterprise, we are really pushing towards automated test and deployments of smaller features in a controlled manner so that business runs as usual.  
                     </li>
                 </ul>
+            </div>
+            <div class="grooveborder">
+                <h3>Mongodb Learner</h3>
+                <p>Relational Databases with its three decades of legacy, have provided robust monolith applications. MongoDB on the other hand, has created no-sql DB engine that allow you to work with your data anyway you want, scale in & scale out with your workloads and run it anywhere by deploying on a single node or on different clouds. MongoDB is a NOSQL Document Database that organizes data as documents (key/value pairs) in a collection and provides drivers in several languages like Python, Javascript, Ruby, Java and allows you to quickly build modern applications. It enables schemaless design that enables speed, ease of development and cloud scale with Atlas offering.</p>
+                <h3>Architecture</h3>
+                <ul>
+                    <li>
+                        mongod is a daemon, a core runtime process of MongoDB designed with architectural layers of MQL, Document Data Model and Storage Layer, that accepts connection requests and persist data to the hard drives.
+                    </li>
+                    <li>
+                        MongoDB Query Language (MQL) - Data & operations send by client drivers in the form of BSON messages are translated to mongoDB  instructions by this layer. It provides different operators & aggregation engine to support CRUD activities.
+                    </li>
+                    <li>
+                        MongoDB Document Data Model - This layer is responsible for applying the CRUD operations in a distributed replicas & its data structures by handling requirements related to replication, durability.
+                    </li>
+                    <li>
+                        Storage Layer -  This layer handles the disk level system calls on a single node while also  providing things like compression, encryption. Wired Tiger is a default storage engine for MongoDB.
+                    </li>
+                    <li>
+                        Security & Admin are traversal layers for user management & database admin activities.
+                    </li>
+                    <li>
+                        MongoDB is a distributed DBMS and supports high availability & automatic failover with a replication mechanism between primary  & secondary nodes in a replica set. MongoDB manages scalability needs with mongos managing shards of replica sets.
+                    </li>
+                </ul>
+                <h3>Documents & Data Structures</h3>
+                <p>
+                    Data in mongoDB is stored in a hierarchical structure with database at the top level with one of more collections. Then there are documents in the collections and multiple documents represent your data set. MongoDB stores JSON documents as binary representation of JSON (BSON). Drivers for different languages returns documents in JSON format and responsible for translation from BSON to JSON format.
+                </p>
+                <h4>CRUD Operations</h4>
+                <ul>
+                    <li>
+                        Create new documents in a collection.
+                        db.users.insertOne({name:"sue", age: 26, status: "pending"})
+                    </li>
+                    <li>
+                        Retrieve documents in a collection with query filters.
+                        db.users.find({age: {$gt: 18}})
+                    </li>
+                    <li>
+                        Modify existing documents in a collection. 
+                        db.users.updateMany({age: {$lt: 18}}, {$set: { status: "reject"}})
+                    </li>
+                    <li>
+                        Remove documents from a collection.
+                        db.users.deleteMany({status: "reject"})
+                    </li>
+                </ul>
+                <h3>Aggregation Framework</h3>
+                <p>
+                    Modeled on the concept of data processing pipelines, pipelines are composition of several stages that operate on documents and filter & transforms them into aggregated results.
+
+                    Syntax:
+                    db.userColl.aggregate([{stage1}, {stage2}, {stage3}], {options}) 
+                </p>
+                <h3>Replication</h3>
+                <p>
+                    Replication provides redundancy and increases data availability.With multiple copies of data on a different server, replication provides level of fault tolerance against the loss of single database server. A replica set in MongoDB is a group of mongod processes that maintain the same data set. MongoDB uses statement based replication mechanism, a process by which DB operations are translated to idempotent op log entries in the primary node which are then used by secondary for replicating data.
+                </p>
+                <h3>Sharding</h3>
+                <p>
+                    Database growth can be supported by either vertical scaling or horizontal scaling. Vertical scaling resorts to approach of increasing CPU on a single node, whereas horizontal scaling is an approach of splitting data across multiple nodes. 
+                    Sharding is a method of dividing data across multiple replicas based on a shard key. MongoDB implements sharding by routing queries through the mongos and storing metadata and configuration settings in Config Servers. 
+                    It is quite important to pick a good shard key based on the cardinality [High], frequency [Low], monotonic change [Avoid]. In some cases, it may be beneficial to use the hashed shard key but then you loose the ability to target a range query and mongos will always perform scatter gather query.
+                </p>
+                <h3>Storage</h3>
+                <p>
+                    Storage Engine is a component that manages how data is stored to the disk. Wired Tiger is the default storage engine for MongoDB but there are other options like In-Memory, MMAPv1. WiredTiger supports atomicity at a document level during the write operations and creates checkpoint after writing snapshot data to the disk. MongoDB can recover from a last checkpoint in case of failure writing the new checkpoint and can refer to journal to replay all the data between the checkpoints. With WiredTiger MongoDB supports compression for all collections and indexes.
+                </p>
+            </div>
+            <div class="grooveborder">
+                <h3>Kubernetes Learner</h3>
+                <p>Docker- It has been almost a decade when Docker build a container runtime build on Linux features and standardize the container image format to solve problem of packaging & distributing container images at scale by creating docker registry.</p>
+                <p>Kubernetes - As Google guys were using containers for a long time, they had Borg which was incubated as a open source project as Kubernetes. Soon it became the defacto standard for container orchestration platform and all 3 public cloud proivders (GCP, Azure, AWS) create a service that will let you spin Kubernetes Cluster without provisioning any infrastructure & software licenses.</p>
+                <p>Kubernetes along with Docker & several other related technologies like Service Mesh and cloud computing is leading the way for enterprise grade microservices implementations at scale. I am also hoping to join this transformtative journey with a quick starter on Kubernetes ! </p>
+
+                <p>We are mostly familiar with the deployment targets as Virtual Machine but as the unit of deployment changes from VM to containers, we need a management layer that manages the cluster of nodes which run the containerized microservices application. As per official documentation (https://kubernetes.io/docs/concepts/overview/), Kubernetes provides you these features: Service discovery and load balancing, Storage Orchestration, Automated rollouts and rollbacks, Automatic bin packing, Self-healing, Secret Configuration Management. It also states that when you deploy Kubernetes, you get a cluster which consists of a set of worker machines, called nodes that run containerized applications. Kubernetes Cluster has a control plane that manages the worker nodes and Pods in a cluster. The core of Control Plane is an API server which exposes HTTP API and there is a kubectl command line interface which in-turn uses the API and let you query and manipulate the state of API Objects (Pods, Namespaces, ConfigMaps etc) in Kubernetes.</p>
+                <p>The state of Kubernetes cluster can be represented with the objects persisted in it. Almost every Kubernetes object includes two nested object fields that govern the object's configuration: object spec and object status. Whether you use the Kubectl or UI, you will use the Kubernetes API to create, modify and delete Kubernetes objects. Some of the common kinds of Kubernetes objects are Pods, ReplicaSets, Services, Secrets, ConfigMaps, Deployments, Jobs, DaemonSets.</p>
+                <p>Pods is a unit of deployment in Kubernetes and usually group one or more containers that are need to colocated and scaled simultaneously. Containers in the same Pod share the same hostname (IP Address) and namespace. Labels and Selectors allows Kubernetes Control Plane to discover the Kubernetes objects as a group and perform common tasks on it as directed by Kubernetes API. Services allow you to expose Pods through internal and external endpoints. Replication Controller allows control plane to maintain the desired number of Pods in a cluster and keeps your application highly available.</p>
+                <p>A workload is an application running in Kubernetes and it can either be a single Pod or several Pods that work together to deliver the desired application features. Some Kubernetes objects apply a controller pattern and implements a control loop that makes the cuurent state closer to the desired state. ReplicaSet, though providers same feature as replication controller and maintains the stable set of replica Pods running at any given time, are successor to replication controller. Replica Set also guarantee the availability of a specified number of identical pods and allows you to use set based selectors & many different opertors to provide granular control on selection of Pods. As the workloads changes across different releases, it becomes quite cumbersome to directly manage relica sets, pods & other objects and deployment teams expect Kubernetes to support rollback, auto scaling, canary usecases. With Deployment object, one can declaratively define the desired state of the application (Pods and Replica Set) and Deployment Controller changes the actual state to deisred state at the controlled rate.</p>
+                <p>There are several usecases that require applications to persist data, share data across several containers and since containers are ephemeral, so does the container storage. However kubernetes volume bring persistence to Pods. In the Pod Spec, you create a another yaml node for volumes where you specify volume types that can be host-based (EmptyDir), BlockStorage (AWS EBS, GCE PD), File System (NFS) along with the name and then you define volumeMounts with that name in the container node. Volumes are categorized as Persistent and Ephemeral Volumes. Persistent Volume is a piece of storage in the cluster that has been provisioned by an administrator or dynamically provisioned using Storage Classes. Developers can create request for provisioned persistent volumes using Persistent Volume Claim (PVC) objects. Ephemeral Volumes like ConfigMap are more designed for usecases like cacheing, key-value configurations and start-up scripts.</p>
             </div>
         </div>
     </div>

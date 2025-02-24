@@ -2,9 +2,9 @@
     <div class="row">
         <integration-side-menu></integration-side-menu>
         <div class="col-md-10">
-            <h6 class="grooveheader">INTEGRATION 107</h6>
+            <h6 class="grooveheader">INTEGRATION 107 - MULE</h6>
             <div class="grooveborder">
-                <h3>Mule Learner</h3>
+                <h3>Learner</h3>
                 <p>When you create your first hello world mule application in studio, you will create a localhost enpoint with a configured URI like hello and use the HTTP connector, logger and payload components. One can observe the start-up logs in the studio console and access the listener endpoint in the browser or postman client.</p>
                 <p>In mule projects, developers usually end up creating multiple mule configuration files, however a common pattern is to create common configuration in global file (global.xml), create different environment properties file and use global property for env key so that appropriate properties file is loaded in an environment. We are also required to secure the environment properties usually with Mule Secure Configuration module and Blowfish algorithm.</p>
                 <p>Mule API Lifecycle requires you to take top-down approach to API, so designers are required to create and publish the API spec in Anypoint Platform (Design Center, Exchange). API Developers have to create API Id in API Manager so that deployed API can be managed and governed centrally from API Manager. Developers should enable autodiscovery on the deployed APIs so that appropritae policies from API Manager can be downloaded and enabled on deployed API by gateway runtime.</p>
@@ -17,6 +17,103 @@
                 When the dataweave transformation engine receives the data, it normalizes the incoming payload & variable references into a canonical format that consists of dataweave simple types, arrays or objects and then renders to desired format as per the output directive.
                 </p>
                 <p>Anypoint Runtime Manager is the management and monitoring tool for integrations and APIs. Some of the key capabilities provided by runtime manager are Application / Server Management, Monitoring and Analytics, Access Control. It enables IT Ops to secure, deploy, monitor, troubleshoot and operate mule apps in anypoint platform at scale. An agent component collects the metrics on the deployed application and dashboard on runtime manager provides some the key mterics like Number of API requeest, Errors, CPU usage in the application & system graphical views. One can choose to view the metrics in hourly, daily or weekly timeframes. Platform team has also enabled programmatic access to runtime manager capabilities with Runtime Manager API and Runtime Manager CLI.</p>
+            </div>
+            <div class="grooveborder">
+                <h3>Walker</h3>
+                <p>Though Dataweave is now in 2.4 release, it was released with Mule 3.7 as DWL 1.0 and was designed from ground up to providing next generation transformation capabilities at speed and scale. A DataWeave script consists of a header and a body, separated by three dashes (---). One can define functions in the script, use function modules as part of the runtime. Dataweave follows the core principles of functional programming, including pure functions, first-class functions, high-order functions, function composition, lambda expressions, and immutable data. Some of the higher order functions like map, mapObject, reduce allow you to simplify complex transformations on large dataset with few lines of DWL. An example script from mule docs uses multi-value selector, define custom type for format.</p>
+                <pre>
+                    <code> 
+                    %dw 2.0
+                    output application/json
+                    type Currency = String { format: "\$#,###.00"}
+                    ---
+                    books: payload.items.*item map
+                        book:
+                            price: $.price as Currency
+                    </code>                    
+                </pre> 
+                <p><strong>API : </strong>One of the guiding principle of Restful architecture is uniform constraint and API Designer allows you to create API specifications in RAML / OAS. Mocking service can simulate API request and responses for all methods on API resources as per the specification and allows you to refine your API specification as per  requirements analysis and design perspectives. In the build phase muleys can scaffold the implementation mule flows based on the API Spec and the scaffolding leverages the Mule APIkit router component. Munit can be added and test runners are enabled in build piplelines to meet appropriate coverage. Anypoint Exchange is a registry and portal interface for published APIs. Based on the deployment topology, mule apps can be deployed either on the on-premise servers in client managed datacenters or in mulesoft provided fully managed cloud service on Cloudhub.</p>
+                <p><strong>Cloudhub: </strong>One of the key architectural aspect that has been enabled in anypoint platform is separation of runtime plane and management plane. Cloudhub is product that ufifies several aspects of it for different personas and organization groups. As the name suggests, it is integration product engineered for cloud with cloud computing of fully managed infrastruture provisioning, self service, scalable vCore licenses, faster deployments and upgrades on mule application supported by developer tools like Runtime Manager API, CLI and UI. Though Runtime Manager UI is the unified view for deploying and managing mule applications and has multi-tenant architecture with Organization & Business Groups, underneath cloudhub has 2 major components: Platform Services and Worker Cloud. Platform Services handles common concerns like logging, alerting, Insight, Account Management, VPC & Load Balancing and is shared across all client deployments. Worker Cloud is elastic and multitenant cloud of virtual machines provisioned by on demand infrastructure resources from public cloud providers with mulesoft installed runtime components. Limits and Allocation to the resources in mule worker cloud is bucketed with vCores which are licensed as per Client contracts. Cloudhub has in-build features for availablity, redundancy, intelligent healing and zero-downtime updates. As all communication between platform services and worker cloud is over SSL, cloudhub is secure for integrations.</p>
+                <p><strong>MUnit: </strong>Along with developing mule applications as per the requirements, architecture, design, it is also quite important to test the applications and munit comes in quite handy for the unit and integration testing. One can also integrate automated test step in the build and deploy pipelines with the required test coverage. As the tooling for Munit testing is build into the studio, muleys can create munits test suite along with mule apps and can easily promote test driven development approach in the integration projects. Munit has full suite of integration and unit test capabilities and is integrated with Maven and Surefire for CI/CD.It is also important to follow practices like appropriate naming on testing flows, write maintainable flows and using subflow feature for reuse and specific test validations.<br>
+                <strong><i>Munit Test Suite Bells & Whistles: </i></strong>
+                <ul>
+                    <li>Before Suite (run once before all tests)</li>
+                    <li>Before Test (run once before every test)</li>
+                    <li>Set Event (define mule messages that serve as input to tested flows)</li>
+                    <li>Mock Processors (mock results from external dependencies like DB Adapters, Rest Connectors)</li>
+                    <li>Spy Processors (run assertions and validations before and after the spied processor)</li>
+                    <li>Assertions (Assert That, Assert Equals, Assert That with Matchers, Assert Expression offers comparable capabilites with other testing frameworks like Hamcrest)</li>
+                </ul></p>
+            </div>
+            <div class="grooveborder pagecover1">
+                <h3>Designer</h3>
+                <p>One of the suggestion when you aspire to become a mule designer is to understand and complete the Anypoint Platform Development: Fundamentals free course and keep developing mule expertise as you deliver on mule projects. I have done this course a few times and pass the certification couple of times.</p>
+                <p>In the introductory section we are introduced with concepts like Application Network, Production - Consumption based IT operating model, Restful API and Services. Earlier we use to identify machines with an application but services are now implemented to run on any machine. Cloud providers & Kubernetes engine is enabling multi-cloud architectures and provides a layer of abstraction to many of the hardware, network and software services at planet scale. We have more services available as API then ever before and also there is significant push to create API for internal services as well. Delivery teams can quickly adapt and consume API & services to generate business value. Thus it is required to create and publish assets that are discoverable and leveraged by Product Owners and Buisness Architects. We can then reap benefits of resusable nodes in the form of application network with both internal and external services and APIs. Application landscape of these services & APIs is geared with restful constraints & microservices principles, and allow team & service topologies can be easily adapted as per business needs.</p>
+                <p>Anypoint platform allow designers to take top down approach to designing, deploying and discovering API whereas Studio, mule runtime & core components, connectors, dataweave covers the development and implementation aspects of mule flows. Anypoint provides tools like API Designer, API Console with Mocking Service, API Portal, Exchange, API Notebook is used throughout the Design-->Simulate-->Feedback-->Validate iteration of RAML spec. API spec is then imported in mule project to scaffold flows, build and test as per the requirements, architecture and design. API Manager and Runtime Manager covers the deployment and governance aspects of the APIs. There are several policies available like client ID enforcement, Open ID connect that helps you secure the APIs. There are additional tools like Anypoint Monitoring, API Analytics and Visualizer that performs the specific function of monitor, analyze and troubleshoot within the governance framework.</p>
+                <p>We start on the API design by creating RAML specs in the API Designer and validates the interface layer by using the mocking service. As we design and create many API specifications, we start to reuse types, traits, library and other features of RAML. As we iterate on design, development and unit testing tasks, we build mule applications in Studio by pulling in the API specification that are published to exchange. Mule flows have sections like source, processor and error handling and we can develop mule apps in a graphical or XML editor with the components and connectors available in the studio palette. Studio has embedded mule runtime to test the developed mule flows but it can be licensed to run on any machine. MUnit is a mule testing framework that lets us write automated tests and is fully integrated into the studio. Mule Apps are deployed with Runtime Manager and supports the following deployment options:
+                    <ul>
+                        <li>Deployed on mule runtime with resources provisioned as AWS VM instances with cloudhub 1.0. Cloudhub 2.0 is using containers on Kubernetes clusters offering on all 3 public cloud providers.</li>
+                        <li>Deployed on mule runtime with resources provisioned in customer datacenter.</li>
+                        <li>Deployed as container images on anypoint runtime fabric with resources provisioned in customer datacenter.</li>
+                    </ul>
+                    API proxies are created in API Manager to secure and govern the mule apps through policy framework. Thereis gateway runtime included as part of mule engine and the policies are downloaded on the gateway when registration is activated for mule service mostly through auto discovery component. When the API proxy is used to manage the non-mule application, it is required to deploy proxy application on the mule runtime and may require an additional vCore license.
+                </p>
+                <p>Deployed mule apps are either started as a listener, scheduler, File or DB trigger. Message Source generates the mule event wrapping the mule message, variables, correlationId. It is mule event that gets mutated as it is consumed and generated by several processors in a mule flow. One can develop rich mule apps with components, connectors, dataweave language. Some of core feature of integrations are message transformation, routing, iteration on items in a collection like arrary, transcation tracing with a unique ID, parallel calls to external APIs and services, configurable connectors to databases, saas apps & cloud services are available to muleys and mule runtime is highly performant, reliable and scabable.</p>
+                <p>When we develop complex integrations, we often develop features in modules which are extensible and also can be included as dependency in the POM. Not only we can create many flows/subflows in mule, but we can also create mutiple mule configuration files in a mule application. We usually create global file to encapsulate reusable configuration elements and same file can be replicated across mule applications. Another best practice to externalize the application properties in a configuration file and then use the global configuration along with property placeholders to refer them in application code.</p>
+                <p>Though Application Programming Interface is a layer of abstraction to the underlying implemented service, it was SOAP protocol that standardize the way webservices are called over the internet with HTTP. Though SOAP made calls platform neutral, it was still cumbersome and REST simplifiled then with following characterstics:
+                    <ul>
+                        <li>Request and responses can be transported with simple media type like JSON instead of XML which eased the serilaization and de-seralization complexities.</li>
+                        <li>REST establish uniform interface with HTTP verbs & URIs instead of WSDL that is required in SOAP webservices.</li>
+                    </ul>
+                    In mule flows, we can consume both SOAP & REST services using the SOAP & HTTP connector. When http connector is configured to consume a Restful API, the behavior is configured as a requester but when we host the Mule API for consumers, HTTP connector is configured as a listener.
+                </p>
+                <p>Along with muleys, I have developed flows with components like scatter gather, choice router, for each based on integration scenarios and applied patterns of message routing, splitters to meet the business needs in integration projects. Error Handling is designed by catching errors at processor, flow, application and system level by using scopes like On Error Propagate, On Error Continue, and features like Error Mapping, Try / Catch. Message transformation is the core capability which is about reading and parsing data from one format, transfrom it and write it to another format. Dataweave is the programming language created by Mulesoft that supports functional programming paradigm. It provides many features like literal bindings, object and array data structures; functions, modules, core function libraries that includes higher order functions like map, filter, reduce; flow controls like if / else. A DWL script can receive CSV file as input and transform into an array of complex JSON objects, or receive an XML file and write the data out to a flat file format.</p>
+                <p>Often times, there are enterprise usecases like data synchronization, large file processing, API Responses with Pagination that are batch-oriented than real-time. Batch oriented design require solutions that can process records in batches as a job. Though the usecase may require message transformation at record level, the record level processing will have to be aggregated, summarized and completion metrics need to be reported at job level. As we are processing a large volume of records in batch scenarios, we need a solution that creates & processes several batches in parallel for a job. Mule Batch processing can be applied to these ETL like scenarios which has components like Batch Job, Batch Step, and Batch Aggregator which are designed for reliable, asynchronous processing of larger-than-memory data sets. Batch Job is executed in three phases: Load & Dispatch Phase, Process Phase and On Complete Phase. Load & Dispatch phase is implicit and it is a prep phase through which mule splits the incoming collection into batches, create persistent queues and assign the Job Instance ID. In the process phase, batches are executed in parallel and each record in the batch goes through the processors in the batch step sequentially and any aggregation logic applied on the group of records in the agreegator step. In the on complete phase, a report is generated summarizing the job result with the number of processed & failed records. We can configure batch components with configurations like maxFailedRecords, acceptPolicy, acceptExpression depending on the usecase, corner & exception scenarios, test strategy & plans and connectors used in the batch processing.</p>
+            </div>
+            <div class="grooveborder">
+                <h3>Deployer</h3>
+                <p>
+                    <h6 class="text-center">Hosting Options<span class="alignright"></h6>
+                    <img ng-src="images/anypoint-hosting_1.png" alt="anypoint-hosting_1" width="900" height="300">
+                    <ul>
+                        <li>Control Plane includes components of Anypoint Platform Architecture that you use to design, develop and manage APIs and Mule Applications.</li>
+                        <li>Runtime Plane includes components of Anypoint Platform Architecture where your APIs and Mule Apps are deployed and made available to yoru users.</li>
+                        <li>Control Plane environments can be US Cloud (default), EU Cloud, Mulesoft Government Cloud, Customer-Hosted.</li>
+                        <li>Runtime Plane environments can be hosted as Cloudhub 2.0, Cloudhub 1.0, Runtime Fabric, Standalone runtimes.</li>
+                    </ul>
+                </p>
+                <p>
+                    <h6 class="text-center">Cloudhub<span class="alignright"></h6>
+                        <img ng-src="images/anypoint-hosting_2.png" alt="anypoint-hosting_2" width="900" height="300">
+                    <ul>
+                        <li>Cloudhub is designed to provide enterprises with a multitenant, secure, elastic and highly available integration platform as a service (iPAAS).</li>
+                    </ul>
+                </p>
+            </div>
+            <div class="grooveborder">
+                <h3>General</h3>
+                <div class="row ml-1 mr-1">
+                    <div class="col-md-2 gridborder">Mule ESB</div>
+                    <div class="col-md-9 gridborder">Lightweight runtime for mule apps</div>
+                    <div class="w-100"></div>
+                    <div class="col-md-2 gridborder">Anypoint API</div>
+                    <div class="col-md-9 gridborder">RAML/OAS specification  published using features like Designer, Exchange.</div>
+                    <div class="w-100"></div>
+                    <div class="col-md-2 gridborder">Anypoint CLI</div>
+                    <div class="col-md-9 gridborder">Provides commands that uses the Anypoint API Interface for tasks related to programmatic automation for account, api-catalog, governance, api-mgr, runtime-mgr (application, cloudhub, server, rtf), cloudhub, datagraph, designcenter, exchange.</div>
+                    <div class="w-100"></div>
+                    <div class="col-md-2 gridborder">Mule Components</div>
+                    <div class="col-md-9 gridborder">Building blocks of mule flows and catergorized as core components, connectors and modules.</div>
+                    <div class="w-100"></div>
+                    <div class="col-md-2 gridborder">RAML</div>
+                    <div class="col-md-9 gridborder">Designed not just to document but model API in yaml syntax but both swagger and raml are succeeded to OAS.</div>
+                    <div class="w-100"></div>
+                    <div class="col-md-2 gridborder">Mule Error Handling</div>
+                    <div class="col-md-9 gridborder">On Error Continue (Red In --> Green Out). On Error Propagate (Red In --> Red Out). Default Error Handler uses On Error Propagate and can't be configured. Global Error Handler can be implemented to override default error handling and configured at application level. Error from child flows can be either propagated or supressed depending upon the whether we have used On Error Propagate or On Error Continue. Use the Try, Catch to handle error at the processor level. Every error has an Error Type comprised of namespace and identifier. Error Type is matched from top to bottom in the Error Handling scope.</div>
+                    <div class="col-md-2 gridborder">Cloudhub</div>
+                    <div class="col-md-9 gridborder">iPAAS platform for mule APIs and services engineered as a control plane and runtime plane. It relies on elastic infrastructure and latest releases leverages container technologies like docker and kubernetes.</div>
+                    <div class="w-100"></div>
+                  </div>
             </div>
         </div>
     </div>

@@ -2,7 +2,15 @@
     <div class="row">
         <integration-side-menu></integration-side-menu>
         <div class="col-md-10">
-            <h6 class="grooveheader">INTEGRATION 104</h6>
+            <h6 class="grooveheader">INTEGRATION 104 - Knowables</h6>
+            <div class="grooveborder">
+                <h3>Thank You</h3>
+                <h6 class="text-center">Integration Patterns<span class="alignright"></h6>
+                <ul>
+                    <li><a href="https://www.youtube.com/watch?v=s0v44dkZdRs" target="_blank" class="nav-link">Thanks, Mark (Architecture Monday)</a></li>
+                    <li><a href="https://www.youtube.com/watch?v=QmaNucXFYd8" target="_blank" class="nav-link">Thanks, Gregor (EA)</a></li>
+                </ul>
+            </div>
             <div class="grooveborder">
                 <h3>Enterprise Integration Patterns</h3>
                 <p>
@@ -43,6 +51,498 @@
                                 .end()
                                 .to("stream:out");
                         }              
+                    </code>                    
+                </pre>
+            </div>
+            <div class="grooveborder">
+                <h3>Modern Enterprise Integration</h3>
+                <p>We all know that monolith application landscape has to transform to microservices enterprise, but tranformation challenges and journey is different for many enterprises. As the transformation programs create mordern enterprises, integration platforms have also evoloved from server based deployments to worker enabled deployments. Let's just try to understand some of the nuances with deployment strategies for Mule applications on Anypoint Platform</p>
+                <h3>Server Model</h3>
+                <p>In a server based deployment model, several mule applications deploys on a mule server with a mule runtime and shared resources are managed in a domain project.</p>
+                <h3>Worker Model</h3>
+                <p>In a worker based deployment model, each mule application is an independent deployment with its runtime and resources on public cloud like AWS.</p>
+                <h3>Container Model</h3>
+                <p>In a container based deployment model, each mule application is converted to a immutable container image that will be deployed as an Kubernetes POD which means mule runtime is part of application resources. When we talk about containers, we mention docker which is platform netural application abstraction over operating system and Kubernetes is google open source orchestration engine to manage container workloads across clusters of nodes. So as long as you package your application as a docker image, one can deploy to kubernetes cluster with a master API provided by the Kubernetes copntroller, and then then there are components like Kubelet and Kube-proxy that helps maintains the desired state based on what you pass to master controller API. One of the ways to talk to API is using the kubectl command line utility.</p>
+                <h3>Deployment Models on Anypoint Platform</h3>
+                <p>Anypoint Platform has a Management Plane and Runtime Plane.</p>
+                <ul class=space_list>
+                    <li>
+                        CloudHub Only - Both runtime and management plane is in the cloud
+                    </li>
+                    <li>
+                        Customer Hosted - Runtime Plane in on-premise and management plane is in the cloud
+                    </li>
+                    <li>
+                        Hybrid - Runtime plane is both on-premise and cloud. Management plane in the cloud.
+                    </li>
+                    <li>
+                        Private Cloud - Both runtime and management plane is on-premise.
+                    </li>
+
+                </ul>
+                <h3>Server Based to Worker Based Deployments</h3>
+                <ul class=space_list>
+                    <li>
+                        Assessment / Discovery phase is about understanding the integration landspace, business process and integration scenarios, discovering and design analysis on existing mule artifacts and infrastructure.
+                        <ul>
+                            <li>
+                                Do we have domain project?
+                            </li>
+                            <li>
+                                    Domain specific and App specific environment properties.
+                                </li>
+                                <li>
+                                    CI/CD Pipeline
+                                </li>
+                                <li>
+                                    Reusable Services and Code
+                                </li>
+                                <li>
+                                    Test Strategies and Test Plans
+                                </li>
+                                <li>
+                                    HA and Scaling Requirements
+                                </li>
+                        </ul> 
+                    </li>
+                    <li>
+                            Planning phase can then focus on following aspects:
+                            <ul>
+                                <li>
+                                    Domain projects are not supported in worker model and dependencies are managed in a worker.
+                                </li>
+                                <li>
+                                    Environment properties are managed as config properties in the platform.
+                                </li>
+                                <li>
+                                    Scalinp up and Scaling out worker apps are based on design and configurations of the platform. In Cloudhub, mule apps can scale up from 1vCore, 2vCore, 4vCore, 8vCore and 16vCore. We can also scale out from 1 to 8 workers.
+                                </li>
+                                <li>
+                                    High Availability and Disaster Recovery can be enabled by supporting deployments in multiple regions and different availability zones.
+                                </li>
+                                <li>
+                                    Sizing in server model is managed with high performance CPU and huge RAM whereas in worker model, each worker app has its own vCores and RAM.
+                                </li>
+                                <li>
+                                Policies in worker model are enabled with gateway product of the platform.
+                                </li>
+                            </ul>
+                    </li>
+                    <li>
+                        Platform Setup [VPC, vCores, Load Balancers, Static IPs]
+                        Anypoint Org location in master and not in business group.
+                        CIDR Block (Expected Applications * 10)
+                        Use the AWS region that is closest to the customer datacenter.
+                        Shared Worker Cloud [DNS as http://appname.cloudhub.io]
+                        DataCenter Apps to AWS VPC [IPSec / AWS Peering / Direct Connect]
+                        Use DLB for custom domain name
+                    </li>
+                    <li>
+                        Iterate: MULE 3 [Migrate, Refactor, Redesign] 
+                        </li>
+                        <li>
+                        Iterate: MULE 4 [APIs, Endpoints, Event Driven Apps, Batch Apps] 
+                        </li>
+                        <li>
+                        Pilot Phase with Hybrid Deployment Model. Anypoint Platform is offering Runtime Fabric that helps mule customers ease the pain in migration and integration projects. 
+                        </li>
+                        <li>
+                        Multiple Waves and releases to create an enterprise ecosystem that fosters seamless deployments and help you achieve benefits of transforming towards microservices architecture.     
+                        </li>
+                </ul>
+                <h3>Deployments of Layered Mule and Java Monolith Application with all components on same Mule Runtime</h3>
+                <p>In a server based deployment model, we create a domain project to manage the dependencies and runtime environment, and many mule applications deploy on same mule runtime.</p>
+                <h3>Deployments with Cloudhub</h3>
+                <p>With the advent of IAAS platfrom like AWS that offered capabilities of elastic infrastructure provisioning at a global scale, CloudHub is integration PAAS platfrom that leverages provisioning and allocating resources from public cloud IAAS providers like AWS during the deploy phase of mule applications. CloudHub is comprised of platform services such as Application Data, Insight, Logs, Alerts, Virtual Private Cloud, Worker Management, Schedule Management and deployment & configuration access to these platform services is enabled through Runtime Manager and REST API. CloudHub deployments are more geared towards worker based deployments.</p>
+                <h3>Deployments with Runtime Fabric</h3>
+                <p>As per the definition on <a href="https://docs.mulesoft.com/runtime-fabric/1.6/">As per Mule Docs, Anypoint Runtime Fabric</a> is a container service that automates the deployment and orchestration of Mule Applications and API gateways. Runtime Plane has three layers [RTF Runtime, K8 Layer, Gravity Layer] and agent component in the RTF Runtime layer binds the runtime plane to management plane of Anypoint Platform to enables features of API Manager, Runtime Manager and Exchange. As it is the immutable application image that runs as a container / pod, the deployment process creates the application image, registers it to the mulesoft registery and deploy as POD in worker node and ingress component in the controller nodes appropriately routes the request to the deployed replica.</p>
+            </div>
+            <div class="grooveborder">
+                <h3>Terms that Matter</h3>
+                <ul>
+                    <li>
+                        Processing Style: Synchronous, Asynchronous, Batch, Real-time, Poll, Schedule
+                    </li>
+                    <li>
+                        Messaging: Publish-Subscribe, Queue, Topic, Channel, Broker, Hub-Spoke, Producer, Consumer, Correlation
+                    </li>
+                    <li>
+                        Service Bus: Router, Mediation, Transform, Mapper, Adapter, Bridge, Composition, Orchestration
+                    </li>
+                    <li>
+                        Event Driven: Listener, Reactive, Subscription, Filter, Pipe, Splitter
+                    </li>
+                    <li>
+                        Architecture: SOA, BPM, EAI, ETL, Restful API, Microservices
+                    </li>
+                    <li>
+                        Protocols and Data: XML, JSON, SOAP, HTTP, JMS, JDBC, AMQP
+                    </li>
+                </ul>
+                <h3>Scheduler and Pollers</h3>
+                    <h5>How’s and Why’s</h5>
+                    <ul>
+                        <li>
+                            How to trigger the integration batches
+                        </li>
+                        <li>
+                            Can we schedule a webservice callout / or API invocation.
+                        </li>
+                        <li>
+                            Should we leverage timers / or event based triggers.
+                        </li>
+                    </ul>
+                    <h3>Learn from Open Source</h3>
+                    <p>
+                        We all know about Quartz, but generally what we may see in real integration environments are components developed on open source Quartz framework. However we can use quartz-scheduler maven dependencies to better understand and use the components available with product and platforms. 
+                    </p>
+                    <pre>
+                        <code> 
+                        // maven dependency
+                        &lt;dependency&gt;
+                        &lt;groupId>org.quartz-scheduler&lt;/groupId&gt;
+                        &lt;artifactId>quartz&lt;/artifactId&gt;
+                        &lt;version>2.1.5&lt;/version&gt;
+                        &lt;/dependency>
+                        import org.quartz.Job;
+                        // Our Job class has to implement Quartz Job Interface, and implementation provided in the execute method will be run based on schedule frequency. 
+                        public void execute(JobExecutionContext context)
+                            throws JobExecutionException {
+                            System.out.println("Hello Quartz!");
+                        }
+                        // In the Application we use the Job Builder and Trigger Builder to create job and trigger instance. We get the scheduler instance from factory class and we pass the job and trigger instance to scheduleJob method of scheduler instance.
+                        <a href="https://mkyong.com/java/quartz-2-scheduler-tutorial/" target="_blank">Scheduler Tutorial</a>
+    //  Output from Local Prototype Run
+    Hello Quartz!
+    15:54:24.379 [Timer-0] DEBUG org.quartz.utils.UpdateChecker - Quartz version update check failed: Server returned HTTP response code: 403 for URL: http://www.terracotta.org/kit/reflector?kitID=quartz&pageID=update.properties&id=-1407972861&os-name=Mac+OS+X&jvm-name=Java+HotSpot%28TM%29+64-Bit+Server+VM&jvm-version=1.8.0_131&platform=x86_64&tc-version=2.1.5&tc-product=Quartz&source=Quartz&uptime-secs=6&patch=UNKNOWN
+    15:54:27.024 [DefaultQuartzScheduler_QuartzSchedulerThread] DEBUG org.quartz.simpl.PropertySettingJobFactory - Producing instance of Job 'group1.dummyJobName', class=HelloJob
+    15:54:27.025 [DefaultQuartzScheduler_QuartzSchedulerThread] DEBUG org.quartz.core.QuartzSchedulerThread - batch acquisition of 1 triggers
+    15:54:27.025 [DefaultQuartzScheduler_Worker-4] DEBUG org.quartz.core.JobRunShell - Calling execute on job group1.dummyJobName
+    Hello Quartz!
+    15:54:32.025 [DefaultQuartzScheduler_QuartzSchedulerThread] DEBUG org.quartz.simpl.PropertySettingJobFactory - Producing instance of Job 'group1.dummyJobName', class=HelloJob
+    15:54:32.025 [DefaultQuartzScheduler_QuartzSchedulerThread] DEBUG org.quartz.core.QuartzSchedulerThread - batch acquisition of 1 triggers
+    15:54:32.025 [DefaultQuartzScheduler_Worker-5] DEBUG org.quartz.core.JobRunShell - Calling execute on job group1.dummyJobName
+    Hello Quartz!
+    15:54:37.024 [DefaultQuartzScheduler_QuartzSchedulerThread] DEBUG org.quartz.simpl.PropertySettingJobFactory - Producing instance of Job 'group1.dummyJobName', class=HelloJob
+    15:54:37.025 [DefaultQuartzScheduler_QuartzSchedulerThread] DEBUG org.quartz.core.QuartzSchedulerThread - batch acquisition of 1 triggers
+    15:54:37.025 [DefaultQuartzScheduler_Worker-6] DEBUG org.quartz.core.JobRunShell - Calling execute on job group1.dummyJobName
+    Hello Quartz!
+
+    Process finished with exit code 130 (interrupted by signal 2: SIGINT)
+                        </code>                    
+                    </pre>
+            </div>
+            <div class="grooveborder">
+                <h3>Transformers</h3>
+                <p>
+                    Inspite of evolving game of integration over past 2 decades, all integration platform and products make tranformation of message in the integration context as a key capability. What you may see in Integration product is that you can create a mapper file with drag & drop component, but as the integrations mature overtime, developers keep scripting these mappers and these snippets of mappers are leveraged across multiple integrations that connects the hybrid enterprise ecosystem.  
+                </p>
+                <p>
+                    In my experience as SOA developer, I have used XSLT / XQuery as a transformation language where integration developers use XPath to access the XML nodes and uses source and target schemas to constrain the input & outputs. In my projects with Anypoint Toolset, I have developed dwl scripts that provides the transformation capabilities in mule flows. 
+                </p>
+                <p>
+                    We should also understand that these transformation components offered in Integration layer is somewhat of a higher order capability, and when complemented with services developed with patterns like <a href="https://www.tutorialspoint.com/design_pattern/transfer_object_pattern.htm">Transfer Object, Adapter, Bridge</a> and frameworks developed in software engineering community with language support from Java, we end up building integrated usecases that seamlessly traverse across several integration boundries.
+                </p>
+                <h3>Mapper with Simple POJOs</h3>
+                <p>
+                    Let just say we have a person pojo with properties as firstname, lastname and we need a mapper which should return a pojo with name formed with concatenation of firstname and lastname and also return the address that is passed in mapper call.  
+                </p>
+                <pre>
+                    <code> 
+                    // Person POJO
+                    public class Person {
+                        private String firstName;
+                        private String lastName;
+                    
+                        Person(String fname, String lname) {
+                            this.firstName = fname;
+                            this.lastName = lname;
+                        }
+                        public String printName() {
+                            return this.firstName + ' ' + this.lastName;
+                        }
+                    
+                        public String getFirstName() {
+                            return firstName;
+                        }
+                    
+                        public String getLastName() {
+                            return lastName;
+                        }
+                    }
+                    </code>                    
+                </pre> 
+                <pre>
+                    <code>
+                    //PersonAddress  POJO
+                    public class PersonAddress {
+                        String name;
+                        String address;
+                    
+                        public void setName(String name) {
+                            this.name = name;
+                        }
+                    
+                        public void setAddress(String address) {
+                            this.address = address;
+                        }
+                    
+                        public String getName() {
+                            return name;
+                        }
+                    
+                        public String getAddress() {
+                            return address;
+                        }
+                    }
+                    </code>                    
+                </pre>
+                <pre>
+                    <code> 
+                    // Demo Application
+                    public class Application {
+                        public static void main(String[] args) throws Exception{
+                            System.out.println("Hello Transformer");
+                    
+                            Person john = new Person("John", "Doe");
+                            System.out.println(john.printName());
+                            PersonAddress johnaddress = new PersonAddress();
+                            johnaddress = mapper(john, johnaddress, "Madison Street");
+                            System.out.println(johnaddress.getAddress());
+                    
+                        }
+                    
+                        public static PersonAddress mapper (Person person, PersonAddress personAndAddress, String address) {
+                            String fullName = person.getFirstName() + ' ' + person.getLastName();
+                            String personAddress = person.getFirstName() + " lives on " + address;
+                            personAndAddress.setName(fullName);
+                            personAndAddress.setAddress(personAddress);
+                            return personAndAddress;
+                    
+                        }
+                    }
+                </code>                    
+            </pre>
+            <pre>
+                <code>
+                //  Output from Local Prototype Run
+                Hello Transformer
+                John Doe
+                John lives on Madison Street
+                Process finished with exit code 0
+                </code>                    
+            </pre> 
+            <h3>DWL Mappers with Dataweave</h3>
+                <p>
+                    Let's just say we have an mule integration flow with person in the event payload and we have to create an output with person name and address.
+                </p>
+                <pre>
+                    <code> 
+                    // Input JSON
+                    { 
+                        "fname" : "John", 
+                        "lname" : "Doe" 
+                    }
+                    // DWL
+                    output application/json
+                    ---
+                    {
+                        name: payload.fname ++ ' ' ++ payload.lname,
+                        address: vars.address
+                    }
+                    </code>                    
+                </pre> 
+                <pre>
+                    <code>
+                    //  Output from Local Prototype Run
+                    INFO  2020-09-16 17:14:59,329 [[MuleRuntime].uber.02: [eip-blog-project].eip-blog-projectFlow.CPU_INTENSIVE @d3caa58] [processor: eip-blog-projectFlow/processors/3; event: 0c882450-f812-11ea-a280-784f438f0d1b] org.mule.runtime.core.internal.processor.LoggerMessageProcessor: Raw Input: {
+                        "fname": "John",
+                        "lname": "Doe"
+                    }
+                    INFO  2020-09-16 17:14:59,357 [[MuleRuntime].uber.04: [eip-blog-project].eip-blog-projectFlow.CPU_INTENSIVE @d3caa58] [processor: eip-blog-projectFlow/processors/5; event: 0c882450-f812-11ea-a280-784f438f0d1b] org.mule.runtime.core.internal.processor.LoggerMessageProcessor: Transformed Output: {
+                        "name": "John Doe",
+                        "address": "'Madison Street'"
+                    }
+                    </code>                    
+                </pre> 
+                <p>
+                    Code snippets from project files  are checked into the integration-102 in the learnjs git repo. Please connect with me if you need help running the code locally.
+                </p>
+            </div>
+            <div class="grooveborder">
+                <h3>Publish-Subscribe</h3>
+                <p>
+                    One of the traditional ways integrating applications has been with exchanging (send and receive) messages to the central enterprise messaging layer. We generally start with simple terms like Queue (Producer / Consumer and mostly FIFO) or Topic (Multiple Subscribers for different tasks), but there are complexities around guaranteed message delivery, acknowledgements, push vs pull, sequencing & ordering in the messaging layer.  
+                </p>
+                <p>
+                    Active MQ & JMS based messaging products implement specifications to provide user friendly interfaces to creates these resources like Queues, Destinations, Topics on an Application Server and server has implementations of connection factories & connection pools and integration developers uses adapters to obtain connection to these messaging servers and implement publish / subscribe interfaces.  
+                </p>
+                <p>
+                    As protocols matured and open source languages abstracted the complexity, we now have an ecosystem of messaging platforms like RabbitMQ, Kafka that scales with the cloud. 
+                </p>
+                <p>
+                    We also see major cloud providers like AWS, Azure use the open source platforms to provide messaging infrastructure with global scale and pay on the go basis. 
+                </p>
+                <h3>How doesPublish-Subscribe help ?</h3>
+                <p>
+                    Messaging is an asynchronous enabler for stateless synchronous requests on Http and  users are acknowledged quickly for their actions with a message publisher and subscribers can do the fulfillment, processing and notifications tasks.  
+                </p>
+                <p>
+                    Products like Rabbitmq enable configuration driven routing to specific destinations with features like routing-keys.  
+                </p>
+                <p>
+                    Platforms like Kafka implement techniques like back-pressure where messages are persisted in order like logs and consumers can playback from a specific point in time.  
+                </p>
+                <p>
+                    Messaging has been a way to enable horizontal scaling for a long time, and with cloud enablements you can handle peaks and bursts by creating containers on the fly. 
+                </p>
+                <h3>Abstractions in Rabbitmq</h3>
+                <p>
+                    vhost / Virtual host - It is the highest level of abstraction with which you enable authentication, authorization and manage user permissions. It can also be used to manage multiple environments in a single instance.  
+                </p>
+                <p>
+                    Rabbitmq server is a broker bootstrapped on an erlang node, and allows publisher and subscriber implementations in different languages to connect with a broker using AMQP wire protocol which uses reliable TCP connection.  
+                </p>
+                <p>
+                    When the connection is established, multiple channels can be opened over a single connection for parallel data exchange. Channel is another level of abstraction that has to be created before messages can be published and consumed.  
+                </p>
+                <p>
+                    Unlike traditional broker architecture, where there is direct binding between the server and resources like queue / or topic, rabbitmq has exchanges and publishers sends messages to the exchange and depending upon the exchange type, routing keys and bindings, messages are delivered to the subscribers.  
+                </p>
+                <h3>Rabbitmq Publisher - Subscriber Implementation in NodeJS</h3>
+                <p>
+                    In LearnJS-102, we have used node modules like axios and array functions implementations from underscore library to filter some todo records. We are going to piggy-back on that example.  
+                </p>
+                <p>
+                    We are going to use docker image to create a rabbit-mq container and have the server listen on default port 5672.  
+                </p>
+                <pre>
+                    <code>
+                    //Start Rabbitmq as a container service with docker
+                    docker run --name rabbitmq -p 5672:5672 rabbitmq
+                    2020-09-21 09:01:59.699 [info] <0.44.0> Application rabbitmq_prometheus started on node rabbit@7cbd3bdbcb4d
+                        2020-09-21 09:01:59.712 [info] <0.831.0> started TCP listener on [::]:5672
+                        2020-09-21 09:02:00.279 [info] <0.680.0> Server startup complete; 3 plugins started.
+                        * rabbitmq_prometheus
+                        * rabbitmq_web_dispatch
+                        * rabbitmq_management_agent
+                        completed with 3 plugins.
+                        2020-09-21 09:02:00.279 [info] <0.680.0> Resetting node maintenance status
+                        2020-09-21 09:02:42.318 [info] <0.876.0> accepting AMQP connection <0.876.0> (172.17.0.1:58256 -> 172.17.0.2:5672)
+                        2020-09-21 09:02:42.338 [info] <0.876.0> connection <0.876.0> (172.17.0.1:58256 -> 172.17.0.2:5672): user 'guest' authenticated and granted access to vhost '/'
+                        2020-09-21 09:02:47.141 [info] <0.897.0> accepting AMQP connection <0.897.0> (172.17.0.1:58258 -> 172.17.0.2:5672)
+                        2020-09-21 09:02:47.148 [info] <0.900.0> accepting AMQP connection <0.900.0> (172.17.0.1:58260 -> 172.17.0.2:5672)
+                        
+                    </code>                    
+                </pre>
+                <p>
+                    In both publisher and subscriber we will use amqlip node module to connect to the rabbitmq container service, create a channel and todos queue  
+                </p>
+                <p>
+                    In consumer service we will consume the message from the todos queue, acknowledge the message, so that it gets removed from the queue.  
+                </p>
+                <pre>
+                    <code>
+                    //consumer.js
+                    const amqp = require('amqplib');
+
+                    connect();
+                    async function connect() {
+                        try {
+                            const connection = await amqp.connect("amqp://localhost:5672");
+                            const channel = await connection.createChannel();
+                            const result  = await channel.assertQueue("todos");
+                            channel.consume("todos", message => {
+                                const input = JSON.parse(message.content.toString());
+                                console.log(`Received todo with input ${JSON.stringify(input)}`);
+                                channel.ack(message);
+                            });
+                            console.log("Waiting for messages...");
+                        }
+                        catch (ex) {
+                            console.error(ex);
+                        }
+                    }
+                    </code>                    
+                </pre>
+                <p>
+                    In publisher service, we will iterate over the todos and publish each of them into the todos queue.  
+                </p>
+                <pre>
+                    <code>
+                    //consumer.js
+                    const amqp = require('amqplib');
+                    const axios = require('axios');
+                    const _ = require('underscore');
+                    
+                    function todosList(todos) {
+                        let arr = Object.values(todos);
+                        return arr;
+                    }
+                    
+                    axios.get('https://jsonplaceholder.typicode.com/todos')
+                    .then((response) => {
+                        let todosArrUnderscore = todosList(response.data);
+                        const unCompletedTodos = _.filter(todosArrUnderscore, element => element.userId == 5 && element.id > 98);
+                        const completedTodos = _.map(unCompletedTodos, element => {connect(element); return element;});
+                        console.log("----------- Published Todos -------------");
+                        console.log(completedTodos);
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+                    
+                    
+                    async function connect(userdata) {
+                        try {
+                            const connection = await amqp.connect("amqp://localhost:5672");
+                            const channel = await connection.createChannel();
+                            const result  = await channel.assertQueue("todos");
+                            channel.sendToQueue("todos", Buffer.from(JSON.stringify(userdata)) );
+                            console.log(`Todos sent successfully ${JSON.stringify(userdata)}`);
+                        }
+                        catch (ex) {
+                            console.error(ex);
+                        }
+                    }
+                    </code>                    
+                </pre>
+                <p>
+                    We will start the consumer service with npm run consume in the terminal window, and wait for messages.  
+                </p>
+                <pre>
+                    <code>
+                    //consumer terminal window
+                    npm run consume
+    
+                    > rabbitmqapp@1.0.0 consume /Users/home/LearnGame/dirGithubio/learnJS/integration-103
+                    > node consumer.js
+                    
+                    Waiting for messages...
+                    Received todo with input {"userId":5,"id":100,"title":"excepturi a et neque qui expedita vel voluptate","completed":false}
+                    Received todo with input {"userId":5,"id":99,"title":"neque voluptates ratione","completed":false}                
+                    </code>                    
+                </pre>
+                <p>
+                    We will start the publisher service with npm run publish filtered todos with id = [99, 100].  
+                </p>
+                <pre>
+                    <code>
+                    //publisher terminal window
+                    > rabbitmqapp@1.0.0 publish /Users/home/LearnGame/dirGithubio/learnJS/integration-103
+                    > node publisher.js
+                    
+                    ----------- Published Todos -------------
+                    [ { userId: 5,
+                        id: 99,
+                        title: 'neque voluptates ratione',
+                        completed: false },
+                    { userId: 5,
+                        id: 100,
+                        title: 'excepturi a et neque qui expedita vel voluptate',
+                        completed: false } ]
+                    Todos sent successfully {"userId":5,"id":100,"title":"excepturi a et neque qui expedita vel voluptate","completed":false}
+                    Todos sent successfully {"userId":5,"id":99,"title":"neque voluptates ratione","completed":false}                
                     </code>                    
                 </pre>
             </div>
