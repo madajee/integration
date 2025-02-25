@@ -1,0 +1,254 @@
+<div class = "container-fluid mt-2">
+    <div class="row">
+        <sprint-side-menu></sprint-side-menu>
+        <div class="col-md-10">
+            <h6 class="grooveheader">ESTORE - cpq-trailhead-subscription-products</h6>
+            <a href="#!/sprint/1" class="nav-link">estore-sprint</a>
+            <a href="#!/integration/119" class="nav-link">Integration-119</a>
+            <a target= "_blank" href="https://www.youtube.com/watch?v=1EJ2aRlfXUM&list=PLMEYlt-BRJcJUUFSUjULJSSUZRbvFALhQ" class="nav-link">demo-playlist</a>
+            <a href="#!/project/103" class="nav-link">project-estoreexpress</a>
+            <h6><strong>Salesforce CPQ Trailhead with Subscription Products, Amendments and  Renewals</strong><span class="alignright"><strong>cpq trailhead: </strong><a href="https://trailhead.salesforce.com/content/learn/projects/simplify-home-security-subscription-renewals" target="_blank">simplify-home-security-subscription-renewals</a></span></h6>
+            <h6><i>Opportunity, Quote, Order, Asset , Contract, Subscriptions, Amendments, Renewals</i></h6>
+            <div class="grooveborder">
+                <div>
+                    <h5><strong>Step-1: </strong>Sign Up for a Trailhead Playground with Salesforce CPQ</h5>
+                    <img ng-src="images/simplify-home-security-subscription-renewals/trailhead-playground-with-salesforce-cpq.png" alt="trailhead-playground-with-salesforce-cpq" width="900" height="300">
+                </div>
+            </div>
+            <div class="grooveborder">
+                <div>
+                    <h5><strong>Step-2: </strong>Create a Quote with Subscription Products</h5>
+                    <h6><strong>Salesforce Objects: </strong>[Product2, Opportunity, OpportunityLineItem, SBQQ__Quote__c, SBQQ__QuoteLineGroup__c]</h6>
+                    <p>Sales Rep is working with Klein Manor account and Home security system with exterior cameras opportunity. The primary quote Q-00013  for the opportunity is available as part of setup data in CPQ Playground.</p>
+                    <p>
+                        Few notable points:
+                        <ul>
+                            <li>Home Security Installation is an installation and don’t need to be tracked as an Asset.</li>
+                            <li>Each Exterior Camera will have a unique serial, so we need the asset record for each unit.</li>
+                            <li>Quote is segregated as 2 groups as One-time Purchases and Ongoing Services.</li>
+                            <li>CPQ will create orders for each quote line group.</li>
+                        </ul>
+                        <img ng-src="images/simplify-home-security-subscription-renewals/create-quote-with-subscription-products-1.png" alt="create-quote-with-subscription-products-1" width="900" height="300">
+                    </p>
+                    <p>We will query the records for salesforce objects that were created / or updated in this trail step.</p>
+                    <p>
+                        <h6><strong>Salesforce Object: </strong>[Product2]</h6>
+<pre>
+    <code> 
+select Id, Name, Family, SBQQ__AssetConversion__c from Product2 where Name in ('Exterior Camera', 'Home Security Console', 'Door Sensor', 'Window Sensor', 'Home Security Installation', 'Home Security Monitoring', 'Mobile Monitoring App', 'Offsite Video Storage 1GB', 'Warranty')
+    </code>                    
+</pre>
+                    <img ng-src="images/simplify-home-security-subscription-renewals/Product2-Query.png" alt="Product2-Query" width="900" height="300">
+                    <h6><strong>Salesforce Object: </strong>[Opportunity and Opportunity Products]</h6>
+<pre>
+    <code> 
+Select Id, Name, TotalOpportunityQuantity, ExpectedRevenue from Opportunity where Name = 'Home security system with exterior cameras'
+    </code>                    
+</pre>
+                    <img ng-src="images/simplify-home-security-subscription-renewals/Opportunity-Query.png" alt="Opportunity-Query" width="900" height="300">
+<pre>
+    <code> 
+Select Id, Name, TotalOpportunityQuantity, ExpectedRevenue from Opportunity where Name = 'Home security system with exterior cameras'
+    </code>                    
+</pre>
+                    <img ng-src="images/simplify-home-security-subscription-renewals/OpportunityLineItem-Query.png" alt="OpportunityLineItem-Query" width="900" height="300">
+                    <h6><strong>Salesforce Object: </strong>[Quotes, QuoteLineGroup, QuoteLine]</h6>
+<pre>
+    <code> 
+Select Id, Name, SBQQ__Ordered__c, SBQQ__Account__r.Name, SBQQ__Opportunity2__r.Name, SBQQ__PriceBook__r.Name, SBQQ__PrimaryContact__r.Name, SBQQ__CustomerAmount__c from SBQQ__Quote__c where Name = 'Q-00013'
+    </code>                    
+</pre>
+                    <img ng-src="images/simplify-home-security-subscription-renewals/SBQQ__Quote__c-Query.png" alt="SBQQ__Quote__c-Query" width="900" height="300">
+<pre>
+    <code> 
+Select Id, Name, SBQQ__NetTotal__c from SBQQ__QuoteLineGroup__c where Name in ('One-time Purchases','Ongoing Services')
+    </code>                    
+</pre>
+                    <img ng-src="images/simplify-home-security-subscription-renewals/SBQQ__QuoteLineGroup__c-Query.png" alt="SBQQ__QuoteLineGroup__c-Query" width="900" height="300">
+<pre>
+    <code> 
+Select Id, Name, SBQQ__EffectiveQuantity__c, SBQQ__NetPrice__c, SBQQ__Group__r.Name, SBQQ__Product__r.Name from SBQQ__QuoteLine__c  where SBQQ__Quote__c = 'a0qbm0000005QkJAAU' and SBQQ__Group__r.Name in ('One-time Purchases', 'Ongoing Services')
+    </code>                    
+</pre>
+                    <img ng-src="images/simplify-home-security-subscription-renewals/SBQQ__QuoteLine__c-Query.png" alt="SBQQ__QuoteLineGroup__c-Query" width="900" height="300">
+                    </p>
+                </div>
+            </div>
+            <div class="grooveborder">
+                <div>
+                    <h5><strong>Step-3: </strong>Generate Orders, Assets, Contracts, and Subscription</h5>
+                    <h6><strong>Salesforce Objects: </strong>[Order, OrderItem, Contracts, Subscriptions]</h6>
+                    <p>Sales Rep is handing over the quote to Sales Ops for Order generation and fulfillment.</p>
+                    <p>
+                        Few notable points:
+                        <ul>
+                            <li>CPQ automates the order generation with an ordered checkbox on the quote.</li>
+                            <li>CPQ automates the generation of contract, subscriptions for an order with on-going subscription products with a contracted checkbox.</li>
+                            <li>CPQ automates the generation of assets for an order with hardware and other non-subscription products with a contracted checkbox.</li>
+                        </ul>
+                        <ul class="no-bullets">
+                            <li>order-contract-subscription-asset: <br/><img ng-src="images/simplify-home-security-subscription-renewals/order-contract-subscription-asset.png" alt="order-contract-subscription-asset" width="900" height="300"></li>
+                            <li>order-and-contract: <br/><img ng-src="images/simplify-home-security-subscription-renewals/order-and-contract.png" alt="order-and-contract" width="900" height="300"></li>
+                            <li>asset-and-subscriptions: <br/><img ng-src="images/simplify-home-security-subscription-renewals/asset-and-subscriptions.png" alt="asset-and-subscriptions" width="900" height="300"></li>
+                            <li>contract-with-subscriptions: <br/><img ng-src="images/simplify-home-security-subscription-renewals/contract-with-subscriptions.png" alt="contract-with-subscriptions" width="900" height="300"></li>
+                        </ul>
+                    </p>
+                    <p>We will query the records for salesforce objects that were created / or updated in this trail step.</p>
+                    <p>
+                    <p>
+                        <h6><strong>Salesforce Object: </strong>[Order and OrderItem]</h6>
+<pre>
+    <code> 
+Select Id, OrderNumber, SBQQ__OrderBookings__c, Status, SBQQ__Contracted__c from Order where SBQQ__Quote__r.name = 'Q-00013'
+    </code>                    
+</pre>
+                    <img ng-src="images/simplify-home-security-subscription-renewals/Order-Query.png" alt="Order-Query" width="900" height="300">
+                    <h6><strong>Salesforce Object: </strong>[Order Items for One-time Purchases]</h6>
+<pre>
+    <code> 
+Select Id, Product2.Name, SBQQ__OrderedQuantity__c, SBQQ__OrderProductBookings__c, SBQQ__Asset__r.name from OrderItem where Order.OrderNumber = '00000107'
+    </code>                    
+</pre>
+                    <img ng-src="images/simplify-home-security-subscription-renewals/OrderItem-One-time-Query.png" alt="OrderItem-One-time-Query" width="900" height="300">
+                    <h6><strong>Salesforce Object: </strong>[Order Items for Ongoing Services]</h6>
+<pre>
+    <code> 
+Select Id, Product2.Name, SBQQ__OrderedQuantity__c, SBQQ__OrderProductBookings__c, SBQQ__Asset__r.name from OrderItem where Order.OrderNumber = '00000108'
+    </code>                    
+</pre>
+                    <img ng-src="images/simplify-home-security-subscription-renewals/OrderItem-Ongoing-Query.png" alt="OrderItem-Ongoing-Query" width="900" height="300">
+                    <h6><strong>Salesforce Object: </strong>[Contract and Subscriptions]</h6>
+<pre>
+    <code> 
+Select Id, Name, SBQQ__Account__r.Name, SBQQ__ProductName__c, SBQQ__QuoteLine__r.Name  from SBQQ__Subscription__c where SBQQ__Contract__r.ContractNumber = '00000106'
+    </code>                    
+</pre>
+                    <img ng-src="images/simplify-home-security-subscription-renewals/Subscriptions-contract-Query.png" alt="Subscriptions-contract-Query" width="900" height="300">
+                    <h6><strong>Salesforce Object: </strong>[Asset]</h6>
+<pre>
+    <code> 
+Select Id, Name, Product2.Name, SBQQ__ListPrice__c from Asset where Account.Name = 'Klein Manor'
+    </code>                    
+</pre>
+                    <img ng-src="images/simplify-home-security-subscription-renewals/Asset-Query.png" alt="Asset-Query" width="900" height="300">
+                    </p>
+                </div>
+            </div>
+            <div class="grooveborder">
+                <div>
+                    <h5><strong>Step-4: </strong>Generate a Renewal Opportunity for Forecasting</h5>
+                    <h6><strong>Salesforce Objects: </strong>[Contract, Opportunity]</h6>
+                    <p>Forecasting team requires Sales Ops to generate Renewal Opportunities and salesforce cpq has automated this with Renewal Forecast checkbox on the contract.</p>
+                    <p>
+                        Few notable points:
+                        <ul>
+                            <li>Warranty product is different for the Renewals, so update the warranty product to specify Warranty Extenion as the renewal product.</li>
+                            <li>Renewal term on the contract is 12 months instead of 24 months.</li>
+                            <li>CPQ will follow through with any update on the contract to the renewal opportunity.</li>
+                        </ul>
+                        <ul class="no-bullets">
+                            <li>contract-renewal: <br/><img ng-src="images/simplify-home-security-subscription-renewals/renewal-opportunity-for-forecasting-1.png" alt="renewal-opportunity-for-forecasting-1" width="900" height="300"></li>
+                            <li>contract-renewal-opportunity: <br/><img ng-src="images/simplify-home-security-subscription-renewals/renewal-opportunity-for-forecasting-2.png" alt="renewal-opportunity-for-forecasting-2" width="900" height="300"></li>
+                        </ul>
+                    </p>
+                    <p>We will query the records for salesforce objects that were created / or updated in this trail step.</p>
+                    <p>
+                        <h6><strong>Salesforce Object: </strong>[Contract  with renewal forecast]</h6>
+<pre>
+    <code> 
+Select Id, ContractNumber, SBQQ__Order__r.OrderNumber, StartDate, ContractTerm, SBQQ__RenewalForecast__c, SBQQ__RenewalTerm__c, SBQQ__RenewalOpportunity__r.Name from Contract where Account.Name = 'Klein Manor’
+    </code>                    
+</pre>
+                    <img ng-src="images/simplify-home-security-subscription-renewals/Contract-with-renewal-forecast-Query.png" alt="Contract-with-renewal-forecast-Query" width="900" height="300">
+                    <h6><strong>Salesforce Object: </strong>[Contract  with renewal forecast]</h6>
+<pre>
+    <code> 
+Select Id, Name, TotalOpportunityQuantity, ExpectedRevenue from Opportunity where Name = 'Home security renewal'
+    </code>                    
+</pre>
+                    <img ng-src="images/simplify-home-security-subscription-renewals/renewal-opportunity-Query" alt="renewal-opportunity-Query" width="900" height="300">
+                    </p>
+                </div>
+            </div>
+            <div class="grooveborder">
+                <div>
+                    <h5><strong>Step-5: </strong>Amend a Contract for quantity increase and replacement of product</h5>
+                    <h6><strong>Salesforce Objects: </strong>[Contract, Amendment Opportunity, Amendment Quote, Amendment Order and OrderItem, Subscriptions]</h6>
+                    <p>As customers request amendments to ongoing contracts, CPQ creates subscription to the existing contract and also keep renewals in sync. Customer called and would like to order extra 3GB of additional video storage effective 6 months from now, so Sales Rep has to amend the existing contract.</p>
+                    <p>
+                        Few notable points:
+                        <ul>
+                            <li>Amendments like quantity increases adds the subscription for the increased quantity.</li>
+                            <li>Amendments like replacement of product creates the subscrition for new product and another subscription for the replaced product with the negative quantity.</li>
+                            <li>CPQ will follow through with any update on the contract to the renewal opportunity.</li>
+                        </ul>
+                        <ul class="no-bullets">
+                            <li>amend-contract-quantity: <br/><img ng-src="images/simplify-home-security-subscription-renewals/amend-a-contract-for-quantity-1.png" alt="amend-a-contract-for-quantity-1" width="900" height="300"></li>
+                            <li>amend-contract-quantitiy-subscriptions: <br/><img ng-src="images/simplify-home-security-subscription-renewals/amend-a-contract-for-quantity-2.png" alt="amend-a-contract-for-quantity-1" width="900" height="300"></li>
+                        </ul>
+                    </p>
+                    <p>We will query the records for salesforce objects that were created / or updated in this trail step.</p>
+                    <p>
+                        <h6><strong>Salesforce Object: </strong>[Amended Opportunity and Quote]</h6>
+<pre>
+    <code> 
+ Select Id, Name, TotalOpportunityQuantity, ExpectedRevenue, SBQQ__AmendedContract__r.ContractNumber, SBQQ__PrimaryQuote__r.Name from Opportunity where Name = 'Amendment for contract #00000106'
+    </code>                    
+</pre>
+                        <img ng-src="images/simplify-home-security-subscription-renewals/Amended-Opportunity-and-Quote-Query.png" alt="Amended-Opportunity-and-Quote-Query" width="900" height="300">
+                        <h6><strong>Salesforce Object: </strong>[Amended Subscriptions for Quantity]</h6>
+<pre>
+    <code> 
+Select Id, Name, SBQQ__Account__r.Name, SBQQ__ProductName__c, SBQQ__QuoteLine__r.Name  from SBQQ__Subscription__c where SBQQ__Contract__r.ContractNumber = '00000106'
+    </code>                    
+</pre>
+                        <img ng-src="images/simplify-home-security-subscription-renewals/amended-subscription-for-quantiity-Query.png" alt="amended-subscription-for-quantiity-Query" width="900" height="300">
+                        <h6><strong>Salesforce Object: </strong>[Amended Subscriptions for Quantity]</h6>
+<pre>
+    <code> 
+ Select Id, Name, TotalOpportunityQuantity, ExpectedRevenue, SBQQ__AmendedContract__r.ContractNumber, SBQQ__PrimaryQuote__r.Name from Opportunity where Name = 'Amendment for contract #00000106'
+    </code>                    
+</pre>
+                        <img ng-src="images/simplify-home-security-subscription-renewals/amended-subscription-for-quantiity-Query.png" alt="amended-subscription-for-quantiity-Query" width="900" height="300">
+                        <h6><strong>Salesforce Object: </strong>[Amended Subscriptions for Quantity]</h6>
+<pre>
+    <code> 
+Select Id, Name, TotalOpportunityQuantity, ExpectedRevenue, SBQQ__AmendedContract__r.ContractNumber, SBQQ__PrimaryQuote__r.Name from Opportunity where Name = 'Amendment for contract #00000106'
+    </code>                    
+</pre>
+                        <img ng-src="images/simplify-home-security-subscription-renewals/renewal-opportunity-after-amendment.png" alt="renewal-opportunity-after-amendment" width="900" height="300">
+                    </p>
+                    <h5><strong>Step-5.1: </strong>Amend a Contract to replace a product</h5>
+                    <p>
+                        Customer called and would like to remove Mobile Monitoring App and add Mobile Control Center App, so Sales Rep will amend the contract. As before, we will have an quote and order. When the order is contracted, we will have a subscription for Mobile Control Center App with quantity of 1 and  Mobile Monitoring App with quantity of -1.<br>
+                        <img ng-src="images/simplify-home-security-subscription-renewals/amend-replace-a-product.png" alt="amend-replace-a-product" width="900" height="300">
+                    </p>
+                </div>
+            </div>
+            <div class="grooveborder">
+                <div>
+                    <h5><strong>Step-6: </strong>Create a  Quote for a Renewal  Contract</h5>
+                    <p>When the customer is up for renewal after 2 year term, Sales Rep can now generate a quote for the renewal opportunity that was generated for forecasting by selecting the Renewal Quoted checkbox on the contract</p>
+                    <ul class="no-bullets">
+                        <li>contract-renewal-quoted-checkbox: <br/><img ng-src="images/simplify-home-security-subscription-renewals/contract-renewal-quoted.png" alt="contract-renewal-quoted" width="900" height="300"></li>
+                        <li>renewal-opportunity-qoute: <br/><img ng-src="images/simplify-home-security-subscription-renewals/renewal-opportunity-quote.png" alt="renewal-opportunity-qoute" width="900" height="300"></li>
+                        <li>renewal-opportunity-qoute: <br/><img ng-src="images/simplify-home-security-subscription-renewals/renewal-quote-products.png" alt="renewal-quote-products" width="900" height="300"></li>
+                    </ul>
+                    <h6><strong>Salesforce Object: </strong>[Amended Subscriptions for Quantity]</h6>
+<pre>
+    <code> 
+        Select Id, Name, SBQQ__EffectiveQuantity__c, SBQQ__NetPrice__c, SBQQ__Group__r.Name, SBQQ__Product__r.Name from SBQQ__QuoteLine__c  where SBQQ__Quote__r.Name = 'Q-00064'
+    </code>                    
+</pre>
+                    <img ng-src="images/simplify-home-security-subscription-renewals/RenewalQuoteLines-Query.png" alt="RenewalQuoteLines-Query" width="900" height="300">
+                </div>
+            </div>
+            <div class="grooveborder">
+                <div>
+                    <h5><strong>Trail Completion : </strong>Salesforce CPQ Trailhead with Subscription Products, Amendments and  Renewals</h5>
+                    <img ng-src="images/simplify-home-security-subscription-renewals/simplify-home-security-subscription-renewals-complete.png" alt="simplify-home-security-subscription-renewals-complete" width="900" height="300">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

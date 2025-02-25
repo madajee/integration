@@ -1,0 +1,44 @@
+<div class = "container-fluid mt-2">
+    <div class="row">
+        <sprint-side-menu></sprint-side-menu>
+        <div class="col-md-10">
+            <h6 class="grooveheader">ESTORE - Scenarios</h6>
+            <a href="#!/sprint/1" class="nav-link">estore-sprint</a>
+            <a href="#!/integration/119" class="nav-link">Integration-119</a>
+            <a href="#!/project/103" class="nav-link">project-estoreexpress</a>
+            <div class="grooveborder">
+                <h6 class="text-center">Level-1 View</h6>
+                <p><strong>Context:</strong>Learning in e-store-express POC will be related to Lead to Cash Process.</p>
+                <img ng-src="images/order-to-cash-1.png" alt="mvc_express" width="900" height="300">
+            </div>
+            <div class="grooveborder">
+                <h6 class="text-center">Scenario View</h6>
+                <p><strong>Context:</strong>As per Level-1 view, a fictious org like ABCEnterprise (Seller) will increase revenue by selling direct to customer through Store and has a lead creation and conversion engine through Salesforce Sales Cloud.</p>
+                <img ng-src="images/lead-to-opportunity.png" alt="mvc_express" width="900" height="300">
+                <p><strong>Scenario-1:</strong>John Doe works for XYZEnterprise and register through the store. Based on user registration and login POC (nodejs jsonwebtoken module or oauth2provider dependency in mule), we should get better at delivering in authenication layer in enterprise projects. John Doe will be created in enterprise LDAP and also register with OAuth2 provider. It is recommended to work under the direction of EA group to support integration with enterprise products like Okta, Anypoint Dynamic Client registration and policies.</p>
+                <img ng-src="images/opportunity-products.png" alt="mvc_express" width="900" height="300">
+                <p><strong>Scenario-2:</strong>First check out this salesforce trail: <a href="https://trailhead.salesforce.com/content/learn/projects/manage-products-prices-quotes-orders" target="_blank">Manage Products, Prices, Quotes, and Orders</a> and do this at your leisure. As we follow along in trail, we will understand that ABCEnterprise is equivalent to Ursa Major Solar. We will also get some hands on creating products, price books and we can use this examples when we create sfdc system API to enable Lead to Cash implementation for customers.</p>
+                <p>Let's just say that John Doe who works for XYZEnterprise instead of coming through store will be a qualifed Lead and one of our agent of ABCEnterprise (Ursa Major Solar) will be convert John Doe through Salesforce Lead Conversion functionality. There is a convert lead operation in mule salesforce connector which will allow us to build this integration feature in mule system api.</p>
+                <p><strong>Scenario-3: </strong>Integration requirements to support cross functional usescase.
+                <ul>
+                    <li><strong>Integration-1: </strong> When John Doe comes through registration process through the store, an account should be created in enterprise apps like Sales Cloud and Billing Cloud.</li>
+                    <li><strong>Integration-2: </strong>We may need to develop a feature that can allow agents to login as John Doe who works for XYZEnterprise and provide the token through the same authentication layer.</li>
+                    <li><strong>Integration-3: </strong>When John Doe comes through the lead conversion process, we have to create a customer in Store and invite John in the registration scenario to allow service apps to support John Doe and enable John Doe to checkout the store as well.</li>
+                </ul>
+                </p>
+                <p><strong>Story: </strong>With this understanding we should deliver on salesforce system api after schweppes.mx1 sprint:<a href="#!/sprint/1" class="nav-link">estore-sprint</a>with lead object integration. We will develop capabilities to better understand lead to cash process along with mule integration with salesforce connector.
+                </p>
+            </div>
+            <div class="grooveborder">
+                <a href="https://trailhead.salesforce.com/content/learn/projects/manage-products-prices-quotes-orders" target="_blank">Trail: Manage Products, Prices, Quotes, and Orders</a><br>
+                <img ng-src="images/manage-products-prices-quotes-orders-trailhead-badge-completed.png" alt="manage-products-prices-quotes-orders-trailhead-badge-completed" width="400" height="400">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="grooveborder">
+    <ul><h6 class="text-center">Helpful Links<span class="alignright"></h6>
+        <li><a href="https://www.youtube.com/watch?v=rvigMkg8MYo" target="_blank">Agile Scrum Sessions with Dr. Jeff Sutherland | Value Stream Management</a></li>
+        <li><a href="https://trailhead.salesforce.com/content/learn/projects/manage-products-prices-quotes-orders" target="_blank">Manage Products, Prices, Quotes, and Orders</a></li>
+    </ul>   
+</div>

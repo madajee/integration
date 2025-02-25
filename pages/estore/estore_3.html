@@ -1,0 +1,131 @@
+<div class = "container-fluid mt-2">
+    <div class="row">
+        <sprint-side-menu></sprint-side-menu>
+        <div class="col-md-10">
+            <h6 class="grooveheader">ESTORE - Backlog</h6>
+            <a href="#!/sprint/1" class="nav-link">estore-sprint</a>
+            <a href="#!/integration/119" class="nav-link">Integration-119</a>
+            <a target= "_blank" href="https://www.youtube.com/watch?v=1EJ2aRlfXUM&list=PLMEYlt-BRJcJUUFSUjULJSSUZRbvFALhQ" class="nav-link">demo-playlist</a>
+            <a href="#!/project/103" class="nav-link">project-estoreexpress</a>
+            <a href="https://trailhead.salesforce.com/content/learn/projects/manage-products-prices-quotes-orders" target="_blank">Trail: Manage Products, Prices, Quotes, and Orders</a>
+            <div class="grooveborder">
+                <h6 class="text-center">BACKLOG-ZONE-JULY-1<span class="alignright"><strong>github repository: </strong><a href="https://github.com/madajee/estore-sfdc-system-api.git" target="_blank">estore-sfdc-system-api</a></span></h6>
+                <h6>Dev Complete Trageted by: <i>Mid July</i>for [Card: 1, 2, 3]</h3>
+                <h6>Release planned in : <i>End July</i></h3>
+                <h4>Features: [Products, Pricebook]</h4>
+                </p>
+            </div>
+            <div class="grooveborder">
+                <h6 class="text-center">BACKLOG-ZONE-JULY-2<span class="alignright"><strong>github repository: </strong><a href="https://github.com/madajee/estore-sfdc-system-api.git" target="_blank">estore-sfdc-system-api</a></span></h6>
+                <h6>Dev Complete Trageted by: <i>third week July</i>for [Card: 4, 5, 6]</h3>
+                <h6>Release planned in : <i>End July</i></h3>
+                <h4>Features: [Products, Pricebook]</h4>
+                </p>
+            </div>
+            <div class="grooveborder">
+                <h6 class="text-center">BACKLOG-ZONE-AUGUST<span class="alignright"><strong>github repository: </strong><a href="https://github.com/madajee/estore-sfdc-system-api.git" target="_blank">estore-sfdc-system-api</a></span></h6>
+                <h6>Dev Complete Trageted by: <i>August</i></h3>
+                <h6>Release planned in : <i>August</i></h3>
+                <h4>Features: [Opportunity, Opportunity Products]</h4>
+            </div>
+            <div class="grooveborder">
+                <h6 class="text-center">BACKLOG-ZONE-SEPTEMBER<span class="alignright"><strong>github repository: </strong><a href="https://github.com/madajee/estore-sfdc-system-api.git" target="_blank">estore-sfdc-system-api</a></span></h6>
+                <h6>Dev Complete Trageted by: <i>SEPTEMBER</i></h3>
+                <h6>Release planned in : <i>September</i></h3>
+                <h4>Features: [Quote, Quote Lines]</h4>
+            </div>
+            <div class="grooveborder">
+                <h6 class="text-center">BACKLOG-ZONE-OCTOBER<span class="alignright"><strong>github repository: </strong><a href="https://github.com/madajee/estore-sfdc-system-api.git" target="_blank">estore-sfdc-system-api</a></span></h6>
+                <h6>Dev Complete Trageted by: <i>OCTOBER</i></h3>
+                <h6>Release planned in : <i>October</i></h3>
+                <h4>Features: [Contract, Order]</h4>
+                <p>
+                    <strong>Context: </strong>In jumping-jogger sprint, we added products to the opportunity, and  the next step in the trailhead Manage Products, Prices, Quotes, and Orders require us to automate further and generate the contracts and orders.
+                    <ul>
+                        <li>
+                            When customer has negotiated with the sales rep and accepted the quote, sales rep closes the opportunity with status as closed won and also creates a contract for the account.
+                        </li>
+                        <li>
+                            Order has to be created with the opportunity/quote products and has to be linked to the contract which then proceeds with the provisioning and fulfillment steps. Initially the order is created in the draft status.
+                        </li>
+                        <li>
+                            It is required to pass in following fields while creating an order:
+<pre>
+    <code>
+    %dw 2.0
+    output application/java
+    ---
+    [{
+        "AccountId": vars.contractrecord[0].AccountId,
+        "EffectiveDate": vars.contractrecord[0].StartDate as Date {format: "yyyy-MM-dd"},
+        "ContractId": vars.contractrecord[0].Id,
+        "OpportunityId": vars.opportunityrecord[0].Id,
+        "Pricebook2Id": vars.opportunityrecord[0].Pricebook2Id,
+        "CurrencyIsoCode": vars.opportunityrecord[0].CurrencyIsoCode,
+        "Status": 'Draft'
+    }]
+    </code>
+    </pre>
+                        </li>
+                    </ul>
+                </p>
+                <p>
+                    <ul>
+                        <li>
+                            <strong>Card-1: </strong>As per trail spec, we have 2 accounts:
+                            <ul>
+                                <li>
+                                    Boy Scouts of the Southwest and Saito Family Laundromats, so we will create contract for both the accounts.
+                                </li>
+                                <li>
+                                    Create a get and post method on /account/contract for querying the contracts on the account and creating a contract for the account.
+<pre>
+    <code>
+        curl --location 'http://localhost:8081/api/account/contract?accountname=Boy%20Scouts%20of%20the%20Southwest'
+    </code>
+</pre>
+<pre>
+    <code>
+        curl --location 'http://localhost:8081/api/account/contract' \
+--header 'Content-Type: application/json' \
+--data '{
+    "accountname": "Boy Scouts of the Southwest",
+    "contracts": [
+        {
+            "contractstartdate": "07-02-2024",
+            "contractterm": "12"
+        }
+    ]
+}'
+    </code>
+</pre>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>Card-2: </strong>We need the capability to query the orders on the contract. Create a order resource with a get method and pass in the contract number as a query param. Response should be the list of orders on the contract.
+                        </li>
+                        <li>
+                            <strong>Card-3: </strong>We need the capability to create the order for an opportunity and contract. Add the post method on the order resource and pass the contract number and opportunity name in the request payload.
+                        </li>
+                        <li>
+                            <strong>Card-4: </strong>We need to provide the capability to add and remove order products. Add the nested resource product on the order resource /order/product and pass in the order number along with list of products in the request payload.
+                        </li>
+                        <li>
+                            <strong>Card-5: </strong>Add the /deleteorders  and /deletecontracts resource to clean up any orphan orders and contract records. Just like in other clean up methods, the request payload should take in the list of salesforce object ids.
+                        </li>
+                        <li>
+                            <strong>Card-6: </strong>October Release.
+                        </li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="grooveborder">
+    <ul><h6 class="text-center">Helpful Links<span class="alignright"></h6>
+        <li><a href="https://www.youtube.com/watch?v=rvigMkg8MYo" target="_blank">Agile Scrum Sessions with Dr. Jeff Sutherland | Value Stream Management</a></li>
+        <li><a href="https://www.youtube.com/watch?v=Yto8nUeki-s" target="_blank">What is Value Stream Management? (Eric, IBM Cloud)</a></li>
+    </ul>   
+</div>

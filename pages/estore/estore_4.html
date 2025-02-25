@@ -1,0 +1,190 @@
+<div class = "container-fluid mt-2">
+    <div class="row">
+        <sprint-side-menu></sprint-side-menu>
+        <div class="col-md-10">
+            <h6 class="grooveheader">ESTORE - USER STORIES</h6>
+            <a href="#!/sprint/1" class="nav-link">estore-sprint</a>
+            <a href="#!/integration/119" class="nav-link">Integration-119</a>
+            <a target= "_blank" href="https://www.youtube.com/watch?v=1EJ2aRlfXUM&list=PLMEYlt-BRJcJUUFSUjULJSSUZRbvFALhQ" class="nav-link">demo-playlist</a>
+            <a href="#!/project/103" class="nav-link">project-estoreexpress</a>
+            <a href="https://trailhead.salesforce.com/content/learn/projects/manage-products-prices-quotes-orders" target="_blank">Trail: Manage Products, Prices, Quotes, and Orders</a>
+            <h4 class="text-center">USER STORIES - LEAD TO CASH<span class="alignright"><strong>github repository: </strong><a href="https://github.com/madajee/estore-sfdc-system-api.git" target="_blank">estore-sfdc-system-api</a></span></h4>
+            <div class="grooveborder">
+                <h5>LEAD FEATURE</h5>
+                <p>As a L2C Stakeholder, I would like to see that all the Leads that are qualified in our Marketing Application should be created in Salesforce Sales Cloud within an hour. I also require that when Sales Rep convert the lead to create account, contacts and opportunities, we should have an extensible Lead Conversion Engine that relies on standard Convert Lead feature of Sales Cloud. Mulesoft API Implementation Flows should allow us to build Conversion Engine with enterpise specific requirements, rules and processes that we can evolve as we scale and integrate within the realm of enterprise applications for our clients.  All these automation should be triggered through a Mulesoft API resource so that external calls to the Salesforce Lead Object from all internal and external applications should be unified and standardized through an API Layer.</p>
+                <p>In the initial sprint, the acceptance criteria is to have a system level API application with Create Lead, Convert Lead and Delete Lead resources. Delete Lead is only for clean-up and should be protected with a special username / password if we are using basic auth or with a special scope if we are using token based auth schemes.</p>
+                <p>In subsequent sprints, we will have to build process level API resources:
+                    <ul>
+                        <li>
+                            Automation to create leads should run every hour that will call on Create Lead system level resource.
+                        </li>
+                        <li>
+                            Implement all the business rules in the Lead Conversion Engine that will call on Convert Lead system level resource.
+                        </li>
+                        <li>
+                            Both automation should use common batch framework that we have to build and test as we integrate system level resources in process layer. We have different approaches and mule components that support Batch processing like Pub-Sub patterns, Mule Batch componenet with Asynchronous Parallel Processing, Parallel For Each so we have to apply fit for purpose analysis which can be backed with solution views, POCs and then use the one that gets approved in specific implementations.
+                        </li>
+                    </ul>
+                </p>
+            </div>
+            <div class="grooveborder">
+                <h5>PRODUCT AND PRICEBOOK FEATURE</h5>
+                <p>As a L2C Stakeholder, I would like to mention that we sell both internationally and in US, so our Salesforce Admin has activated multiple currencies in Salesforce Org Admin has added <i>GBP - British Pound, EUR - Euro, JPY - Japanese Yen,SGD - Singapore Dollar </i> along with <i>USD - US Dollar</i> but the corporate currency is <i>USD - US Dollar</i>. Our product group creates and mantain product sheets to discuss product codes, pricing and other market level product configurations. I would like Automation team to pick up the product sheets on hourly schedule and create / and update products in the Product2 salesforce object and also create the associated pricebook entries in PricebookEntry salesforce object. The pricebook in Pricebook2 salesforce object are created and managed by the product architect manually through salesforce UI. Please take a note that Product Code is how we are going to uniquely idenfiy each product. 
+                </p>
+                <p>In the initial sprint, the acceptance criteria is to have a system level API implementation for Create Product, Retrieve Product and Delete Product resources.  Also we require Create., Retrieve and Delete for Pricebook Entry. Delete resources are required only for clean and should be protected with special access.</p>
+                <p>In subsequent sprints, we will have to build process level API resources:
+                    <ul>
+                        <li>
+                            Automation to create products should run every hour and process level composition should call on both product and pricebook system level resources to setup the product code along with unit price in the salesforce org.
+                        </li>
+                        <li>
+                            Any Errors related to setup issues like missing Pricebook should sent an alert to product group immediately. If the same error is picked in the next hourly run, the notfication alert counter should be incremented as well.
+                        </li>
+                    </ul>
+                </p>
+            </div>
+            <div class="grooveborder">
+                <h5>OPPORTUNTIY AND OPPORTUNITY PRODUCT FEATURE</h5>
+                <p>As a L2C Stakeholder, I would like to see that when we convert both the leads (John Doe and Jane Doe), we should have accounts, opportunity and contact gets created through our extensible Lead Conversion Engine. After the conversion on both leads, we should have both the opportunities: BSofSW - Ground-mounted Panels; Saito - Ground-mounted Panels in our Salesforce Org.
+                </p>
+                <p>As a Team Lead, I need the capability to update the pricebook, currency and amount on the opportunity. I should then able to add the products to the opportunity with an API resource by passing in the opportunity name along with product list. Product in the list should require product code and quantity whereas the API implementation should pick up the unit price from the price book entry.
+                </p>
+                <p>In the initial sprint, the acceptance criteria is to leverage on Convert Lead system level API resource to create an opportunity; create implementation for Retrieve Opportunity, Update Opportunity, Create Opportunity Product and Remove Opportunity Product resources.</p>
+                <p>In subsequent sprints, we will have to build process level API resources to refine the business processes with Opportunity object and generate business outcomes as per stakeholder reviews.
+                </p>
+            </div>
+            <div class="grooveborder">
+                <h5>QUOTES AND QUOTE LINES FEATURE</h5>
+                <p>Sales Reps will have several opportunities in pipeline, and opportunities will move through several stages in a sales path. Also reps will create several quotes in the negotiation phase and one of the quote will be selected in a closed/won scenario which will be a primary quote. As L2C stakeholder works with the product groups, there are scenarios that require customization and automation at business process layer and requires team to add a capability to create quotes in a nightly batch with the list of opportunites in an excel.  
+                </p>
+                <p>As a Team Lead, I need an API resource that will create an quote by passing opportunity name and quote name.
+                </p>
+                <p>In the initial sprint, the acceptance criteria is to add the quote resource as a nested resource in the opportunity top level resource. When the quote is create with automation, the quote lines will be created with opportunity products. We will rely on salesforce sync feature when the opportunity / or quote changes.</p>
+                <p>In subsequent sprints, as the requirements elaborate, we will design the customization on sync feature.
+                </p>
+            </div>
+            <div class="grooveborder">
+                <h5>ORDER AND ORDER PRODUCT FEATURE</h5>
+                <p>L2C stakeholder mentioned that sales repo close about 200 opportunities on a given day and provisioning group would like to see orders for all the opportunites that are in closed won status. One of the lead account executive will export an excel with the opportunities in closed won status along with the accountname, contract start date and contract term.
+                </p>
+                <p>As a Team Lead, I need an system layer API resource that will create a contract by passing account name and contract details.
+                </p>
+                <p>As a Team Lead, I need another system layer API resource that will create an order by passing in the contract number and opportunity name.
+                </p>
+                <p>We also need to provide the capability to add and remove products from the order so we need anpther 2 system level resources. As this step is done manually by sales rep for the time being, we need a process layer test capability for these 2 resources of adding and removing order products.</p>
+                <p>In subsequent sprints, as the requirements elaborate, we will design the process layer api that will read the daily opportunity extract excel and automates the contract and order creation in a single step by calling on system level resources.
+                </p>
+            </div>
+            <div class="grooveborder">
+                <h4>TEST PLAN</h4>
+                <h5 class="text-center">LEAD</h5>
+                <p>
+                    <ul>
+                        <li>
+                            Create a Lead John Doe who is an account executive with Boy Scouts of the Southwest. Create another Lead Jane Doe who is an account executive with Saito Family Laundromats. Both Leads can be created in a single invocation to Create Lead API resource.
+                        </li>
+                    </ul>
+                </p>
+                <h5 class="text-center">PRODUCT AND PRICEBOOK</h5>
+                <p>
+                    <ul>
+                        <li>
+                            Create a Solar Panel Cleaning Residential service package product with product code as SPC-R01 and 2 panel products; SunPower Ground with product code as SPG-01 and GreenSun Ground with product code as SPG-02.
+                        </li>
+                        <li>
+                            Create pricebook entry for service package and both the panels with Standard Price Book and all 5 currencies of USD, EUR, GBP, SGD, JPY.
+                        </li>
+                        <li>
+                            Create pricebook entry for both the panel with Enterprise Price Book in JPY and SGD currency.
+                        </li>
+                        <li>
+                            Create pricebook entry for both the panel with Nonprofit Price Book in USD and GBP currency.
+                        </li>
+                    </ul>
+                </p>
+                <h5 class="text-center">OPPORTUNTIY AND OPPORTUNITY PRODUCT</h5>
+                <p>
+                    <ul>
+                        <li>
+                            Convert John Doe who works for ‘Boy Scouts of the Southwest’ by passing in opportunity name as ‘BSofSW - Ground-mounted Panels’. Validate that account, opportunity and contact is created through convert lead automation step.
+                        </li>
+                        <li>
+                            Convert Jane Doe who works for ‘Saito Family Laundromats’ by passing in opportunity name as ‘Saito - Ground-mounted Panels’. Validate that account, opportunity and contact is created through convert lead automation step.
+                        </li>
+                        <li>
+                            Update ‘BSofSW - Ground-mounted Panels’ opportunity with Nonprofit pricebook and opportunity amount of 20000 USD. Then use automation to add 20 quantity of GreenSun Ground to the opportunity. 
+                        </li>
+                        <li>
+                            Update account currency for ‘Saito Family Laundromats’ account to ‘JPY’. Then update ‘Saito - Ground-mounted Panels’ opportunity with Enterprise pricebook and opportunity amount of 4200000 JPY. Then use automation to add 35 quantity of SunPower ground and 20 quantity of GreenSun Ground to the opportunity.
+                        </li>
+                    </ul>
+                </p>
+                <h5 class="text-center">QUOTE AND QUOTE LINES</h5>
+                <p>
+                    <ul>
+                        <li>
+                            We have created an opportunity "Saito - Ground-mounted Panels" by converting lead Jane Doe and in this step we will create a quote by passing quotename as "80 Cell Ground-mounted Panels" along with opportunity name to post /opportunity/quote resource.
+                        </li>
+                        <li>
+                            We have created an opportunity "BSofSW - Ground-mounted Panels" by converting lead John Doe and in this step we will create a quote by passing quotename as "60 Cell Ground-mounted Panels" along with opportunity name to post /opportunity/quote resource.
+                        </li>
+                        <li>
+                           We can retrieve the quote by passing in the opportunity name to the get /opportunity/quote resource and check on the quote lines which should be same as opportunity products on the opportunity. 
+                        </li>
+                        <li>
+                           We will pass the quoteId as uri param in the PUT /opportunity/quote and update the quantity and discount for a quote line item by passing in these values in the request payload. We will pass product name in the request which will be used to retrieve the quote line item. 
+                         </li>
+                        <li>
+                           Clean up the quotes by calling on the /deletequotes and passing the quoteidsfordelete.
+                        </li>
+                    </ul>
+                </p>
+                <h5 class="text-center">ORDER AND ORDER PRODUCT</h5>
+                <p>
+                    <ul>
+                        <li>
+                            Sales rep has worked with customer and we have primary quote being accepted by the customer for an opportunity. We are ready to create contract and orders. Create a contract for both 'Boy Scouts of the Southwest' and 'Saito Family Laundromats' by calling on resource POST /account/contract.
+                        </li>
+                        <li>
+                            Create an order for an opportunity by calling on resource /order and passing in the opportunity name as 'BSofSW - Ground-mounted Panels' along with the contract number generated for the 'Boy Scouts of the Southwest' account.
+                        </li>
+                        <li>
+                            Create an order for an opportunity by calling on resource /order and passing in the opportunity name as 'Saito - Ground-mounted Panels' along with the contract number generated for the 'Saito Family Laundromats' account.
+                        </li>
+                        <li>
+                            Create GreenSun groud order product with a quantity of 10 for a BoyScout order by calling on resource /order/product.
+                        </li>
+                        <li>
+                            Create SunPower Ground with quantity of 35 and GreenSun groud with a quantity of 20 order products for a Laundromat order by calling on resource /order/product.
+                        </li>
+                        <li>
+                            Test on the /removeproduct endpoint by removing sunpower ground from the laundromat orders.
+                        </li>
+                        <li>
+                            Clean up the orders by calling on the /deleteorders and passing the orderidsfordelete.
+                        </li>
+                    </ul>
+                </p>
+            </div>
+            <div class="grooveborder">
+                <h4>User Story to Delivery</h4>
+                <h5 class="text-center">LEAD <span class="text-warning">[JUNE Sprint]</span></h5>
+                <a href="#!/sprint/1" target="_blank" class="nav-link"><strong>Sprint: </strong>dietcoke.jx1; <strong>Features: </strong>[lead automation and conversion]</a>
+                <h5 class="text-center">PRODUCT AND PRICEBOOK <span class="text-warning">[July Sprint]</span></h5>
+                <a href="#!/sprint/1" class="nav-link"><strong>Sprint: </strong>walkingjogger.jx2; <strong>Features: </strong>[Products, Pricebook]</a>
+                <h5 class="text-center">Opportunity, Opportunity Products <span class="text-warning">[August Sprint]</span></h5>
+                <a href="#!/sprint/1" class="nav-link"><strong>Sprint: </strong>jumpingjogger.ax1; <strong>Features: </strong>[Opportunity, Opportunity Products]</a>
+                <h5 class="text-center">Quote, Quote Lines <span class="text-warning">[September Sprint]</span></h5>
+                <a href="#!/sprint/1" class="nav-link"><strong>Sprint: </strong>sleepingjogger.sx1; <strong>Features: </strong>[Quote, Quote Lines]</a>
+                <h5 class="text-center">Contract, Order <span class="text-warning">[October Sprint]</span></h5>
+                <a href="#!/sprint/1" class="nav-link"><strong>Sprint: </strong>runningjogger.sx1; <strong>Features: </strong>[Contract, Order]</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="grooveborder">
+    <ul><h6 class="text-center">Helpful Links<span class="alignright"></h6>
+        <li><a href="https://www.youtube.com/watch?v=rvigMkg8MYo" target="_blank">Agile Scrum Sessions with Dr. Jeff Sutherland | Value Stream Management</a></li>
+        <li><a href="https://www.youtube.com/watch?v=Yto8nUeki-s" target="_blank">What is Value Stream Management? (Eric, IBM Cloud)</a></li>
+    </ul>   
+</div>

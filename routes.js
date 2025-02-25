@@ -37,6 +37,16 @@ app.config(function ($routeProvider) {
         },
         controller: 'sprintController'
     })
+    .when('/estore', {
+        templateUrl: 'pages/estore/estore_1.html',
+        controller: 'estoreController'
+    })
+    .when('/estore/:estoreid', {
+        templateUrl: function (param) {
+            return 'pages/estore/estore_' + param.estoreid + '.html'
+        },
+        controller: 'estoreController'
+    })
     .
     otherwise('/');
     

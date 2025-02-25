@@ -1,0 +1,871 @@
+<div class = "container-fluid mt-2">
+    <div class="row">
+        <sprint-side-menu></sprint-side-menu>
+        <div class="col-md-10">
+            <h6 class="grooveheader">ESTORE - Demos</h6>
+            <a href="#!/sprint/1" class="nav-link">estore-sprint</a>
+            <a href="#!/integration/119" class="nav-link">Integration-119</a>
+            <a href="#!/project/103" class="nav-link">project-estoreexpress</a>
+            <a target= "_blank" href="https://www.youtube.com/watch?v=1EJ2aRlfXUM&list=PLMEYlt-BRJcJUUFSUjULJSSUZRbvFALhQ" class="nav-link">demo-playlist</a>
+            <div class="grooveborder">
+                <h6 class="text-center"><a href="https://github.com/madajee/estore-sfdc-system-api.git" target="_blank" class="nav-link">estore-sfdc-system-api</a></h6>
+                <p><strong>Feature: </strong>Lead To Order E2E with Trail Automation and Mulesoft System API</p>
+                <p><strong>Demo:</strong><a href="https://youtu.be/CzzudGHQwg4" target="_blank" class="nav-link">Lead To Order E2E Demo</a></p>
+                <p>
+                    <ol type="1">
+                        <li>Read through the trail <a href="https://trailhead.salesforce.com/content/learn/projects/manage-products-prices-quotes-orders" target="_blank">Trail: Manage Products, Prices, Quotes, and Orders</a> and start the estore-sfdc-system-api mule app <strong>github repository: </strong><a href="https://github.com/madajee/estore-sfdc-system-api.git" target="_blank">estore-sfdc-system-api</a> in the studio.</li>
+                        <li>Hit the ping uri and check for 200 OK. </li>
+                        <li>Query on lead John and Jane Doe with get on lead resource; as we don’t have them in the org, so we will create them in the next step. </li>
+                        <li>Create John Doe and Jane Doe with post on lead resource.</li>
+                        <li>We have products and pricebook from the trail in the system, so we have to delete them so that we can create them with the automation. We will query the pricebook id for Enterprise, Nonprofit and Standard Pricebook for Solar Panel, Sunpower and GreenSun. We will retrieve the pricebook Id and use the deletepricebookentry resource to delete pricebook entries.
+    <pre>
+        <code>
+            select Id, Name, CurrencyIsoCode, UnitPrice, ProductCode from PricebookEntry where Pricebook2.Name = 'Standard Price Book' and ProductCode in ('SPC-R01', 'SPG-01', 'SPG-02')
+        </code>
+    </pre>  
+                        </li>
+                        <li>We will get on productsbyproductcodelist resource to retrieve the Ids for Solar Panel (SPC-R01), Sunpower (SPG-02) and Greensun (SPG-02). We will then use deleteproducts resource to delete the product entries.</li>
+                        <li>Do the get on productsbyproductcodelist resource again to make sure products are deleted and we receive empty list in the response.</li>
+                        <li>Create Solar Panel (SPC-R01), Sunpower (SPG-02) and Greensun (SPG-02) with post on product resource.</li>
+                        <li><strong>Do the verification on Create and Customize Products and earn reward points.</strong></li>
+                        <li>Create the Standard Pricebook entries for Solar Panel, then Sunpower and then GreenSun with post on pricebookentry resource.</li>
+                        <li>Create the Enterprise Pricebook entries as per trail spec for Japanese and Singapore currencies.</li>
+                        <li>Create the Nonprofit Pricebook entries as per the trail spec for british pound and us dollar.</li>
+                        <li><strong>Do the verification on Create and Customize Products and earn reward points.</strong></li>
+                        <li>John Doe works for Boy Scouts of the Southwest, so create the account and opportunity with post on convertlead resource. As per the spec, we have to pass the opportunity name as ‘BSofSW - Ground-mounted Panels’.</li>
+                        <li>Jane Doe works for Saito Family Laundromats, so create the account and opportunity with post on convertlead resource. As per the spec, we have to pass the opportunity name as ‘Saito - Ground-mounted Panels’.</li>
+                        <li>Update Boyscout opportunity with currency, amount and pricebook with put on opportunity/{id} resource.</li>
+                        <li>Add Greensun ground to the Boyscout opportunity with post on opportunity/product resource.</li>
+                        <li>Retrieve the account id for the  Saito Family Laundromats account with get on account resource and passing account name as a query param.</li>
+                        <li>Update the Laundromat account with the account currency as Japanese with put on account/{id} resource.</li>
+                        <li>Update Laundromat opportunity with currency, amount and pricebook with put on opportunity/{id} resource.</li>
+                        <li>Add Sunpower and Greensun ground to the Laundromat opportunity with post on opportunity/product resource.</li>
+                        <li><strong>Do the verification on Create an Opportunity and Add Products to It and earn reward points.</strong></li>
+                        <li><strong>Follow writeup for Control Access to Pricebooks and Products, do the verification and earn reward points. It is a one time setup.</strong></li>
+                        <li>Crean a 80-cell quote for Saito - Ground-mounted Panels opportunity of Laundromat account with post on resource opportunity/quote resource.</li>
+                        <li>Crean a 60-cell quote for BSofSW - Ground-mounted Panels opportunity of Boy scout account with post on resource opportunity/quote resource.</li>
+                        <li>Update the discount and quantity for Greensun product on the boy scout quote with put quote/{id} resource.</li>
+                        <li><strong>Do the verification on Create Multiple Quotes and earn reward points.</strong></li>
+                        <li>Create a contract for ‘Boy Scouts of the Southwest’ with the post on account/contract resource and make note of the generated contract number as we need to pass it in the order request.</li>
+                        <li>Create a contract for ‘Saito Family Laundromats’ with the post on account/contract and make note of the generated contract number.</li>
+                        <li>Create an order for Boyscout account for the "BSofSW - Ground-mounted Panels" opportunity with th post on order resource by passing the contract number and opportunity name.. Make note of the generated order number as we need to pass in the order product request.</li>
+                        <li>Create an order for Laundromat account for the "Saito - Ground-mounted Panels" opportunity with the post on order resource by passing the contract number and opportunity name.</li>
+                        <li>Add Greensun to the  Boyscout order with the post on order/product resource by passing the generated order number.</li>
+                        <li>Add the Sunpower and Greensun to the Laundromat order with the post on order/product resource by passing the generated order number.</li>
+                        <li>Remove the Greensun from the Laundromat order with the post on order/removeproduct resource.</li>
+                        <li><strong>Do the verification on Create an Order with Products and earn reward points.</strong></li>
+                        <li>With this we should have 6 green checks as there are 6 trail steps on the <a href="https://trailhead.salesforce.com/content/learn/projects/manage-products-prices-quotes-orders" target="_blank">Trail: Manage Products, Prices, Quotes, and Orders</a> trail.</li>
+                        <li>Earlier, we have seen how to clean up pricebook and product entries, and now we have to clean lead and account related objects.</li>
+                        <li>Retrieve the accountid for Boyscout and Laundromat account with the get on account resource and delete all the account related objects with the post on deleteaccountcontact resource.</li>
+                        <li>Retrieve the lead id for John Doe and Jane Doe with the get on lead resource and delete both John and Jane with the post on deleteleads resource.</li>
+                        <li><a href="https://trailhead.salesforce.com/" target="_blank" class="nav-link">Thanks, Trailhead</a></li>
+                    </ol>
+                </p>
+            </div>
+            <div class="grooveborder">
+                <h6 class="text-center"><a href="https://github.com/madajee/estore-sfdc-system-api.git" target="_blank" class="nav-link">estore-sfdc-system-api</a></h6>
+                <p><strong>Feature: </strong>LeadToOrder-E2E-Endpoint-Curls</p>
+                <div>
+                    <h4>ping</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/ping'
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>get-lead-by-leadname-John</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/lead?leadname=John%20Doe'
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>get-lead-by-leadname-Jane</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/lead?leadname=Jane%20Doe'
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>get-account-by-name-Boyscout</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/account?accountname=Boy%20Scouts%20of%20the%20Southwest'
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>get-account-by-name-Laundromat</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/account?accountname=Saito%20Family%20Laundromats'
+                        </code>
+                    </pre>
+                </div>
+                <hr>            
+                <div>
+                    <h4>get-products-by-productcodelist-UMS</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/productsbyproductcodelist' \
+--header 'Content-Type: application/json' \
+--data '{
+    "productcodelist": [
+        "SPC-R01",
+        "SPG-01",
+        "SPG-02"
+    ],
+    "callsource": "postman"
+}'
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>get-pricebookentry-by-productcode-and-name-Panel</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/pricebookentry?productcode=SPC-R01&pricebookname=Standard%20Price%20Book'
+                        </code>
+                    </pre>
+                </div> 
+                <hr>
+                <div>
+                    <h4>get-opportunity-by-name-BoyScout</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/opportunity?opportunityname=BSofSW%20-%20Ground-mounted%20Panels'
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>get-opportunity-by-name-Laundromats</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/opportunity?opportunityname=Saito%20-%20Ground-mounted%20Panels'
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>get-quote-by-opportunityname-BoyScout</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/opportunity/quote?opportunityname=BSofSW%20-%20Ground-mounted%20Panels'
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>get-quote-by-opportunityname-Laundromats</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/opportunity/quote?opportunityname=Saito%20-%20Ground-mounted%20Panels'
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>delete-acct-and-related-records</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/deleteaccountcontact' \
+--header 'Content-Type: application/json' \
+--data '{
+    "acct_contact_idsfordelete": ["001bm00000CCzP0AAL", "001bm00000CDK21AAH"],
+    "callsource": "postman"
+}'
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>delete-leads</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/deleteleads' \
+--header 'Content-Type: application/json' \
+--data '{
+    "leadidsfordelete": [
+        "00Qbm000002wcN7EAI",
+        "00Qbm000002wcN8EAI"
+    ],
+    "callsource": "postman"
+}'
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>delete-pricebookentry</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/deletepricebookentry' \
+--header 'Content-Type: application/json' \
+--data '{
+    "pricebookentryfordelete": ["01ubm000000hQvJAAU", "01ubm000000hQvKAAU", "01ubm000000hQvLAAU", "01ubm000000hQvMAAU", "01ubm000000hQvNAAU"],
+    "callsource": "postman"
+}'
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>delete-products</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/deleteproducts' \
+--header 'Content-Type: application/json' \
+--data '{
+    "productidsfordelete":["01tbm000003aaAbAAI", "01tbm000003aaAcAAI", "01tbm000003aaAdAAI"],
+    "callsource": "postman"
+}'
+                        </code>
+                    </pre>
+                </div> 
+                <hr>
+                <hr>
+                <div>
+                    <h4>delete-quotes</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/deletequotes' \
+--header 'Content-Type: application/json' \
+--data '{
+    "quoteidsfordelete": [
+        "0QLbm0000003hYHGAY",
+        "0Q0bm0000007tcTCAQ"
+    ],
+    "callsource": "postman"
+}'
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>delete-orders</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/deleteorders' \
+                            --header 'Content-Type: application/json' \
+                            --data '{
+                                "orderidsfordelete": [
+                                    "801bm00000QxvhdAAB",
+                                    "801bm00000QxXa9AAF"
+                                ],
+                                "callsource": "postman"
+                            }'
+                        </code>
+                    </pre>
+                </div> 
+                <hr>
+                <div>
+                    <h4>delete-contracts</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/deletecontracts' \
+                            --header 'Content-Type: application/json' \
+                            --data '{
+                                "contractidsfordelete": [
+                                    "800bm00000GVfgsAAD",
+                                    "800bm00000GVVJIAA5"
+                                ],
+                                "callsource": "postman"
+                            }'
+                        </code>
+                    </pre>
+                </div> 
+                <hr>
+                <div>
+                    <h4>create-lead</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/lead' \
+                            --header 'Content-Type: application/json' \
+                            --data '[
+                                {
+                                    "firstname": "John",
+                                    "lastname": "Doe",
+                                    "company": "Boy Scouts of the Southwest",
+                                    "status": "Open",
+                                    "title": "Account Executive"
+                                },
+                                {
+                                    "firstname": "Jane",
+                                    "lastname": "Doe",
+                                    "company": "Saito Family Laundromats",
+                                    "status": "Open",
+                                    "title": "Account Executive"
+                                }
+                            ]'
+                        </code>
+                    </pre>
+                </div> 
+                <hr>
+                <div>
+                    <h4>create-product-UMS</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/product' \
+                            --header 'Content-Type: application/json' \
+                            --data '[
+                                {
+                                    "name": "UMS Solar Panel Cleaning Residential",
+                                    "description": "Residential solar panel cleaning service package",
+                                    "family": "Service Packages",
+                                    "productcode": "SPC-R01",
+                                    "productcurrency": "USD",
+                                    "active": true
+                            
+                                },
+                                {
+                                    "name": "SunPower Ground",
+                                    "description": "80-cell ground-mounted solar panel",
+                                    "family": "Panels",
+                                    "productcode": "SPG-01",
+                                    "productcurrency": "USD",
+                                    "active": true,
+                                    "groundmount": true
+                                },
+                                {
+                                    "name": "GreenSun Ground",
+                                    "description": "60-cell ground-mounted solar panel",
+                                    "family": "Panels",
+                                    "productcode": "SPG-02",
+                                    "productcurrency": "USD",
+                                    "active": true,
+                                    "groundmount": true
+                                }
+                            ]'
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>create-pricebookentry-Solar-Panel</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/pricebookentry' \
+                            --header 'Content-Type: application/json' \
+                            --data '[
+                                {
+                                    "productcode": "SPC-R01",
+                                    "currency": "USD",
+                                    "pricebookname": "Standard Price Book",
+                                    "price": "450"
+                                },
+                                {
+                                    "productcode": "SPC-R01",
+                                    "currency": "EUR",
+                                    "pricebookname": "Standard Price Book",
+                                    "price": "397"
+                                },
+                                {
+                                    "productcode": "SPC-R01",
+                                    "currency": "GBP",
+                                    "pricebookname": "Standard Price Book",
+                                    "price": "355"
+                                },
+                                {
+                                    "productcode": "SPC-R01",
+                                    "currency": "JPY",
+                                    "pricebookname": "Standard Price Book",
+                                    "price": "52744"
+                                },
+                                {
+                                    "productcode": "SPC-R01",
+                                    "currency": "SGD",
+                                    "pricebookname": "Standard Price Book",
+                                    "price": "637"
+                                }
+                            ]'
+                        </code>
+                    </pre>
+                </div> 
+                <hr>
+                <div>
+                    <h4>create-pricebookentry-SunPower Ground</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/pricebookentry' \
+                            --header 'Content-Type: application/json' \
+                            --data '[
+                                {
+                                    "productcode": "SPG-01",
+                                    "currency": "USD",
+                                    "pricebookname": "Standard Price Book",
+                                    "price": "1200"
+                                },
+                                {
+                                    "productcode": "SPG-01",
+                                    "currency": "EUR",
+                                    "pricebookname": "Standard Price Book",
+                                    "price": "1250"
+                                },
+                                {
+                                    "productcode": "SPG-01",
+                                    "currency": "GBP",
+                                    "pricebookname": "Standard Price Book",
+                                    "price": "1000"
+                                },
+                                {
+                                    "productcode": "SPG-01",
+                                    "currency": "JPY",
+                                    "pricebookname": "Standard Price Book",
+                                    "price": "140000"
+                                },
+                                {
+                                    "productcode": "SPG-01",
+                                    "currency": "SGD",
+                                    "pricebookname": "Standard Price Book",
+                                    "price": "1800"
+                                }
+                            ]'
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>create-pricebookentry-GreenSun Ground</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/pricebookentry' \
+                            --header 'Content-Type: application/json' \
+                            --data '[
+                                {
+                                    "productcode": "SPG-02",
+                                    "currency": "USD",
+                                    "pricebookname": "Standard Price Book",
+                                    "price": "900"
+                                },
+                                {
+                                    "productcode": "SPG-02",
+                                    "currency": "EUR",
+                                    "pricebookname": "Standard Price Book",
+                                    "price": "1900"
+                                },
+                                {
+                                    "productcode": "SPG-02",
+                                    "currency": "GBP",
+                                    "pricebookname": "Standard Price Book",
+                                    "price": "1450"
+                                },
+                                {
+                                    "productcode": "SPG-02",
+                                    "currency": "JPY",
+                                    "pricebookname": "Standard Price Book",
+                                    "price": "250000"
+                                },
+                                {
+                                    "productcode": "SPG-02",
+                                    "currency": "SGD",
+                                    "pricebookname": "Standard Price Book",
+                                    "price": "3200"
+                                }
+                            ]'
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>create-pricebookentry-Enterprise</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/pricebookentry' \
+                            --header 'Content-Type: application/json' \
+                            --data '[
+                                {
+                                    "productcode": "SPG-01",
+                                    "currency": "JPY",
+                                    "pricebookname": "Enterprise",
+                                    "price": "78500"
+                                },
+                                {
+                                    "productcode": "SPG-02",
+                                    "currency": "JPY",
+                                    "pricebookname": "Enterprise",
+                                    "price": "100000"
+                                },
+                                {
+                                    "productcode": "SPG-01",
+                                    "currency": "SGD",
+                                    "pricebookname": "Enterprise",
+                                    "price": "900"
+                                },
+                                {
+                                    "productcode": "SPG-02",
+                                    "currency": "SGD",
+                                    "pricebookname": "Enterprise",
+                                    "price": "1400"
+                                }
+                            ]'
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>create-pricebookentry-nonprofit</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/pricebookentry' \
+                            --header 'Content-Type: application/json' \
+                            --data '[
+                                {
+                                    "productcode": "SPG-01",
+                                    "currency": "GBP",
+                                    "pricebookname": "Nonprofit",
+                                    "price": "701"
+                                },
+                                {
+                                    "productcode": "SPG-02",
+                                    "currency": "USD",
+                                    "pricebookname": "Nonprofit",
+                                    "price": "900"
+                                }
+                            ]'
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>convertlead-JohnDoe-BoyScout</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/convertlead' \
+                            --header 'Content-Type: application/json' \
+                            --data '{
+                                "name": "John Doe",
+                                "leadsource": "web",
+                                "doNotCreateOpportunity": false,
+                                "opportunityname": "BSofSW - Ground-mounted Panels"
+                            }'
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>convertlead-JaneDoe-Saitto_Laundromats</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/convertlead' \
+                            --header 'Content-Type: application/json' \
+                            --data '{
+                                "name": "Jane Doe",
+                                "leadsource": "web",
+                                "doNotCreateOpportunity": false,
+                                "opportunityname": "Saito - Ground-mounted Panels"
+                            }'
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>update-opportunity-by-id-BoyScout</h4>
+                    <pre>
+                        <code>
+                            curl --location --request PUT 'http://localhost:8081/api/opportunity/006bm000001oXrRAAU' \
+                            --header 'Content-Type: application/json' \
+                            --data '{
+                                "opportunitypricebook": "Nonprofit",
+                                "opportunitycurrency": "USD",
+                                "opportunityamount": "20000"
+                            
+                            }'
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>create-opportunity-product-Boyscout</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/opportunity/product' \
+                            --header 'Content-Type: application/json' \
+                            --data '{
+                                "opportunityname": "BSofSW - Ground-mounted Panels",
+                                "products": [
+                                    {
+                                        "productcode": "SPG-02",
+                                        "quantity": 20
+                                    }
+                                ]
+                            }'                        
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>update-account-by-id</h4>
+                    <pre>
+                        <code>
+                            curl --location --request PUT 'http://localhost:8081/api/account/001bm00000CDK21AAH' \
+                            --header 'Content-Type: application/json' \
+                            --data '{
+                                "accountcurrency": "JPY"
+                            
+                            }'                        
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>update-opportunity-by-id-Laundromats</h4>
+                    <pre>
+                        <code>
+                            curl --location --request PUT 'http://localhost:8081/api/opportunity/006bm000001oXt3AAE' \
+                            --header 'Content-Type: application/json' \
+                            --data '{
+                                "opportunitypricebook": "Enterprise",
+                                "opportunitycurrency": "JPY",
+                                "opportunityamount": "4200000"
+                            
+                            }'                        
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>create-opportunity-product-Laundromats</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/opportunity/product' \
+                            --header 'Content-Type: application/json' \
+                            --data '{
+                                "opportunityname": "Saito - Ground-mounted Panels",
+                                "products": [
+                                    {
+                                        "productcode": "SPG-01",
+                                        "quantity": 35
+                                    },
+                                    {
+                                        "productcode": "SPG-02",
+                                        "quantity": 20
+                                    }
+                                ]
+                            }'                        
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>create-quote-for-opportunity-Laundromats-80-Cell</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/opportunity/quote' \
+                            --header 'Content-Type: application/json' \
+                            --data '{
+                                "opportunityname": "Saito - Ground-mounted Panels",
+                                "quotename": "80 Cell Ground-mounted Panels"
+                            }'                        
+                        </code>
+                    </pre>
+                </div>
+                <hr>
+                <div>
+                    <h4>create-quote-for-opportunity-BoyScout-60-Cell</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/opportunity/quote' \
+                            --header 'Content-Type: application/json' \
+                            --data '{
+                                "opportunityname": "BSofSW - Ground-mounted Panels",
+                                "quotename": "60 Cell Ground-mounted Panels"
+                            }'                        
+                        </code>
+                    </pre>
+                </div>
+                <div>
+                    <h4>update-quote-for-opportunity-BoyScout-60-Cell</h4>
+                    <pre>
+                        <code>
+                            curl --location --request PUT 'http://localhost:8081/api/opportunity/quote/0Q0bm000000804TCAQ' \
+                            --header 'Content-Type: application/json' \
+                            --data '{
+                                "quantity": 3,
+                                "discount": 10,
+                                "productname": "GreenSun Ground"
+                            }'                         
+                        </code>
+                    </pre>
+                </div> 
+                <div>
+                    <h4>create-account-contract-boyscout</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/account/contract' \
+                            --header 'Content-Type: application/json' \
+                            --data '{
+                                "accountname": "Boy Scouts of the Southwest",
+                                "contracts": [
+                                    {
+                                        "contractstartdate": "07-02-2024",
+                                        "contractterm": "12"
+                                    }
+                                ]
+                            }'
+                        </code>
+                    </pre>
+                </div>
+                <div>                    
+                    <h4>create-account-contract-Laundromat</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/account/contract' \
+                            --header 'Content-Type: application/json' \
+                            --data '{
+                                "accountname": "Saito Family Laundromats",
+                                "contracts": [
+                                    {
+                                        "contractstartdate": "07-02-2024",
+                                        "contractterm": "12"
+                                    }
+                                ]
+                            }'
+                        </code>
+                    </pre>
+                </div>
+                <div>                    
+                    <h4>create-order-for-contract-BoyScout</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/order' \
+                            --header 'Content-Type: application/json' \
+                            --data '{
+                                "contractnumber": "00000120",
+                                "opportunityname": "BSofSW - Ground-mounted Panels"
+                            }'
+                        </code>
+                    </pre>
+                </div>
+                <div>                    
+                    <h4>create-order-for-contract-Laundromat</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/order' \
+                            --header 'Content-Type: application/json' \
+                            --data '{
+                                "contractnumber": "00000121",
+                                "opportunityname": "Saito - Ground-mounted Panels"
+                            }'
+                        </code>
+                    </pre>
+                </div>
+                <div>                    
+                    <h4>create-order-product-GreenSun-ForBoyScout</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/order' \
+                            --header 'Content-Type: application/json' \
+                            --data '{
+                                "contractnumber": "00000121",
+                                "opportunityname": "Saito - Ground-mounted Panels"
+                            }'
+                        </code>
+                    </pre>
+                </div>
+                <div>                    
+                    <h4>create-order-product-Laundromat</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/order/product' \
+                            --header 'Content-Type: application/json' \
+                            --data '{
+                                "ordernumber": "00000117",
+                                "products": [
+                                    {
+                                        "productcode": "SPG-01",
+                                        "quantity": 35
+                                    },
+                                    {
+                                        "productcode": "SPG-02",
+                                        "quantity": 20
+                                    }
+                                ]
+                            }'
+                        </code>
+                    </pre>
+                </div> 
+                <div>                    
+                    <h4>remove-order-product-Laundromat-Sunpower</h4>
+                    <pre>
+                        <code>
+                            curl --location 'http://localhost:8081/api/order/removeproduct' \
+                            --header 'Content-Type: application/json' \
+                            --data '{
+                                "ordernumber": "00000117",
+                                "products": [
+                                    {
+                                        "productcode": "SPG-01",
+                                        "quantity": 35
+                                    }
+                                ]
+                            }'
+                        </code>
+                    </pre>
+                </div>                                                         
+            </div>
+            <div class="grooveborder">
+                <h6 class="text-center"><a href="https://github.com/madajee/e-store-express-mule.git" target="_blank" class="nav-link">e-store-express-mule</a></h6>
+                <p><strong>Feature: </strong>poc with mule oauth2 provider</p>
+                <p><strong>Demo:</strong><a href="https://youtu.be/iADN4mrmFxc" target="_blank" class="nav-link">poc with mule oauth2 provider</a></p>
+            </div>
+            <div class="grooveborder">
+                <h6 class="text-center"><a href="https://github.com/madajee/e-store-express.git" target="_blank" class="nav-link">e-store-express [NodeJS]</a></h6>
+                <p><strong>Feature: </strong>user registration and login along with partial resources for  cart, product, order.</p>
+                <p><strong>Demo:</strong><a href="https://youtu.be/1EJ2aRlfXUM" target="_blank" class="nav-link">e-store-express [NodeJS]</a></p>
+            </div>
+            <div class="grooveborder">
+                <h6 class="text-center"><a href="https://github.com/madajee/estoreexpress-subscriberapi-mule.git" target="_blank" class="nav-link">estoreexpress-subscriberapi-mule</a></h6>
+                <p><strong>Feature: </strong>poc with user, product crud with mule and postgres</p>
+                <p><strong>Demo:</strong><a href="https://youtu.be/T0uiBeYtGgw" target="_blank" class="nav-link">poc on user, product crud</a></p>
+            </div>
+            <div class="grooveborder">
+                <h6 class="text-center"><a href="https://github.com/madajee/estoreexpress-subscriberapi-mule.git" target="_blank" class="nav-link">estoreexpress-subscriberapi-mule</a></h6>
+                <p><strong>Feature: </strong>poc with order crud with mule and postgres</p>
+                <p><strong>Demo:</strong><a href="https://youtu.be/-5noSaeVYoE" target="_blank" class="nav-link">poc on order crud</a></p>
+            </div>
+            <div class="grooveborder">
+                <h6 class="text-center"><a href="https://github.com/madajee/estore-sfdc-system-api.git" target="_blank" class="nav-link">estore-sfdc-system-api</a></h6>
+                <p><strong>Feature: </strong>lead object</p>
+                <p><strong>Demo-1:</strong><a href="https://youtu.be/ol_MKqGMxYo" target="_blank" class="nav-link">Sprint-Lead-Feature-Update</a></p>
+                <p><strong>Demo-2:</strong><a href="https://youtu.be/MoK0LQ8Ezqk" target="_blank" class="nav-link">Mule Interface with SFDC Lead Object</a></p>
+            </div>
+            <div class="grooveborder">
+                <h6 class="text-center"><a href="https://github.com/madajee/estore-sfdc-system-api.git" target="_blank" class="nav-link">estore-sfdc-system-api</a></h6>
+                <p><strong>Feature: </strong>Product object with Standard and Custom Pricebook</p>
+                <p><strong>Demo-Part-1:</strong><a href="https://youtu.be/FhG91ediO7M" target="_blank" class="nav-link">Mule Interface with SFDC Product and Pricebook</a></p>
+                <p><strong>Demo-Part-2:</strong><a href="https://youtu.be/yfojOkZKiIM" target="_blank" class="nav-link">Mule Interface with SFDC Product and Custome Pricebook</a></p>
+            </div>
+            <div class="grooveborder">
+                <h6 class="text-center"><a href="https://github.com/madajee/estore-sfdc-system-api.git" target="_blank" class="nav-link">estore-sfdc-system-api</a></h6>
+                <p><strong>Feature: </strong>Opportunity and Opportunity Product</p>
+                <p><strong>Demo-Part-1:</strong><a href="https://youtu.be/OQw2zfviQfU" target="_blank" class="nav-link">Mule Interface with SFDC Opportunity and Opportunity Products</a></p>
+                <p><strong>Demo-Part-2:</strong><a href="https://youtu.be/X9-Fe9qHnQ8" target="_blank" class="nav-link">Mule Interface - Add Product to Opportunity</a></p>
+            </div>
+            <div class="grooveborder">
+                <h6 class="text-center"><a href="https://github.com/madajee/estore-sfdc-system-api.git" target="_blank" class="nav-link">estore-sfdc-system-api</a></h6>
+                <p><strong>Feature: </strong>Quote and Quote Lines</p>
+                <p><strong>Demo:</strong><a href="https://youtu.be/j4QRSticq6k" target="_blank" class="nav-link">Mule Interface with SFDC Quote and Quote Lines</a></p>
+            </div>
+            <div class="grooveborder">
+                <h6 class="text-center"><a href="https://github.com/madajee/estore-sfdc-system-api.git" target="_blank" class="nav-link">estore-sfdc-system-api</a></h6>
+                <p><strong>Feature: </strong>Contracts and Orders</p>
+                <p><strong>Demo:</strong><a href="https://youtu.be/KzQGuQt_914" target="_blank" class="nav-link">Mule Interface with SFDC Contracts and Orders</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="grooveborder">
+    <ul><h6 class="text-center">Helpful Links<span class="alignright"></h6>
+        <li><a href="https://www.youtube.com/watch?v=rvigMkg8MYo" target="_blank">Agile Scrum Sessions with Dr. Jeff Sutherland | Value Stream Management</a></li>
+        <li><a href="https://trailhead.salesforce.com/content/learn/projects/manage-products-prices-quotes-orders" target="_blank">Manage Products, Prices, Quotes, and Orders</a></li>
+    </ul>   
+</div>

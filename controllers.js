@@ -26,3 +26,8 @@ app.controller('integrationController', ['$scope',
   function($scope) {
     $scope.sidemenu = "sprint";
   }]);
+
+  app.controller('estoreController', ['$scope',
+    function($scope) {
+      $scope.sidemenu = "estore";
+    }]);
