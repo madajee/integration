@@ -1,0 +1,128 @@
+<div class = "container-fluid mt-2">
+    <div class="row">
+        <sprint-side-menu></sprint-side-menu>
+        <div class="col-md-10">
+            <a href="#!/sprint/2" class="nav-link">agentai-sprint</a>
+            <a href="#!/integration/122" class="nav-link">Integration-122</a>
+            <div class="grooveborder">
+                    <h4>Maturity Level 0: AI Beginner</h4>
+                    <p><strong>Prediction: </strong>Automation on Cloud gave us Ecosystem. Autonomous AI and Robotics will give us Ecosphere.</p>
+                    <ul>
+                        <li><strong>Artificial intelligence (AI): </strong>A field of study that uses computers to do processes that mimic human behavior.</li>
+                        <li><strong>Machine learning (ML): </strong>A subset of AI. Uses algorithms to learn and improve from training data.</li>
+                        <li><strong>Deep learning (DL): </strong>A subset of ML. Uses multilayer networks to build models that are inspired by the human brain.</li>
+                        <li><strong>MLOPs: </strong>As we train the algorithm with a training data, we have a ML model as an output of training process which can then be used to make predictions through inference and hosting processes. MLOps is a practice of  delivering machine learning models. It begins with development and ends with a finished model in an operational setting. It covers things like supervised learning, unsupervised learning, CI/CD, model registries, API and UIs that expose model operations as a consumption service and ongoing performance monitoring.</li>
+                        <li><strong>Roles: </strong><em>AI Engineer</em> operationalize and deploy AI models. Data scientist perform model selection and optimization of deployed models. Data Enginner build pipelines that connect data from different data sources and the unified data is leveraged for all AI/ML related tasks. AI Partners and Consultants bridge the gaps and scale of AI implementation for enterprises.</li>
+                        <li><strong>ML Pipeline Lifecycle: </strong>The purpose to deliver results to an enterprise for critical decision making on a periodic or on demand basis. All three roles mentioned above enables production delivery of ML pipeline.</li>
+                        <img ng-src="images/mlops-org-ml-pipeline.png" alt="mlops-org-ml-pipeline" width="900" height="300"><br>
+                        <em class="text-center">Image Reference: https://ml-ops.org/content/mlops-principles</em> 
+                        <p>Checkout the Feature Store which house clean data for the model. Data Scientist start the experimentation with raw data analysis, employs the best alogrithm for the solution. Source Repository house the code for models, CI/CD functions deploy the model.  ML Prediction Service offers the results against live data through UI/UX experience or an API. ML Metadata store captures the runtime stats and performance monitoring along with triggeres create a feedack loop with rest of the system.</p>
+                        <li><strong>ML Pipeline Layers: </strong>At the bottom is the infrastructure along with security, montoring, automation and resource management which is usually a combination of acclerated computing chips form likes Nvidia and hyperscalers like GCP, AWS, Azure. Orgs and Partners have to create a tool chain that will cover the testing and validation layer. Data Collection and ETL jobs layers populates the clean and unified data into feature store which is vefified and validated AI/ML solution and usecases. We then have Model development, Model monitoring, UI/UX layers which are goverened with MLOps best practices to deliver finished models in production along with consumption service. This process goes through several maturity phases with the help of CI/CD. Phase 1 usually covers lot of decision making at stakeholder level, small group of ground level teams prove out data science to the point that the analytical solution can be operationlized within the enterprise.</li>
+                        <li><strong>Model Understanding: </strong>
+                        <p>Typically there is an experimental phase with model selection and parameters tuning, and the codebase is in form of Juypter notebooks and just enough infrastructure is provisioned to do proof of concept and fit for purpose analysis. Al Engineer will have to check on few things like best practices, testing approach, troubleshooting guides to categorize the model appropriately in the broad spectrum from experimental to production ready. Things like metrics, inference approach have to be discussed and usually the model that predicts a single numeric outcome are a bit easier than models that have more than one outcome like image classification or labelling models are a bit more complex. In case of a classification model like fraud detection where the outcome will be boolean binary, then we usually use the metric like accuracy which is based on how many cases the model predicted correctly. However for classfying jars of different shape is not a yes / or no answer is a multi class outcome and it can get a bit fuzzy and supported with other two dimensional metrics based on confusion matrix. Some AI engineers want to lean in with data scientist, which may require them to do some deeper dive into maths and statistics topics related to calculating probability, mean, median, average.</p>
+                        <p>At times, we will have clean data which can be sliced by business in non AI tools in different categories to analyze the impact and when the same conceptual understanding is applied in AI model, we may train the model using only one of those categories, so in this case MLOps teams goes through a refinement phase of generating the revised versions of model by adding more granularity into Analysis Base Tables.
+                        </p>
+                        <p>
+                            At the core machine learning models are algorithms that learn from the data in the training process. In the morning algorithm, everyone follows a best practice of bruising, bathing so even in our daily life we have series of steps which is a recipe that gets us ready for the day. Just like our brain creates a variation of morning algorithm based on the lifestyle and things like weather, weekend, models uses training data to identify patterns and create algorithms that run on accelerated computing infrastructure to achieve far fetched goals. There are different types of machine learning algorithms like supervised learning, unsupervised learning, deep learning, reinforcement learning. Engineers will learn and understand these different types while working alongside Scientists but the generic view on model understanding should cover the following:
+                            <ul>
+                                <li>Input and Output schema of the model including data types and prediction columns</li>
+                                <li>Relevant metrics to track based on the model type and business objectives.</li>
+                                <li>Training and Inference process along with runtime environment for different types of model</li>
+                            </ul>
+                        </p>
+                        </li>
+                        <li><strong>Logging and Metric Selection: </strong>
+                            <p>We understand that AI applications and machine learning operations are solving complex problems and creating new frontiers, but we should be aware of  things like rapid data changes, models becoming stale and losing the predictive power, system performance issues. Logging and Monitoring solutions help us troubleshoot these kind of issues and there are four levels in an AI/ML solution:                            
+                                <ul>
+                                    <li><strong>Data: </strong>We should know the anomalies in the data like new or existing customer, consider data profiling with count on number of records in immutable data set and profiled data set.We should enable logs for features like applying pricing discounts or more advertising to achieve sales target.</li>
+                                    <li><strong>Model: </strong>We may have to externalize features before we deploy the solution as a service, so that we can generate the feedback cycle with data scientist and help them tune the model parameters.</li>
+                                    <li><strong>Predictions: </strong>We will benchmark predictions based on inputs from data scientists and industry standards but we have to log metrics like mean and avg of errors, confidence score to determine things like training loss rate.</li>
+                                    <li><strong>System Performance: </strong>As models get deployed in production, we would have to monitor on memory usage, load and up times, errors and exceptions.</li>
+                                </ul>
+                            </p>
+                            <p>Though in experimental phase, we may use print and log statements which will be useful in upstream environments as well, as we promote to production like environments, we should start using language specifc logging frameworks, requirements and infrastructure driven logging functions and configurations that allow us to alter log levels and logging locations.</p>
+                        </li>
+                        <li><strong>Model and Data Versioning: </strong>
+                            <p>As we go through several iterations in an AI/ML project, we will require versioning in a machine learning workflow for both model and data. For the model, we have to versioning things like hyperparameters, variable selection, algorithm choice and composite models. There can be multiple modalities in the data and size can vary on machine learning dataset depending upon training approach and model size, so we can leverage cloud tools to maintain versions in the dataset.</p>
+                        </li>
+                        <li><strong>Training Artifacts and Model Store: </strong>
+                            <p>Usually there are things like state management in software applications and systems, but in ML system we have a training process which gives the model as runtime engine. We have an input and output artifacts like model code, configurations settings, checkpoints, training data, logs and metrics, visualization charts. We use serialization and deserailization to store and re-instantiate the model, and there are standards like pickle, protobuf, MLeap, ONNEX, H5, Keras. As platform enterprises build developer tools for AI/ML, they create metadata and information about training runs and capabilities are offered to AI Enginner to manage them.</p>
+                            <p>We are require registries to store and retrieve model images, manage model lifecycle, model promotion and versioning. Deployment strategies like Blue/Green and Canary are extended and being recreated for the AI/ML systems.</p>
+                        </li>
+                        <li><strong>Hyperscalers AI: </strong>
+                            <p>Public Cloud providers offer AI capabilities like Image detection and labeling (Amazon Rekognition), Document analysis and text extraction (Amazon Textract), Natural Languarge Processing (Amazon Comprehend), Speech to Text (Amazon Transcribe), Language Translation (Amazon Translate), Conversational Chatbot (Amazon Lex) as API backed with their service delivery model and global infrastructure at scale. Amazon Sagemaker is a fully managed service for preparing, building, training and deploying high quality machine learning models.</p>
+                        </li>
+                        <li><strong>Data is a Fuel for AI and ML Echospheres: </strong>
+                            <img ng-src="images/foundational-models.png" alt="mvc_express" width="900" height="300">
+                            <p>In the past 60 years, we started with generating, storing and exchanging data as files, tables and relationships in structured databases and serialized binary objects as XML and JSON documents. With internet, cloud, mobility, social, we have increased the scale of data generation, storage and retrieval, and have been building big data management solutions. With the advent of AI, we are taking data usage to a different level by using it for machine learning techniques like unsupervised learning, supervised learning and reinforcement learning which has generated transformers like LLMs like ChatGPT, LLama and Gemini which have become available to everyone in past couple of years.</p>
+                            <p>We must agree that Data Management takes lots of effort, and It starts with identification of data sources. ETL techniques like aggregation, cleansing creates a staging area and then we have to explore techniques like labeling, profiling, unification, augmentation so that it realizes into training data for the AI models.</p>
+                            <p>It may so happen that we have train and deploy the model through MLOps and later realize that we misunderstood the problem, team has done enough due diligence while choosing the correct algorithm and we just don’t have the comprehensive data to cover all the edge scenarios which can the retrigger the MLOps pipeline lifecycle from the beginning or checkpoints. Talks about hallucinations in AI products further reinforce the importance of testing data and evaluation pipelines as image classification can detect bottles of soda as alcohol.</p>
+                            <p>Enterprise AI will rely heavily on the data in Enterprise Systems for training the AI models and data engineers and architects will have to see things from technical as well as from regulatory aspects. Data Engineers also work on identifying libraries that can be used to synthesize training data to augment existing real datasets.</p>
+                        </li>
+                        <li><strong>What is Data Engineering? </strong>
+                            <ol>
+                                <li>Design and Build Data Pipelines</li>
+                                <li>Extract, load, transform, integrate and store data</li>
+                                <li>Design scalable data infrastructure</li>
+                                <li>Measure and provide tools to improve data quality</li>
+                            </ol>                               
+                        </li>
+                        <li><strong>What is Data Analysis? </strong>
+                            <ol>
+                                <li>Analyze and Summarize data to support decision making</li>
+                                <li>Apply Statistical Methods</li>
+                                <li>Use spreadsheets and business intelligence tools</li>
+                            </ol>                               
+                        </li>
+                        <li><strong>What is Data Science? </strong>
+                            <ol>
+                                <li>Build statistical and machine learning models to make predictions</li>
+                                <li>Use advanced analytics and algorithms</li>
+                                <li>Apply scientific method using data and test with simulations.</li>
+                            </ol>                               
+                        </li>
+                        <li><strong>Types of Data Quality Check?</strong>
+                            <ol>
+                                <li><strong>Completeness: </strong>All expected data is loaded with all columns</li>
+                                <li><strong>Consistency: </strong>Data formats and Validation Rules.</li>
+                                <li><strong>Accuracy: </strong>Correct Values with Picklist field type and range validators.</li>
+                                <li><strong>Uniqueness: </strong>Remove duplicates with a unique constraints and record Ids.</li>
+                                <li><strong>Validity: </strong>Business and Domain Validation Rules.</li>
+                                <li><strong>Timeliness: </strong>Control factors are freshness and latency of data loads.</li>
+                                <li><strong>Data Integrity Checks: </strong>Enable summarization on record count between pre-run and post-run of data loads on both source and target data stores; check for outliers, put watch on correlated fields in a record set, use of regular expressions to check for data and string patterns.</li>
+                            </ol>                               
+                        </li>
+                        <li><strong>Role of Relational Databases in Data Engineering?</strong>
+                            <ol>
+                                <li>Destination for ingestion from files and streams</li>
+                                <li>Load to dimensional model for data warehouses</li>
+                                <li>Support analytical queries and models</li>
+                                <li>Catalog metadata about data lakes and other data stores.</li>
+                            </ol>                               
+                        </li>
+                        <li><strong>Types of No-SQL Databases?</strong>
+                            <ol>
+                                <li>Key Value Stores such as Redis and DynamoDB</li>
+                                <li>Document Databases such as MongoDB and CouchDB</li>
+                                <li>Column Stores such as BigTable, Cassandra and HBase</li>
+                                <li>Graph Databases such as Neo4j and Amazon Neptune</li>
+                            </ol>                               
+                        </li>
+                    </ul>
+            </div>
+            <div class="grooveborder">
+                <h4>Maturity Level 0: AI Intermediate</h4>
+                <ul>
+                    <li><strong>TBD: </strong></li>
+                </ul>
+            </p>
+        </div>
+        </div>
+    </div>
+</div>
+<div class="grooveborder">
+    <ul><h6 class="text-center">Helpful Links<span class="alignright"></h6>
+        <li><a href="https://www.youtube.com/watch?v=rvigMkg8MYo" target="_blank">Agile Scrum Sessions with Dr. Jeff Sutherland | Value Stream Management</a></li>
+        <li><a href="https://www.edx.org/" target="_blank">Helpful AI/ML Courses</a></li>
+    </ul>   
+</div>

@@ -47,6 +47,16 @@ app.config(function ($routeProvider) {
         },
         controller: 'estoreController'
     })
+    .when('/agentai', {
+        templateUrl: 'pages/agentai/agentai_1.html',
+        controller: 'agentaiController'
+    })
+    .when('/agentai/:agentaiid', {
+        templateUrl: function (param) {
+            return 'pages/agentai/agentai_' + param.agentaiid + '.html'
+        },
+        controller: 'agentaiController'
+    })
     .
     otherwise('/');
     

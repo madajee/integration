@@ -31,3 +31,8 @@ app.controller('integrationController', ['$scope',
     function($scope) {
       $scope.sidemenu = "estore";
     }]);
+  
+  app.controller('agentaiController', ['$scope',
+    function($scope) {
+      $scope.sidemenu = "agentai";
+    }]);
