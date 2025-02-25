@@ -1,0 +1,143 @@
+<div class = "container-fluid mt-2">
+    <div class="row">
+        <project-side-menu></project-side-menu>
+        <div class="col-md-10">
+            <h6 class="text-center">PROJECT 101<span class="alignright"><a href="https://github.com/madajee/todo.git" target="_blank">Todo NodeJS Repo</a></span></h6>
+            <div class="grooveborder">
+                <h3>Dockerize NodeJS App - Part 1</h3>
+                <p><strong>Changes from c6 (commit id: 6cc3ad6)</strong>
+                    <ul>
+                        <li>Added DB persistence with mongodb.</li>
+                        <li>Added api controllers to get and add todo in todo collection.</li>
+                    </ul>
+                </p>
+                <pre>
+                    <code>
+                        <h3>requires from app.js in todo repo</h3>
+                        var express = require('express');
+                        var app = express();
+                        const mongoose = require("mongoose");
+                        var config = require('./config');
+                        var setupController = require('./controllers/setupController');
+                        var apiController = require('./controllers/apiController');
+
+                    </code>                    
+                </pre>
+                <p>
+                    <ul>
+                        <li>Clone the repo</li>
+                        <li>Create Volume and Network for Mongodb container</li>
+                        <li>Run MongoDB as a container and expose the mongo container service on default port of 27017. </li>
+                        <li>Run Todo application as a container and expose it on port 3000. Application container will connect to mongodb container on an exposed port of 27107.</li>
+                        <li>clean up</li>
+                    </ul>
+                </p>
+                <pre>
+                    <code>
+                        <ul>
+                            <li>docker volume create mongodb</li>
+                            <li>docker volume create mongodb_config</li>
+                            <li>docker network create mongodb </li>
+                            <li>docker run -it --rm -d -v mongodb:/data/db \
+                                -v mongodb_config:/data/configdb -p 27017:27017 \
+                                --network mongodb \
+                                --name mongodb \
+                                mongo</li>
+                            <li>docker build --tag todo .</li>
+                            <li>docker run -it --rm -d --network mongodb \
+                                --name rest-server \
+                                -p 3000:3000 \
+                                -e DATABASE_URL_PAAS=mongodb://mongodb:27017/todoDB \
+                                todo</li>
+                            
+                        </ul>
+                    </code>                    
+                </pre>
+                <p class="text-primary"><strong>Test the application on http://localhost:3000</strong></p>
+                <h4>Clean Up</h4>
+                <pre>
+                    <code>
+                        <ul>
+                            <li>docker stop $(docker ps -a -q)</li>
+                            <li>docker rmi $(docker images -a -q)</li>
+                            <li>docker volume prune</li>
+                            <li>docker network prune</li>
+                            <li>docker system prune -a</li>
+                        </ul>
+                    </code>                    
+                </pre>
+                <h4>Run with docker compose</h4>
+                <pre>
+                    <code>
+                        docker compose -f docker-compose.dev.yml up --build
+                    </code>                    
+                </pre>
+                <h5>SOURCES</h5>
+                <ul>
+                    <li>https://docs.docker.com/get-started/overview/</li>
+                    <li>https://blog.devgenius.io/how-to-build-and-run-a-nodejs-app-with-docker-github-actions-59eb264dfef5</li>
+                </ul>
+            </div>
+            <div class="grooveborder">
+                <h3>Dockerize NodeJS App - Part 2</h3>
+                <p>One has to install docker on the local machine and create a docker hub account.
+                    <ul>
+                        <li>Use express module to serve a basic Todo UI on port 3000.</li>
+                        <li>Run as a docker container.</li>
+                        <li>Automate the image build with github action.</li>
+                    </ul>
+                </p>
+                <pre>
+                    <code>
+                        <h3>dockerfile</h3>
+                        # syntax=docker/dockerfile:1
+
+                        FROM node:18-alpine
+                        ENV NODE_ENV=production
+
+                        WORKDIR /app
+
+                        COPY ["package.json", "package-lock.json*", "./"]
+
+                        RUN npm install --production
+
+                        COPY . .
+
+                        CMD [ "node", "app.js" ]
+                    </code>                    
+                </pre>
+                <pre>
+                    <code>
+                        <h3>Steps</h3>
+                        <ul>
+                            <li>Clone the repo and CD to the repo directory</li>
+                            <li>Docker Build (docker build --tag DOCKERHUB_USERNAME/todo .)</li>
+                            <li>Docker Run (docker run -d -p 3000:3000 todo)</li>
+                            <li>Docker Login to Dockerhub (docker login)</li>
+                            <li>Docker Push (docker push DOCKERHUB_USERNAME/todo)</li>
+                        </ul>
+                    </code>                    
+                </pre>
+                <pre>
+                    <code>
+                        <h3>Github Action Steps (todo/.github/workflows/main.yml)</h3>
+                        <p>One has to create DOCKERHUB_USERNAME and DOCKERHUB_TOKEN as repository secrets. Dockerhub_Token is the access token generated from the developer dockerhub account.</p>
+                        <ul>
+                            <li>Checkout (actions/checkout@v3)</li>
+                            <li>Login to Docker Hub (docker/login-action@v2)</li>
+                            <li>Set up Docker Buildx (docker/setup-buildx-action@v2)</li>
+                            <li>Build and push (docker/build-push-action@v4)</li>
+                        </ul>
+                    </code>                    
+                </pre>
+                <img ng-src="images/dockerize-node-app-v1.png" alt="iot-solution-view-v1" width="1000" height="400">
+                <h5>SOURCES</h5>
+                <ul>
+                    <li>https://docs.docker.com/get-started/overview/</li>
+                    <li>https://blog.devgenius.io/how-to-build-and-run-a-nodejs-app-with-docker-github-actions-59eb264dfef5</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<custom-footer authorname='Jeetan' linkurl='https://www.linkedin.com/in/jeetan-madaan-37aaa113/'></custom-footer>

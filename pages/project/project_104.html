@@ -2,7 +2,7 @@
     <div class="row">
         <project-side-menu></project-side-menu>
         <div class="col-md-10">
-            <h6 class="text-center">E-STORE-EXPRESS (AGILE DOC)<span class="alignright"><strong>github repository: </strong><ul><li><a href="https://github.com/madajee/e-store-express-mule.git" target="_blank">e-store-express-mule</a></li><li><a href="https://github.com/madajee/estoreexpress-subscriberapi-mule.git" class="nav-link" target="_blank">estoreexpress-subscriberapi-mule</a></li></ul></span></h6>
+            <h6 class="text-center">E-STORE-EXPRESS (AGILE DOC)<span class="alignright"><strong>github repository: </strong><ul><li><a href="https://github.com/madajee/e-store-express-mule.git" target="_blank">e-store-express-mule</a></li><li><a href="https://github.com/madajee/estoreexpress-subscriberapi-mule.git" class="nav-link" target="_blank">estoreexpress-subscriberapi-mule</a></li><li><a href="https://github.com/madajee/e-store-express.git" target="_blank">e-store-express-node</a></li></ul></span></h6>
             <a href="#!/integration/119" class="nav-link">Integration-119</a>
             <a href="#!/project/103" class="nav-link">project-estoreexpress</a>
             <div class="grooveborder">
@@ -51,6 +51,20 @@
                 <h3><i>latte.m1</i></h3>
                 <h4>Mule Error Handling_POV_2</h4>
                 <p>Generally in projects, there are common error handlers which are developed and maintained as a common mule artifact (usually as a separate repository) and included as a dependency. We also rely on tracing transaction logs in ELK stacks along with kibana dashboards when the error crosses transaction boundaries and propagates across mule services in separate layers. We also persist some business errors that occur at application layer in middle-tier DB tables or with customizations in saas business applications like salesforce. We also rely on notifications by configuring alerts to manage outage and other error situations. In POCs, I took a simplified approach of creating common utility mule configuration file which can be copied in different mule applications.</p>
+            </div>
+            <div class="grooveborder">
+                <h3><i>latte.m1</i></h3>
+                <h4>e-store-express in NodeJS</h4>
+                <img ng-src="images/mvc_express.png" alt="mvc_express" width="600" height="200">
+                <caption style="caption-side:bottom">Image source: developer.mozilla.org</caption>
+                <ul>
+                    <li>Step-1: Scaffold a node app with express module. Serve the index page in the app folder.Test the server is listening on port 3000.</li>
+                    <li>Step-2: Signup and Login routes with accesstoken and password encryption and user model and test the model with sqllite3. [{properties: id, username, password, role}, {functions: initialise, createUser, findUser, updateUser, findAllUsers, deleteUser}]</li>
+                    <li>Step-2: Login and Register schema validation ajv module and express middleware.</li>
+                    <li>Step 4: Add creatuser (model) to the register and password validation to the login route. Use sequelize, pg node module to connect to local instance of postgres.</li>
+                    <li>Step 5: Add the user route (/user/all) for getAllUsers (controller) and findAllUsers (model).</li>
+                    <li>Step 6: Test user signup and login and user/all route for few users.</li>
+                </ul>
             </div>
         </div>
     </div>
