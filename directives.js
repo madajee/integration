@@ -77,16 +77,16 @@ app.directive("panelGroup", function(){
     }
 });
 
-app.directive("tableDirective", function(){
-    return {
-        restrict: 'E',
-        templateUrl: 'pages/directives/table-directive.html',
-        replace: true,
-        scope:{
-            data: '='
-        }
-    }
-});
+// app.directive("tableDirective", function(){
+//     return {
+//         restrict: 'E',
+//         templateUrl: 'pages/directives/table-directive.html',
+//         replace: true,
+//         scope:{
+//             data: '='
+//         }
+//     }
+// });
 
 app.directive("projectCard", function(){
     return {
