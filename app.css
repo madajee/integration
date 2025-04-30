@@ -129,6 +129,15 @@ body {
     border: 1px solid black;
     width:5%;
   }
+  .nctech-brews-bytes-insights-metlife {
+    border: 1px solid black;
+    width:5%;
+  }
+  .agentblazer {
+    border: 1px solid black;
+    width:30%;
+  }
+  
   .grooveborder {border-style: groove;
     border-color: green;
     padding: 5px;}
