@@ -1,0 +1,44 @@
+<div class = "container-fluid mt-2">
+    <div class="row">
+        <integration-side-menu></integration-side-menu>
+        <div class="col-md-10">
+            <h6 class="grooveheader">INTEGRATION 123 - Data Pipelines</h6>
+            <div class="grooveborder">
+                <h3>Data Ingestion</h3>
+                <ul>
+                    <li>ETL (Extract, Transform, Load): Perform data transformations  on the source data and load the transformed data into target systems like Data Warehouses.</li>
+                    <li>ELT (Extract, Load, Transform): Load the source files as raw data in cloud Data Lakehouse and uses the transformation engine of Analytics Services.</li>
+                    <li>Data Pipelines benefits data quality, automation, and intelligent insights, which will usually lead to better customer centricity.</li>
+                    <li>Data Pipelines address usecase and scenarios in Visualization and Machine Learning.</li>
+                    <li>Data Handling should use 3Vs (Velocity, Volume, and Variety) to define the non function requirements from ingested data sources.</li>
+                    <li>Types of data: structured, semi-structured, unstructured. Relational Databases are structured, Document Databases are semi-structured, and Cloud-based Object Storage is unstructured.</li>
+                    <li>Data Pull Style: Batch and Streaming 
+                        <ul>
+                            <li>Batch Mode: Daily or Monthly Accounting Processes. Requires High Throughput Solutions with configurable batch options.</li>
+                            <li>Streaming Mode: Click Streams, Machine Data. Requires Low Latency, Fault-Tolerant Systems.</li>
+                        </ul>
+                    </li>
+                    <li>Data Processing Systems are categorized based on Transactional and Analytical Workloads
+                        <ul>
+                            <li>OLTP: Online Transaction Processing System. Eg: Order Entry, Payment Processing.</li>
+                            <li>OLAP: Online Analytical Processing System. Eg: Forecasting, Scoring, Predictions.</li>
+                        </ul>
+                    </li>
+                    <li>OLTP systems are at the beginning of the pipeline and mostly high volume short transactions. OLTP system prioritizes writes and maintains integrity with relationship and ACID transactions.</li>
+                    <li>OLAP systems are designed specifically for querying and analyzing large datasets. Eg: Data Warehouses, Data Lakes.</li>
+                    <li>Most Enterprises use OLTP for their transactional applications while also periodically loading data into OLAP for analysis.</li>
+                    <li>Columnar Style Storage pattern allows better compression, fast reads on column values and are more preferred for OLAP systems.</li>
+                    <li>There are additional formats like Avro and Parquet for unstructured text and metadata. Requirements on schema evolution, compression, read/write performance determine the choice of one over the other.</li>
+                    <li>Batch Data Pipelines that require high throughput use parallel processing to distribute data across multiple nodes in a cloud cluster.</li>
+                    <li>Data models evolve from concept (domain), logical (entities and relationships), and physical (datatypes in database stack) layers.</li>
+                    <li>Data cleaning techniques are applied to the data extracts from several sources and mapped to the model layer.</li>
+                </ul>
+            </div>
+            <div class="grooveborder">
+                <h3>Data Pipelines</h3>
+                <p>Data Pipelines</p>
+            </div>
+        </div>
+    </div>
+</div>
+<custom-footer authorname='Jeetan' linkurl='https://www.linkedin.com/in/jeetan-madaan-37aaa113/'></custom-footer>
