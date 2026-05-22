@@ -51,7 +51,7 @@
                     <li>An example can be that we can pull a large dataset of product and pipeline filter operation can help label the top products in visualizations.</li>
                  </ul>
             </div>
-             <div class="grooveborder">
+            <div class="grooveborder">
                  <h3>Data Storage</h3>
                  <ul>
                     <li>Over the years, relational databases are the backbone of structured datasets created as part of OLTP and OLAP systems.</li>
@@ -60,6 +60,21 @@
                     <li>Storage cost and access timeframe varies based on the temperature of the data, which can be hot, warm, and cold.</li>
                     <li>A large number of software companies have SaaS products and PaaS tools that provide direct secure access to the data stored in the public cloud.</li>
                     <li>One can expect that data pipelines will read/or write data from/or to databases (on-premise / or cloud) and othe cloud storage services (s3, azure blob, gcp object storage).</li>
+                 </ul>
+            </div>
+            <div class="grooveborder">
+                 <h3>Data Analytics</h3>
+                 <ul>
+                    <li>Typically, the job of a data pipeline is to get the data ready for business analysis.</li>
+                    <li>At times, data pipelines implements 3 -layered solution to process data through different layers before it can be consumed by business analytics and reporting tools.
+                        <ul>
+                            <li>Bronze Layer: Raw Data Ingestion</li>
+                            <li>Silver Layer: Clean and Conformed Data</li>
+                            <li>Gold Layer: Business Level Aggregates</li>
+                        </ul>
+                    </li>
+                    <li>Analytics tools offer several features to slice and dice facts across several dimensions to generate business intelligence. Analysts work with platform services like Amazon Redshift, Apache Spark on EMR, Azure SQL Server, Power BI to create reports and dashboards</li>
+                    <li>Apache Flink can use Java, Scala to analyze the stream of data in real-time. Amazon Athena is an in-memory query engine that helps you analyze data ingested in S3 datalakes. One can also load and unload data from S3 to Redshift clusters.</li>
                  </ul>
             </div>
         </div>
