@@ -57,6 +57,16 @@ app.config(function ($routeProvider) {
         },
         controller: 'agentaiController'
     })
+    .when('/datapipeline', {
+        templateUrl: 'pages/datapipeline/datapipeline_1.html',
+        controller: 'datapipelineController'
+    })
+    .when('/datapipeline/:datapipelineid', {
+        templateUrl: function (param) {
+            return 'pages/datapipeline/datapipeline_' + param.datapipelineid + '.html'
+        },
+        controller: 'datapipelineController'
+    })
     .
     otherwise('/');
     

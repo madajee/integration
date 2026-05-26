@@ -36,3 +36,8 @@ app.controller('integrationController', ['$scope',
     function($scope) {
       $scope.sidemenu = "agentai";
     }]);
+  
+    app.controller('datapipelineController', ['$scope',
+    function($scope) {
+      $scope.sidemenu = "datapipeline";
+    }]);
