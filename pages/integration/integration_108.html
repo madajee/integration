@@ -35,6 +35,74 @@
                 <panel-group title1='Management Tools' text1="Stackdriver, Monitoring, Logging, Error Reporting, Trace, Debugger, Deployment Manager, Cloud Endpoints, Cloud Console, Cloud Shell, Cloud Mobile App, Billing App" title2='Developer Tools' text2="Cloud SDK, Deployment Manager, Cloud Source Repositories, Cloud Tools for Android Studio, Cloud Tools for IntelliJ" title3='Developer Tools' text3='Cloud Tools for Powershell, Cloud Tools for Visual Studio, Google Plugin for Eclipse, Cloud Test Lab'></panel-group>
                 <br>
             </div>
+            <div class="grooveborder">
+                <h3>Understanding <a href="https://docs.aws.amazon.com/wellarchitected/latest/framework/rel-dp.html" target="_blank">Well-Architected Side</a> in Cloud Solutions.</h3>
+                <ul>
+                   <li>Data pipelines, when created as part of large digital transformation, require professionals to rely on a well-architected framework to realize business value in cloud programs.</li>
+                   <li>AWS has created a well-architected framework that focuses on key concepts, design principles, and architectural best practices for designing and running workloads in the cloud.</li>
+                   <li>Well-Architected Framework addresses concerns related to security, reliability, performance, cost, and sustainability.</li>
+                   <li>List down different framework pillars and continuously learn the best practices in each pillar.
+                        <ul>
+                            <li><strong>Operational Excellence Pillar: </strong>This pillar is focused on logging and monitoring and continuous improvement on  root cause analysis with end to end pipeline traceability from source to destination.</li>
+                            <li><strong>Security Pillar: </strong>This pillar extends the principle of least privilege with requirements like secure access to data apis with policy enforcement and logging unauthenticated attempts.</li>
+                            <li><strong>Reliability Pillar: </strong>This pillar discusses applying queuing architecture to prevent failed connections. It futher extends monitoring connection pools with usage alerts.</li>
+                            <li><strong>Performance Efficiency Pillar: </strong>This pillar keeps the automation at the center and requires us to use tools that improve agility and productivity. For eg: Automated CI/CD for build and deploy pipelines, monitoring service latency and throughput.</li>
+                            <li><strong>Cost Optimization Pillar: </strong>This pillar ensures that cost management is integral to solution design. An example may be that Invoice matches to purchased resources and reconciles to the approved expense.   Cloud products have built-in billing dashboards, and the detailed usage data can be pulled into custom reports.</li>
+                            <li><strong>Sustainability Pillar: </strong>This pillar extends baseline cost management at the solution level and collects resource-level usage to determine the sustainable path for the scaled deployment of the solution.</li>
+                        </ul>
+                   </li>
+                </ul>
+           </div>
+           <div class="grooveborder">
+                <h3>Understanding Design Side in Cloud Solutions.</h3>
+                <li>List down design consideration areas.
+                <ul>
+                    <li><strong>Design Network Connectivity: </strong>Application side test with IPs mapped with DNS in non-prod enviroments and with upstream deployments, the requirements and organization policies determine network and access patterns. A free-tier AWS account in Americas will create following networking components:
+                        <div class="row">
+                            <table>
+                                <tr>
+                                  <th>VPCs</th>
+                                  <th>Subnets</th>
+                                  <th>Route Tables</th>
+                                  <th>Internet Gateways</th>
+                                  <th>Egress-Only Internet gateways</th>
+                                  <th>DHCP options sets</th>
+                                  <th>Elastic IPs</th>
+                                  <th>Managed prefix lists</th>
+                                  <th>NAT gateways</th>
+                                  <th>Peering connections</th>
+                                  <th>Route servers</th>
+                                </tr>
+                                <tr>
+                                  <td>One VPc in an account region wth 16-bit CIDR block</td>
+                                  <td>3 subnets in the same region, each for an availability zone</td>
+                                  <td>One route table with 2 routes</td>
+                                  <td>One intenet gateway</td>
+                                  <td>Zero Egress gateway</td>
+                                  <td>One dhcp option with AmazonProvidedDNS</td>
+                                  <td>Zero Elastic IPs</td>
+                                  <td>15 Managed prefix lists: [region.ipv6.route53-healthchecks, region.ipv6.vpc-lattice, region.ec2.instance-connect, region.route53-healthchecks, global.ipv6.cloudfront.origin-facing, global.groundstation, region.ipv6.ec2-instance-connect, region.vpc-lattice, region.dynamodb, region.s3express, region.s3, region.ipv6.s3, global.cloudfront.origin-facing, region.ipv6.s3express, region.ipv6.dynamodb]</td>
+                                  <td>Zero NAT gateways</td>
+                                  <td>Zero Peering connections</td>
+                                  <td>Zero Route servers</td>
+                                </tr>
+                              </table>
+                        </div>    
+                        <ul>
+                            <li>A familiar scenario is an account with non-prod and prod VPC. Public facing Load Balancer with dynamic IP from allocated CIDR block protected with firewall.</li>
+                            <li>A less familiar slight complex scenario with non-prod and prod VPC. Both accounts are deploying apps but at some point, organization transformation or account merge can trigger a consolidation to single prod VPC and there can be one or two non-prod vpc. An interim milestone that we have apps from both accounts in one prod vpc, repurpose relased prod vpc to shared vpc and create a plan for further changes.</li>
+                            <li>A non familiar complex scenario from tech talk is a large enterprise with several aws accounts, each account have atleast 1 vpc and with different VPC workload isolation and multiple regions, some extra idle provisioned resources. A business mandate is for global VPC network.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Design Security Controls: </strong>
+                        <ul>
+                            <li>Crete Users and enable access with roles, groups and permissions in IAM.</li>
+                            <li>SSO: SAML with identity providers like Azure AD.</li>
+                            <li>Token-based resource access: OpenId and OAuth with OAuth providers like Okta with clientId, secrets and tokens.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 </div>
