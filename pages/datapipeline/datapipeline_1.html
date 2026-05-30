@@ -4,6 +4,30 @@
         <div class="col-md-10">
             <h6 class="grooveheader">INTEGRATION 123 - Data Pipelines</h6>
             <a href="#!/integration/123" class="nav-link">Integration-123</a>
+            <div class="grooveborder">
+                <h4>TASKS (June-2026)</h4>
+                    <ul>
+                        <p><li><strong>Task-1: </strong>CREATE BUCKET Interface with Mulesoft S3 Connector.</p>
+                            <img ng-src="images/aws-s3-createbucketFlow.png" alt="mvc_express" width="400" height="200">  
+                        </li></p>
+                        <p><li><strong>Task-2: </strong>CONNECT RDS and EC2 instance on AWS free-tier account.</p>
+                            <ol>
+                                <li><p>Create the Key Pair</p> <pre><code>aws ec2 create-key-pair --key-name MyKeyPair --query 'KeyMaterial' --output text > MyKeyPair.pem</code></pre></li>
+                               <li><p>Add the security group</p> <pre><code>aws ec2 create-security-group --group-name my-sg --description "My security group" --vpc-id vpc-xxxxxxxxxxxxxxxxx</code></pre></li>
+                               <li><p>Add the ingress rule for SSH</p> <pre><code>aws ec2 authorize-security-group-ingress --group-id sg-xxxxxxxxxxxxxxxx --protocol tcp --port 22 --cidr xx.xx.xx.xx/32</code></pre></li>
+                               <li><p>Create the EC2 Instance and conncet to instance with ssh</p> <pre><code>aws ec2 run-instances --image-id ami-078f95be0757084a3 --count 1 --instance-type t3.micro --key-name MyKeyPair --security-group-ids sg-xxxxxxxxxxxxxxxx --subnet-id subnet-xxxxxxxxxxxxxxxx<br>aws ec2-instance-connect ssh --instance-id i-xxxxxxxxxxxxxxx</code></pre></li>
+                               <li><p>Create the RDS database instances</p> <pre><code></code></pre></li>
+                               <li><p>Setup EC2 connection to RDS Database. This will add 2 more security groups, one for RDS as rds-ec2-1 and other for EC@ as ec2-rds-1.</p> <pre><code></code></pre></li>
+                               <li><p>Delete the RDS database instance.</p> <pre><code></code></pre></li>
+                               <li><p>Termimate the EC2 instance.</p> <pre><code></code></pre></li>
+                               <li><p>Delete all 3 security groups.</p> <pre><code></code></pre></li>
+                               <li><p>Delete the Key Pair</p> <pre><code></code></pre></li>
+                            </ol>
+                        </li></p>
+                        <p><li><strong>Task-3: </strong>CRUD Interface with Mulesoft S3 Connector with AWS S3 bucket.</p>
+                        </li></p>
+                    </ul>
+            </div>
         </div>
     </div>
 </div>
