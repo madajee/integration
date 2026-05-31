@@ -99,6 +99,9 @@
                             <li>Crete Users and enable access with roles, groups and permissions in IAM.</li>
                             <li>SSO: SAML with identity providers like Azure AD.</li>
                             <li>Token-based resource access: OpenId and OAuth with OAuth providers like Okta with clientId, secrets and tokens.</li>
+                            <li>A familiar scenario is a single account which uses identity provider like azure AD, or Okta to propagate SAML authenticated tokens for an account.</li>
+                            <li>A less familiar scenario is 2 or more accounts and we have to manage all accounts with an Org Management account. This will require to SAML based identity configurations at the parent org/account and all roles and access is managed through an org management account.</li>
+                            <li>A non familiar complex scenario is multiple accounts, some of account require SSO Auth with one Identity provider like Azure AD, and others may require SSO Auth with a different Identity provider like Okta.</li>
                         </ul>
                     </li>
                 </ul>

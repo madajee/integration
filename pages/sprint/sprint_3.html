@@ -9,14 +9,9 @@
                     <ul>
                         <li><strong>Card-1: </strong>Allocate few hours of online learning and document the learned context on Datapipeline.</li>
                         <li><strong>Card-2: </strong>Sign up for a free-tier AWS and create a bucket in AWS S3.</li>
-                        <li><strong>Card-3: </strong>Creat an EC2 t3.micro with ami-078f95be0757084a3 (amazon linux) image. Add inbound rules, connect with ssh, install ngnix, and test the instance connectivity with http. terminate the instance.
-                                                    <pre>
-                                <code>
-                                    aws ec2 run-instances --image-id ami-078f95be0757084a3 --count 1 --instance-type t3.micro --key-name MyKeyPair --security-group-ids sg-0ae64252a525f69f8 --subnet-id subnet-xxxxxxxxxxxxxxxxxx
-                                    aws ec2 terminate-instances --instance-ids i-04722dcfecd979c53
-                                </code>
-                            </pre>
-                        </li>
+                        <li><strong>Card-3: </strong>CONNECT RDS and EC2 instance on AWS free-tier account.</li>
+                        <li><strong>Card-4: </strong>CREATE VPC, Public Subnet, Internet Gateway and test an EC2 instance with the security group for web servers. Clean Up Resources.</li>
+
                     </ul>
             </div>
         </div>
