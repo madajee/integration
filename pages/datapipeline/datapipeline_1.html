@@ -32,6 +32,16 @@
                                     <li><p>Clean up Resources: Terminate EC2 instances; Delete the key pair; Delete from Security Groups; Find the route table association Id and dis-associate the route table association Id; Delete the route table; Delete the Internet Gateway; Delete Subnet; Delete the  VPC<pre><code>aws ec2 delete-key-pair --key-name MyKeyPair<br>aws ec2 terminate-instances --instance-ids i-0a4c0a0c2af5f0fc5<br>aws ec2 delete-key-pair --key-name vpc-tutorial-key<br>rm vpc-tutorial-key.pem<br>aws ec2 wait instance-terminated --instance-ids i-0a4c0a0c2af5f0fc5<br>aws ec2 delete-security-group --group-id sg-0bc6b079324f82bbf<br>aws ec2 describe-route-tables --route-table-id rtb-0298443ba85397545<br>aws ec2 disassociate-route-table --association-id rtbassoc-0c7f5cc5ba507e62e<br>aws ec2 delete-route-table --route-table-id rtb-0298443ba85397545<br>aws ec2 detach-internet-gateway --internet-gateway-id igw-098202386745235ff --vpc-id vpc-009de6821cc141b32<br>aws ec2 delete-internet-gateway --internet-gateway-id igw-098202386745235ff<br>aws ec2 delete-subnet --subnet-id subnet-079925de7c1ac5c62<br>aws ec2 delete-vpc --vpc-id vpc-009de6821cc141b32</code></pre></p></li>
                                 </ol>
                         </li></p>
+                         <p><li><strong>Task-4: </strong>CREATE a RDS DB Instance, Add the Security Group with an ingress rule from your IP on DB Port 3306, modify db instance with the created security group, test connectivity from local MySQLWorkbench, Clean Up Resources.</p>
+                            <ol>
+                               <li><p>Create a DB Instance</p> <pre><code>aws rds create-db-instance --db-instance-identifier MySQLForLambda --db-instance-class db.t4g.micro --engine mysql --allocated-storage 20 --master-username admin --master-user-password mypassword --db-name ExampleDB</code></pre></li>
+                               <li><p>Create a Security Group</p> <pre><code>aws ec2 create-security-group --group-name my-sg --description "My security group" --vpc-id vpc-xxxxxxxxxxxxxxxxx</code></pre></li>
+                               <li><p>Add the ingress rule for MYSQL DB Instance port</p> <pre><code>aaws ec2 authorize-security-group-ingress --group-id sg-05a53ffe25d7e0577 --protocol tcp --port 3306 --cidr xx.xx.xx.xx/32</code></pre></li>
+                               <li><p>Modify the DB Instance to attach the security group and test connectivity from the local IP</p> <pre><code>aws ec2 create-security-group --group-name my-sg --description "My security group" --vpc-id vpc-xxxxxxxxxxxxxxxxx</code></pre></li>
+                               <li><p>Delete DB Instance</p><pre><code>aws rds delete-db-instance --db-instance-identifier MySQLForLambda --skip-final-snapshot</code></pre></li>
+                               <li><p>Delete Secuirty Group</p><pre><code>aws ec2 delete-security-group --group-id sg-05a53ffe25d7e0577</code></pre></li>
+                            </ol>
+                        </li></p>
                     </ul>
             </div>
         </div>

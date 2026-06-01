@@ -84,6 +84,19 @@
                     <li>Apache Flink can use Java, Scala to analyze the stream of data in real-time. Amazon Athena is an in-memory query engine that helps you analyze data ingested in S3 datalakes. One can also load and unload data from S3 to Redshift clusters.</li>
                  </ul>
             </div>
+            <div class="grooveborder">
+                 <h3>Data Pipeline Orchestration</h3>
+                 <p>Why do we need Data Pipeline Orchestration with controllers, serverless cloud and queuing resources?</p>
+                 <p>Let’s consider a scenario of a data pipeline that loads leads records from Sales Cloud CRM to AWS S3. Some of the initial requirements are as follows:
+                    <ul>
+                        <li>On-demand load of all leads created in the past year.</li>
+                        <li>Delta load that triggers 3-4 times a day for the current month lead bucket.</li>
+                        <li>On-demand load for past months lead bucket in the current year.</li>
+                        <li>Bronze to Silver layer bucket loads should have orchestration requirements of address validation and filter transforms.</li>
+                    </ul>
+                    <p>We often require controllers that can orchestrate the scheduling, managing, and controlling of the flow and processing of data through the pipelines. Data Pipelines provision cloud resources, use serverless and event driven architecture talong with queues to implement asynchronous publish-subscribe patterns and synchronous calls to Data APIs.</p>
+                 </p>
+            </div>
         </div>
     </div>
 </div>
