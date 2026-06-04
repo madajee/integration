@@ -44,7 +44,7 @@
                         </li></p>
                         <p><li><strong>Task-5: </strong><a href="https://docs.aws.amazon.com/lambda/latest/dg/with-sqs-example.html" target="_blank">AWS Lambda with SQS</a></p>
                             <ol>
-                               <li><p>Setup</p> <pre><code>mkdir sqs-tutorial<br>cd sqs-tutorial<br>touch template-sqs.yaml<br>touch lambda-sqs-role.yaml<br>touch index.js<br>touch send-message.json</code></pre></li>
+                               <li><p>Setup</p> <pre><code>mkdir sqs-tutorial<br>cd sqs-tutorial<br>touch template-sqs.yaml<br>touch lambda-sqs-role.yaml<br>touch index.js<br>touch input.json</code></pre></li>
                                <li><p>template-sqs.yaml</p> <pre><code>AWSTemplateFormatVersion: '2010-09-09'
 Description: 'A simple CloudFormation template to create a standard Amazon SQS queue.'
 
@@ -86,7 +86,7 @@ exports.handler = async (event, context) => {
   console.info(JSON.stringify(event));
   console.info("done");
 };</code></pre></li>
-        <li><p>send-message.json</p> <pre><code>{
+        <li><p>input.json</p> <pre><code>{
   "City": {
     "DataType": "String",
     "StringValue": "Hello City"
@@ -108,7 +108,7 @@ exports.handler = async (event, context) => {
 --role arn:aws:iam::xxxxxxxxxxxxxx:role/lambda-sqs-role</code></pre></li>
                                <li><p>Optionally test the lambda with the invoke lambda command</p> <pre><code>aws lambda invoke --function-name ProcessSQSRecord --payload file://input.json out --log-type Tail \
 --query 'LogResult' --output text --cli-binary-format raw-in-base64-out | base64 --decode</code></pre></li>
-                                <li><p>Create an event source mapping between Lambda and SQS queue and list the event source mapping.</p> <pre><code>ws lambda create-event-source-mapping --function-name ProcessSQSRecord  --batch-size 10 \
+                                <li><p>Create an event source mapping between Lambda and SQS queue and list the event source mapping.</p> <pre><code>aws lambda create-event-source-mapping --function-name ProcessSQSRecord  --batch-size 10 \
 --event-source-arn arn:aws:sqs:us-east-2:xxxxxxxxxxxxx:my-simple-standard-queue<br>aws lambda list-event-source-mappings --function-name ProcessSQSRecord</code></pre></li> 
                                 <li><p>Send a message to the SQS and event source mapping should trigger a lambda.</p> <pre><code>aws sqs send-message --queue-url https://sqs.us-east-2.amazonaws.com/xxxxxxxxxxxxx/my-simple-standard-queue --message-body "Information about the largest city in Any Region." --delay-seconds 10 --message-attributes file://send-message.json</code></pre></li>
                                 <li><p>Check the Cloudwatch logs.</p> <pre><code>aws lambda invoke --function-name ProcessSQSRecord out --log-type Tail \
@@ -116,7 +116,163 @@ exports.handler = async (event, context) => {
                                 <li><p>Clean Up by deleting the log groups and event logs; Delete the lambda function; deleting the stack for lambda role; deleting the stack for SQS queue.</p> <pre><code>aws lambda delete-function --function-name ProcessSQSRecord<br>aws cloudformation delete-stack --stack-name lambda-sqs-role<br>aws cloudformation delete-stack --stack-name simple-sqs-stack</code></pre></li>
                             </ol>
                         </li></p>
+                        <p><li><strong>Task-6: </strong><a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Streams.Lambda.Tutorial.html" target="_blank">AWS Lambda with DynamoDB</a></p>
+                            <ol>
+                               <li><p>Setup</p> <pre><code>mkdir dynamodb-tutorial<br>cd dynamodb-tutorial<br>touch trust-relationship.json<br>touch role-policy.json<br>touch index.js<br>touch input.json</code></pre></li>
+                                <li><p>trust-relationship.json</p> <pre><code>{
+   "Version":"2012-10-17",
+   "Statement": [
+     {
+       "Effect": "Allow",
+       "Principal": {
+         "Service": "lambda.amazonaws.com"
+       },
+       "Action": "sts:AssumeRole"
+     }
+   ]
+ }</code></pre></li>
+                              <li><p>role-policy.json</p> <pre><code>{
+    "Version":"2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+            ],
+            "Resource": "arn:aws:logs:us-east-2:111122223333:*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "dynamodb:DescribeStream",
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
+                "dynamodb:ListStreams"
+            ],
+            "Resource": "arn:aws:dynamodb:us-east-2:111122223333:table/BarkTable/stream/*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "sns:Publish"
+            ],
+            "Resource": [
+                "*"
+            ]
+        }
+    ]
+}</code></pre></li>
+                               <li><p>index.js</p> <pre><code>'use strict';
+var AWS = require("aws-sdk");
+
+exports.handler = (event, context, callback) => {
+
+    event.Records.forEach((record) => {
+        console.log('Stream record: ', JSON.stringify(record, null, 2));
+
+        if (record.eventName == 'INSERT') {
+            var who = JSON.stringify(record.dynamodb.NewImage.Username.S);
+            var when = JSON.stringify(record.dynamodb.NewImage.Timestamp.S);
+            var what = JSON.stringify(record.dynamodb.NewImage.Message.S);
+            var params = {
+                Subject: 'A new bark from ' + who,
+                Message: 'Woofer user ' + who + ' barked the following at ' + when + ':\n\n ' + what,
+                TopicArn: 'arn:aws:sns:region:accountID:wooferTopic'
+            };
+        }
+    });
+    callback(null, `Successfully processed ${event.Records.length} records.`);
+};   </code></pre></li>
+                              <li><p>input.json</p> <pre><code>{
+    "Records": [
+        {
+            "eventID": "7de3041dd709b024af6f29e4fa13d34c",
+            "eventName": "INSERT",
+            "eventVersion": "1.1",
+            "eventSource": "aws:dynamodb",
+            "awsRegion": "region",
+            "dynamodb": {
+                "ApproximateCreationDateTime": 1479499740,
+                "Keys": {
+                    "Timestamp": {
+                        "S": "2016-11-18:12:09:36"
+                    },
+                    "Username": {
+                        "S": "John Doe"
+                    }
+                },
+                "NewImage": {
+                    "Timestamp": {
+                        "S": "2016-11-18:12:09:36"
+                    },
+                    "Message": {
+                        "S": "This is a bark from the Woofer social network"
+                    },
+                    "Username": {
+                        "S": "John Doe"
+                    }
+                },
+                "SequenceNumber": "13021600000000001596893679",
+                "SizeBytes": 112,
+                "StreamViewType": "NEW_IMAGE"
+            },
+            "eventSourceARN": "arn:aws:dynamodb:region:account ID:table/BarkTable/stream/2016-11-16T20:42:48.104"
+        }
+    ]
+}</code></pre></li>
+                               <li><p>Create a IAM role for Lambda: WooferLambdaRole.</p> <pre><code>aws iam create-role --role-name WooferLambdaRole \
+    --path "/service-role/" \
+    --assume-role-policy-document file://trust-relationship.json<br>aws iam put-role-policy --role-name WooferLambdaRole \
+    --policy-name WooferLambdaRolePolicy \
+    --policy-document file://role-policy.json</code></pre></li>
+                                <li><p>Crete an index.js for the lambda javascript code. Create a deployment package using the following zip command.</p> <pre><code>zip function.zip index.js</code></pre></li>
+                               <li><p>Create a Lambda function with the role that was created in previous step</p> <pre><code>aws lambda create-function \
+    --region us-east-2 \
+    --function-name publishNewBark \
+    --zip-file fileb://publishNewBark.zip \
+    --role arn:aws:iam::xxxxxxxxxxxxxx:role/service-role/WooferLambdaRole \
+    --handler publishNewBark.handler \
+    --timeout 5 \
+    --runtime nodejs24.x</code></pre></li>
+                               <li><p>Optionally test the lambda with the invoke lambda command</p> <pre><code>aws lambda invoke --function-name publishNewBark --payload file://input.json --cli-binary-format raw-in-base64-out output.txt</code></pre></li> 
+                               <li><p>Create a dynamoDB table with streaming enabled.</p> <pre><code>aws dynamodb create-table \
+    --table-name BarkTable \
+    --attribute-definitions AttributeName=Username,AttributeType=S AttributeName=Timestamp,AttributeType=S \
+    --key-schema AttributeName=Username,KeyType=HASH  AttributeName=Timestamp,KeyType=RANGE \
+    --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5 \
+    --stream-specification StreamEnabled=true,StreamViewType=NEW_AND_OLD_IMAGES<br>aws dynamodb describe-table --table-name BarkTable</code></pre></li>
+                               <li><p>Create an event source mapping between Lambda and SQS queue and list the event source mapping.</p> <pre><code>aws lambda create-event-source-mapping \
+    --region region \
+    --function-name publishNewBark \
+    --event-source streamARN  \
+    --batch-size 1 \
+    --starting-position TRIM_HORIZON<br>aws lambda list-event-source-mappings --function-name publishNewBark</code></pre></li>
+                                <li><p>Put Item in the BarkTable</p> <pre><code>aws dynamodb put-item \
+    --table-name BarkTable \
+    --item Username={S="Jane Doe"},Timestamp={S="2016-11-18:14:32:17"},Message={S="Testing...1...2...3"}
+    --starting-position TRIM_HORIZON</code></pre></li>
+                               <li><p>Clean Up by deleting the log groups and event logs; Delete the lambda function; delete the policy and lambda role; Delete the dynamoDB table</p> <pre><code>aws lambda delete-function --function-name publishNewBark<br>aws iam delete-role-policy --role-name WooferLambdaRole --policy-name WooferLambdaRolePolicy<br>aws iam delete-role --role-name WooferLambdaRole<br>aws dynamodb delete-table --table-name BarkTable</code></pre></li>
+                            </ol>
+                        </li></p>
                     </ul>
+            </div>
+             <div class="grooveborder">
+                <h4>KNOW-HOW (June-2026)</h4>
+                <ul>
+                 <li><h5>Steps to delete a role</h5> <pre><code>
+                    <ol>
+                      <li>List instance profiles: aws iam list-instance-profiles-for-role --role-name MyRoleName</li>
+                      <li>Remove the role from instance profile: aws iam remove-role-from-instance-profile --instance-profile-name MyInstanceProfile --role-name MyRoleName</li>
+                      <li>List attached policies: aws iam list-attached-role-policies --role-name MyRoleName</li> 
+                      <li>Detach each policy: aws iam detach-role-policy --role-name MyRoleName --policy-arn arn:aws:iam::123456789012:policy/MyPolicyName</li>
+                      <li>List inline policies: aws iam list-role-policies --role-name MyRoleName</li>
+                      <li>Delete each inline policy: aws iam delete-role-policy --role-name MyRoleName --policy-name MyInlinePolicyName</li>
+                      <li>Delete the role: aws iam delete-role --role-name MyRoleName</li>
+                    </ol>
+                    </code></pre></li> 
+                  </ul>
             </div>
         </div>
     </div>
