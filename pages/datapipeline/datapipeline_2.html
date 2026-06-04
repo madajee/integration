@@ -1,0 +1,102 @@
+<div class = "container-fluid mt-2">
+    <div class="row">
+        <integration-side-menu></integration-side-menu>
+        <div class="col-md-10">
+            <h6 class="grooveheader">Data Pipelines</h6>
+             <div class="grooveborder">
+                <ul>
+                    <li><a href="#!/sprint/3" target="_blank" class="nav-link">datapipeline-backlog</a></li> 
+                    <li><a href="#!/datapipeline/1" target="_blank" class="nav-link">datapipeline-task-view</a></li>
+                </ul>
+            </div>
+            <div class="grooveborder">
+                Integration and Data professionals have been creating EAI (Realtime) and ETL (Batch) jobs for a long time. Cloud computing in the past decade has evolved the products and tools for professionals on both sides. Let’s gear up a bit for the next wave with data pipelines. 
+                <h3>Data Ingestion</h3>
+                <ul>
+                    <li>ETL (Extract, Transform, Load): Perform data transformations  on the source data and load the transformed data into target systems like Data Warehouses.</li>
+                    <li>ELT (Extract, Load, Transform): Load the source files as raw data in cloud Data Lakehouse and uses the transformation engine of Analytics Services.</li>
+                    <li>Data Pipelines benefits data quality, automation, and intelligent insights, which will usually lead to better customer centricity.</li>
+                    <li>Data Pipelines address usecase and scenarios in Visualization and Machine Learning.</li>
+                    <li>Data Handling should use 3Vs (Velocity, Volume, and Variety) to define the non function requirements from ingested data sources.</li>
+                    <li>Types of data: structured, semi-structured, unstructured. Relational Databases are structured, Document Databases are semi-structured, and Cloud-based Object Storage is unstructured.</li>
+                    <li>Data Pull Style: Batch and Streaming 
+                        <ul>
+                            <li>Batch Mode: Daily or Monthly Accounting Processes. Requires High Throughput Solutions with configurable batch options.</li>
+                            <li>Streaming Mode: Click Streams, Machine Data. Requires Low Latency, Fault-Tolerant Systems.</li>
+                        </ul>
+                    </li>
+                    <li>Data Processing Systems are categorized based on Transactional and Analytical Workloads
+                        <ul>
+                            <li>OLTP: Online Transaction Processing System. Eg: Order Entry, Payment Processing.</li>
+                            <li>OLAP: Online Analytical Processing System. Eg: Forecasting, Scoring, Predictions.</li>
+                        </ul>
+                    </li>
+                    <li>OLTP systems are at the beginning of the pipeline and mostly high volume short transactions. OLTP system prioritizes writes and maintains integrity with relationship and ACID transactions.</li>
+                    <li>OLAP systems are designed specifically for querying and analyzing large datasets. Eg: Data Warehouses, Data Lakes.</li>
+                    <li>Most Enterprises use OLTP for their transactional applications while also periodically loading data into OLAP for analysis.</li>
+                    <li>Columnar Style Storage pattern allows better compression, fast reads on column values and are more preferred for OLAP systems.</li>
+                    <li>There are additional formats like Avro and Parquet for unstructured text and metadata. Requirements on schema evolution, compression, read/write performance determine the choice of one over the other.</li>
+                    <li>Batch Data Pipelines that require high throughput use parallel processing to distribute data across multiple nodes in a cloud cluster.</li>
+                    <li>Data models evolve from concept (domain), logical (entities and relationships), and physical (datatypes in database stack) layers.</li>
+                    <li>Data cleaning techniques are applied to the data extracts from several sources and mapped to the model layer.</li>
+                    <img ng-src="images/data_pipeline_1.png" alt="mvc_express" width="800" height="200">
+                    <li>Let's start with a free tier access on AWS, and create a simple mule traget side service api that will push an object on an AWS S3 bucket.</li>
+                    <li>Batch Processing scenarios with large volume and high throughput provision on-demand compute resources.</li>
+                    <li>Stream Processing scenarios with high velocity that require low latency or near real-time analytics provision and run compute resources continuously.</li>
+                    <li>Batch Ingestion Scenarios on AWS platform can use services like AWS Data Migration and AWS Data Sync.</li>
+                    <li>Streaming Ingestion Scenarios on AWS platform can use services like AWS Kinesis and AWS Lambda. An example use case can be capture audio and video files to enhance physcical security posture or send application logs to observability stacks like Elastic or Splunk.</li>
+                </ul>
+            </div>
+             <div class="grooveborder">
+                 <h3>Data Transformation</h3>
+                 <ul>
+                    <li>Often raw data extracts have to cleansed before it can be used for model training or can generate actionable insights. Raw extracts can have simple issues like duplicate records, records with fields having null values, inconsistent date and decimal formats. Some features may require data encryption, and use of aggregates and filters.</li>
+                    <li>Some of these transformation requirements can be implemented while ingesting data into the data warehouses and data lake.</li>
+                    <li>Big Data processing requires experience Apache Hadoop, Apache Spark. Amazon EMR is a managed cluster platform that simplifies the provisioning and operation tasks.</li>
+                    <li>For the datasets that are not categorized as big data, we can use the transformation capabilities in other ETL, EAI, scripting engine to deliver cleansing tasks in data pipelines.</li>
+                    <li>An example can be that we can pull a large dataset of product and pipeline filter operation can help label the top products in visualizations.</li>
+                 </ul>
+            </div>
+            <div class="grooveborder">
+                 <h3>Data Storage</h3>
+                 <ul>
+                    <li>Over the years, relational databases are the backbone of structured datasets created as part of OLTP and OLAP systems.</li>
+                    <li>Cloud Computing has created other set of options for storing all kinds of data encompassing not just structured but semi-structured and unstructured datasets.</li>
+                    <li>Architects consider these cloud-based storage options to build solutions that are optimized for cost and performance.</li>
+                    <li>Storage cost and access timeframe varies based on the temperature of the data, which can be hot, warm, and cold.</li>
+                    <li>A large number of software companies have SaaS products and PaaS tools that provide direct secure access to the data stored in the public cloud.</li>
+                    <li>One can expect that data pipelines will read/or write data from/or to databases (on-premise / or cloud) and othe cloud storage services (s3, azure blob, gcp object storage).</li>
+                 </ul>
+            </div>
+            <div class="grooveborder">
+                 <h3>Data Analytics</h3>
+                 <ul>
+                    <li>Typically, the job of a data pipeline is to get the data ready for business analysis.</li>
+                    <li>At times, data pipelines implements 3 -layered solution to process data through different layers before it can be consumed by business analytics and reporting tools.
+                        <ul>
+                            <li>Bronze Layer: Raw Data Ingestion</li>
+                            <li>Silver Layer: Clean and Conformed Data</li>
+                            <li>Gold Layer: Business Level Aggregates</li>
+                        </ul>
+                    </li>
+                    <li>Analytics tools offer several features to slice and dice facts across several dimensions to generate business intelligence. Analysts work with platform services like Amazon Redshift, Apache Spark on EMR, Azure SQL Server, Power BI to create reports and dashboards</li>
+                    <li>Apache Flink can use Java, Scala to analyze the stream of data in real-time. Amazon Athena is an in-memory query engine that helps you analyze data ingested in S3 datalakes. One can also load and unload data from S3 to Redshift clusters.</li>
+                 </ul>
+            </div>
+            <div class="grooveborder">
+                 <h3>Data Pipeline Orchestration</h3>
+                 <p>Why do we need Data Pipeline Orchestration with controllers, serverless cloud and queuing resources?</p>
+                 <p>Let’s consider a scenario of a data pipeline that loads leads records from Sales Cloud CRM to AWS S3. Some of the initial requirements are as follows:
+                    <ul>
+                        <li>On-demand load of all leads created in the past year.</li>
+                        <li>Delta load that triggers 3-4 times a day for the current month lead bucket.</li>
+                        <li>On-demand load for past months lead bucket in the current year.</li>
+                        <li>Bronze to Silver layer bucket loads should have orchestration requirements of address validation and filter transforms.</li>
+                    </ul>
+                    <p>We often require controllers that can orchestrate the scheduling, managing, and controlling of the flow and processing of data through the pipelines. Data Pipelines provision cloud resources, use serverless and event driven architecture talong with queues to implement asynchronous publish-subscribe patterns and synchronous calls to Data APIs.</p>
+                 </p>
+            </div>
+        </div>
+    </div>
+</div>
+<custom-footer authorname='Jeetan' linkurl='https://www.linkedin.com/in/jeetan-madaan-37aaa113/'></custom-footer>
