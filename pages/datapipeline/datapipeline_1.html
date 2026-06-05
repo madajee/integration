@@ -262,6 +262,19 @@ exports.handler = (event, context, callback) => {
                                <li><p>Clean Up by deleting the log groups and event logs; Delete the lambda function; delete the policy and lambda role; Delete the dynamoDB table</p> <pre><code>aws lambda delete-function --function-name publishNewBark<br>aws iam delete-role-policy --role-name WooferLambdaRole --policy-name WooferLambdaRolePolicy<br>aws iam delete-role --role-name WooferLambdaRole<br>aws dynamodb delete-table --table-name BarkTable</code></pre></li>
                             </ol>
                         </li></p>
+                        <p><li><strong>Task-8: </strong><a href="https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-sending-messages-from-vpc.html" target="_blank">VPC, EC2 Instance, SQS with Cloudformation</a></p>
+                            <ol>
+                                <li><p>Setup</p> <pre><code>mkdir sqs-sending-messages-from-vpc<br>touch SQS-VPCE-Tutorial-CloudFormation.yaml<br><a href="https://github.com/aws-samples/amazon-sqs-samples/blob/master/templates/SQS-VPCE-Tutorial-CloudFormation.yaml" target="_blank">SQS-VPCE-Tutorial-CloudFormation.yaml</a></code></pre></li>
+                                <li><p>Create the Key Pair</p> <pre><code>aws ec2 create-key-pair --key-name vpc-tutorial-key --query 'KeyMaterial' --output text > vpc-tutorial-key.pem<br>chmod 400 vpc-tutorial-key.pem</code></pre></li> 
+                                <li><p><a href="https://checkip.amazonaws.com/" target="_blank">Check IP</a>&nbsp;Create the CloudFormation Stack</p> <pre><code>aws cloudformation create-stack --stack-name sqs-vpce-tutorial-stack --template-body file://SQS-VPCE-Tutorial-CloudFormation.yaml --parameters ParameterKey=KeyName,ParameterValue=vpc-tutorial-key ParameterKey=SSHLocation,ParameterValue=xx.xx.xx.xx/32 --capabilities CAPABILITY_NAMED_IAM</code></pre></p></li>
+                                <li><p>Connect to EC2 Instance and send the message to SQS. AS there is no VPC Endpoint, the send message command should timeout.</p> <pre><code>ssh -i vpc-tutorial-key.pem ec2-user@xx.xx.xx.xx<br>aws sqs send-message --region us-east-2 --endpoint-url https://sqs.us-east-2.amazonaws.com/ --queue-url https://sqs.us-east-2.amazonaws.com/123456789012/ --message-body "Hello from Amazon SQS."</code></pre></li>
+                                <li><p>Create the Endpoint from console, run the test steps and message should be delivered to the queue.</p> <pre><code>ssh -i vpc-tutorial-key.pem ec2-user@xx.xx.xx.xx<br>aws sqs send-message --region us-east-2 --endpoint-url https://sqs.us-east-2.amazonaws.com/ --queue-url https://sqs.us-east-2.amazonaws.com/123456789012/ --message-body "Hello from Amazon SQS."<br>{
+    "MD5OfMessageBody": "c5dba0dd8f89fe763f66cbddb9c37cb7", 
+    "MessageId": "d9600508-9022-4aad-946c-xxxxxxxxxxxxxxx"
+}</code></pre></li>
+                                <li><p>Clean Up:  Delete the Endpoint from Console; Delete the cloudformation stack; Delete the key pair</p> <pre><code>aws cloudformation delete-stack --stack-name sqs-vpce-tutorial-stack<br>aws ec2 delete-key-pair --key-name vpc-tutorial-key</code></pre></li>
+                            </ol>
+                        </li></p>
                     </ul>
             </div>
              <div class="grooveborder">
