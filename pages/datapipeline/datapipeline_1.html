@@ -11,6 +11,54 @@
                 </ul>
             </div>
             <div class="grooveborder">
+                <h4>STORIES (June-2026)</h4>
+                     <p><li><strong>Story-1: </strong>Create a reusable integration capability that will read a message from the SQS queue and insert a record into the table in MySQL RDS instance.</p>
+                            <ol>
+                               <li><p>INFRA: create queue and test it from ec2 instance. (task-8)</p> <pre><code>aws ec2 create-key-pair --key-name story1-key --query 'KeyMaterial' --output text > story1-key.pem
+chmod 400 story1-key.pem
+aws cloudformation create-stack --stack-name story1-stack --template-body file://story1-CloudFormation.yaml --parameters ParameterKey=KeyName,ParameterValue=story1-key ParameterKey=SSHLocation,ParameterValue=xx/32 --capabilities CAPABILITY_NAMED_IAM
+aws ec2 create-vpc-endpoint --vpc-id vpc-0bc0bf0ee6d19e5f7 --vpc-endpoint-type Interface --service-name com.amazonaws.us-east-2.sqs --subnet-ids subnet-06eb444e8d1e91efa --security-group-ids sg-078b5012ea74a7e64 --private-dns-enabled
+ssh -i story1-key.pem ec2-user@3.134.81.230
+aws sqs send-message --region us-east-2 --endpoint-url https://sqs.us-east-2.amazonaws.com/ --queue-url https://sqs.us-east-2.amazonaws.com/859196001802/story1-stack-DatapipelineLogEventQueue-7uHkKzr2QqZm --message-body '{"event_name": "lead", "event_type": "log", "event_message": "Datapipe Started"}'
+
+aws sqs receive-message --queue-url https://sqs.us-east-2.amazonaws.com/859196001802/story1-stack-DatapipelineLogEventQueue-7uHkKzr2QqZm --region="us-east-2"
+aws sqs delete-message --queue-url https://sqs.us-east-2.amazonaws.com/859196001802/story1-stack-DatapipelineLogEventQueue-7uHkKzr2QqZm --region="us-east-2" --receipt-handle "AQEBHOYE6PUMV+/flopZh3sUr"</code></pre></li>
+                               <li><p>INFRA: create rds mysql instance (task-4)</p> <pre><code>aws rds create-db-instance --db-instance-identifier MySQLForDatapipeline --db-instance-class db.t4g.micro --engine mysql --allocated-storage 20 --master-username admin --master-user-password mypassword --db-name DatapipelineDB
+aws ec2 create-security-group --group-name my-sg --description "My security group" --vpc-id vpc-09709d75b855d36bc
+aws ec2 authorize-security-group-ingress --group-id sg-00d4883daa37c654c --protocol tcp --port 3306 --cidr xx/32
+aws rds modify-db-instance --db-instance-identifier MySQLForDatapipeline --vpc-security-group-ids sg-00d4883daa37c654c</code></pre></li>
+                               <li><p>APP:Create a datapipeline_event_log table and manually insert a record into it.</p> <pre><code>show databases;
+CREATE USER 'developer1'@'%' IDENTIFIED BY 'developer1';
+GRANT ALL PRIVILEGES ON DatapipelineDB.* TO 'developer1'@'%';
+GRANT ALL PRIVILEGES ON DatapipelineDB.* TO 'developer1'@'%';
+
+Login as developer1
+use DatapipelineDB;
+
+CREATE TABLE datapipeline_event_log (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    event_name VARCHAR(50) NOT NULL,
+    event_type VARCHAR(50) NOT NULL,
+    event_message VARCHAR(100) NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO datapipeline_event_log(event_name, event_type, event_message) VALUES ('lead', 'log','Datapipe Ended');
+    select * from datapipeline_event_log;</code></pre></li>
+                                <li><p>APP: Create a listener with AWS Mule SQS Connector to listen on the SQS; Create a connection to RDS instance with Mule DB Connector; Create a subflow to insert the received message into the RDS table.</p> 
+                                    <img ng-src="images/mule_sqs_listener_to_rds_table.png" alt="mvc_express" width="400" height="300"> 
+                                    <pre><code> select * from datapipeline_event_log;</code></pre></li>
+                                <li><p>clean up</p> <pre><code>aws ec2 delete-security-group --group-id sg-00d4883daa37c654c
+aws rds delete-db-instance --db-instance-identifier MySQLForDatapipeline --skip-final-snapshot
+aws ec2 delete-vpc-endpoints --vpc-endpoint-ids vpce-0cc66e6d1f1ea0a20
+aws cloudformation delete-stack --stack-name story1-stack
+aws ec2 delete-key-pair --key-name story1-key
+rm -rf story1-key.pem</code></pre></li>
+                            </ol>
+                        </li></p>
+            </div>
+            <div class="grooveborder">
                 <h4>TASKS (June-2026)</h4>
                     <ul>
                         <p><li><strong>Task-1: </strong>CREATE BUCKET Interface with Mulesoft S3 Connector.</p>
@@ -18,7 +66,7 @@
                         </li></p>
                         <p><li><strong>Task-2: </strong>CONNECT RDS and EC2 instance on AWS free-tier account.</p>
                             <ol>
-                                <li><p>Create the Key Pair</p> <pre><code>aws ec2 create-key-pair --key-name MyKeyPair --query 'KeyMaterial' --output text > MyKeyPair.pem</code></pre></li>
+                              <li><p>Create the Key Pair</p> <pre><code>aws ec2 create-key-pair --key-name MyKeyPair --query 'KeyMaterial' --output text > MyKeyPair.pem</code></pre></li>
                                <li><p>Add the security group</p> <pre><code>aws ec2 create-security-group --group-name my-sg --description "My security group" --vpc-id vpc-xxxxxxxxxxxxxxxxx</code></pre></li>
                                <li><p>Add the ingress rule for SSH</p> <pre><code>aws ec2 authorize-security-group-ingress --group-id sg-xxxxxxxxxxxxxxxx --protocol tcp --port 22 --cidr xx.xx.xx.xx/32</code></pre></li>
                                <li><p>Create the EC2 Instance and conncet to instance with ssh</p> <pre><code>aws ec2 run-instances --image-id ami-078f95be0757084a3 --count 1 --instance-type t3.micro --key-name MyKeyPair --security-group-ids sg-xxxxxxxxxxxxxxxx --subnet-id subnet-xxxxxxxxxxxxxxxx<br>aws ec2-instance-connect ssh --instance-id i-xxxxxxxxxxxxxxx</code></pre></li>
