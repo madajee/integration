@@ -440,6 +440,58 @@ export const handler = async (event, context) => {
                             </ol>
                         </li></p>    
                     </ul>
+                    <p><li><strong>Task-10: </strong>Lambda with Python.<a href="https://docs.aws.amazon.com/lambda/latest/dg/python-package.html#python-package-upload-code" target="_blank">AWS Lambda with SQS</a></p>
+                            <ol>
+                               <li><p>Setup: Create a my_function directory. Pick up cloud formation (CF) from Task-5 to create lamdba role.</p> <pre><code>mkdir my_function<br>cd my_function<br>touch lambda-sqs-role.yaml</code></pre></li>
+                                <li><p>lambda-sqs-role.yaml</p> <pre><code>AWSTemplateFormatVersion: '2010-09-09'
+Description: IAM role for Lambda function to read from SQS queue.
+
+Resources:
+  LambdaSQSRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: lambda-sqs-role
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole</code></pre></li>
+                               <li><p>Crete a role for lambda.</p> <pre><code>aws cloudformation create-stack --stack-name lambda-sqs-role --template-body file://lambda-sqs-role.yaml --capabilities CAPABILITY_NAMED_IAM</code></pre></li>
+                               <li><p>Install the dependencies in the package directory.</p><pre><code>pip install --target ./package boto3</code></pre></li>
+                               <li><p>Create a .zip file with the installed libraries at the root.</p><pre><code>cd package<br>zip -r ../my_deployment_package.zip .</code></pre></li>
+                               <li><p>Create the lambda_function.py.</p><pre><code>lambda_function.py<br>def lambda_handler(event, context):
+    print(event)
+    return 'Hello from Lambda!'</code></pre></li>
+                               <li><p>Add the lambda_function.py file to the root of the .zip file.</p><pre><code>cd ..<br>zip my_deployment_package.zip lambda_function.py</code></pre></li>
+                              <li><p>Create a Lambda function with the role that was created earlier.</p> <pre><code>aws lambda create-function --function-name myFunction \
+--runtime python3.14 --handler lambda_function.lambda_handler \
+--role arn:aws:iam::859196001802:role/lambda-sqs-role \
+--zip-file fileb://my_deployment_package.zip</code></pre></li>
+                               <li><p>Create the test payload for the lambda.</p><pre><code>input.json<br>{
+  "City": {
+    "DataType": "String",
+    "StringValue": "Hello City"
+  },
+  "Greeting": {
+    "DataType": "String",
+    "StringValue": "Hello, World!"
+  },
+  "Population": {
+    "DataType": "Number",
+    "StringValue": "1250800"
+  }
+}</code></pre></li>
+                               <li><p>Test the lambda with the invoke lambda command</p> <pre><code>ws lambda invoke --function-name myFunction --payload file://input.json out --log-type Tail \
+--query 'LogResult' --output text --cli-binary-format raw-in-base64-out | base64 --decode</code></pre></li>
+                               <li><p>Clean Up by deleting the log groups and event logs; Delete the lambda function; deleting the stack for lambda role</p> <pre><code>aws lambda delete-function --function-name myFunction<br>aws cloudformation delete-stack --stack-name lambda-sqs-role</code></pre></li>
+                            </ol>
+                    </li></p>    
             </div>
              <div class="grooveborder">
                 <h4>KNOW-HOW (June-2026)</h4>
