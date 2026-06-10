@@ -323,6 +323,122 @@ exports.handler = (event, context, callback) => {
                                 <li><p>Clean Up:  Delete the Endpoint from Console; Delete the cloudformation stack; Delete the key pair</p> <pre><code>aws cloudformation delete-stack --stack-name sqs-vpce-tutorial-stack<br>aws ec2 delete-key-pair --key-name vpc-tutorial-key</code></pre></li>
                             </ol>
                         </li></p>
+                        <p><li><strong>Task-9: </strong><a href="https://docs.aws.amazon.com/lambda/latest/dg/with-sqs-example.html" target="_blank">SQS-Lambda-S3</a></p>
+                            <ol>
+                                <li><p>We have tested partially this as part of Task-5. Couple of important additions are adding the S3 permissions to Lambda role and awk-sdk usage in the lambda function. A message push in this scenario should create a file in S3 bucket.</p>
+                                <li><p>Setup</p> <pre><code>mkdir SQS-Lambda-S3<br>cd SQS-Lambda-S3<br>touch template-sqs.yaml<br>touch lambda-sqs-role.yaml<br>touch index.mjs<br>touch input.json</code></pre></li>
+                               <li><p>template-sqs.yaml</p> <pre><code>AWSTemplateFormatVersion: '2010-09-09'
+Description: 'A simple CloudFormation template to create a standard Amazon SQS queue.'
+
+Resources:
+  MySimpleQueue:
+    Type: 'AWS::SQS::Queue'
+    Properties:
+      QueueName: 'my-simple-standard-queue'
+
+Outputs:
+  QueueUrl:
+    Description: 'The URL of the created SQS queue.'
+    Value: !Ref MySimpleQueue
+  QueueArn:
+    Description: 'The ARN of the created SQS queue.'
+    Value: !GetAtt MySimpleQueue.Arn</code></pre></li>
+       <li><p>lambda-sqs-role.yaml</p> <pre><code>AWSTemplateFormatVersion: '2010-09-09'
+Description: IAM role for Lambda function to read from SQS queue.
+
+Resources:
+  LambdaSQSRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: lambda-sqs-role
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole</code></pre></li>
+        <li><p>index.mjs</p> <pre><code>
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+// Generated with Google AI
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+
+// Initializing the S3 client outside the handler allows connection reuse across invocations.
+const s3Client = new S3Client({}); 
+
+export const handler = async (event, context) => {
+  console.log("EVENT: \n" + JSON.stringify(event, null, 2));
+  const bucketName = "datapipe-test-bucket-1";
+  const fileKey = "data/example-file.json";
+// Define the content payload you want to write
+    const payload = {
+        message: "Hello from AWS Lambda Node.js 24!",
+        timestamp: new Date().toISOString(),
+    };
+
+    const params = {
+        Bucket: bucketName,
+        Key: fileKey,
+        Body: JSON.stringify(payload),
+        ContentType: "application/json"
+    };
+
+    try {
+        // Execute the upload via SDK v3 commands
+        const response = await s3Client.send(new PutObjectCommand(params));
+        
+        return {
+            statusCode: 200,
+            body: JSON.stringify({
+                message: `Successfully uploaded data to ${bucketName}/${fileKey}`,
+                requestId: response.$metadata.requestId
+            }),
+        };
+    } catch (error) {
+        console.error("Error uploading object to S3:", error);
+        
+        return {
+            statusCode: 500,
+            body: JSON.stringify({ message: "Failed to upload data to S3", error: error.message }),
+        };
+    }
+};</code></pre></li>
+        <li><p>input.json</p> <pre><code>{
+  "City": {
+    "DataType": "String",
+    "StringValue": "Hello City"
+  },
+  "Greeting": {
+    "DataType": "String",
+    "StringValue": "Hello, World!"
+  },
+  "Population": {
+    "DataType": "Number",
+    "StringValue": "1250800"
+  }
+}</code></pre></li>
+                               <li><p>Create a sqs queue with cloudformation template.</p> <pre><code>aws cloudformation create-stack --stack-name simple-sqs-stack --template-body file://template-sqs.yaml</code></pre></li>
+                               <li><p>Crete a role for lambda  with AWSLambdaSQSQueueExecutionRole permission policy.</p> <pre><code>aws cloudformation create-stack --stack-name lambda-sqs-role --template-body file://lambda-sqs-role.yaml --capabilities CAPABILITY_NAMED_IAM</code></pre></li>
+                               <li><p>Crete an index.mjs for the lambda javascript code. Create a deployment package using the following zip command.</p> <pre><code>zip function.zip index.mjs</code></pre></li>
+                               <li><p>Create a Lambda function with the role that was created in previous step</p> <pre><code>aws lambda create-function --function-name ProcessSQSRecord \
+--zip-file fileb://function.zip --handler index.handler --runtime nodejs24.x \
+--role arn:aws:iam::xxxxxxxxxxxxxx:role/lambda-sqs-role</code></pre></li>
+                               <li><p>Optionally test the lambda with the invoke lambda command</p> <pre><code>aws lambda invoke --function-name ProcessSQSRecord --payload file://input.json out --log-type Tail \
+--query 'LogResult' --output text --cli-binary-format raw-in-base64-out | base64 --decode</code></pre></li>
+                                <li><p>Create an event source mapping between Lambda and SQS queue and list the event source mapping.</p> <pre><code>aws lambda create-event-source-mapping --function-name ProcessSQSRecord  --batch-size 10 \
+--event-source-arn arn:aws:sqs:us-east-2:xxxxxxxxxxxxx:my-simple-standard-queue<br>aws lambda list-event-source-mappings --function-name ProcessSQSRecord</code></pre></li> 
+                                <li><p>Send a message to the SQS and event source mapping should trigger a lambda.</p> <pre><code>aws sqs send-message --queue-url https://sqs.us-east-2.amazonaws.com/xxxxxxxxxxxxx/my-simple-standard-queue --message-body "Information about the largest city in Any Region." --delay-seconds 10 --message-attributes file://input.json</code></pre></li>
+                                <li><p>Check the Cloudwatch logs. Check the S3 Bucket.</p> <pre><code>aws lambda invoke --function-name ProcessSQSRecord out --log-type Tail \
+--query 'LogResult' --output text --cli-binary-format raw-in-base64-out | base64 --decode</code></pre></li>
+                                <li><p>Clean Up by deleting the log groups and event logs; Delete the lambda function; deleting the stack for lambda role; deleting the stack for SQS queue.</p> <pre><code><br>aws lambda list-event-source-mappings --function-name ProcessSQSRecord<br>aws lambda delete-event-source-mapping --uuid c958b1e9-a4e0-4e74-b606-267bf00cbec1<br>aws lambda delete-function --function-name ProcessSQSRecord<br>aws cloudformation delete-stack --stack-name lambda-sqs-role<br>aws cloudformation delete-stack --stack-name simple-sqs-stack</code></pre></li>
+                            </ol>
+                        </li></p>    
                     </ul>
             </div>
              <div class="grooveborder">
