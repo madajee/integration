@@ -57,6 +57,13 @@ aws ec2 delete-key-pair --key-name story1-key
 rm -rf story1-key.pem</code></pre></li>
                             </ol>
                         </li></p>
+                         <p><li><strong>Story-2_Lead Data Pipeline from SFDC to S3: </strong>Create a pipeline artifact that will pull lead object data from SFDC playground org and write it to the S3 bucket.</p>
+                            <ol>
+                              <li><p>Create a bucket with name brz_lead and brz_lead_log, preferably with an API end point.</p><img ng-src="images/aws-s3-createbucketFlow.png" alt="mvc_express" width="400" height="200"></li>
+                              <li><p>Create a process integration that use Mule SFDC query connector operation to select the lead records and use Mule AWS S3 PutObject connector to implement the pipeline flow.</p> <pre><code>When the pipeline run starts, write an object to brz_lead_log with message as "Datapipe Started for Lead" and update the same object to space and "Datapipe Ended for Lead" when the pipeline run completes successfully.<br>In between start and end log, call 2 sub flows, one for querying the lead object from sfdc and other s3 put object operation which should create a brz_lead_now().csv file in the brz_lead bucket.</code></pre><img ng-src="images/datapipeline-sfdc-s3-papiFlow.png" alt="mvc_express" width="1400" height="200"></li>
+                              <li><p>Running the lead data pipe.</p><img ng-src="images/lead_pipe_run_view_1.png" alt="mvc_express" width="1000" height="600"><br><img ng-src="images/lead_pipe_run_view_2.png" alt="mvc_express" width="800" height="200"></li>
+                            </ol>
+                        </li>
             </div>
             <div class="grooveborder">
                 <h4>TASKS (June-2026)</h4>
