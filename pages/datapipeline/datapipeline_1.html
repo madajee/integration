@@ -437,6 +437,45 @@ export const handler = async (event, context) => {
                                 <li><p>Check the Cloudwatch logs. Check the S3 Bucket.</p> <pre><code>aws lambda invoke --function-name ProcessSQSRecord out --log-type Tail \
 --query 'LogResult' --output text --cli-binary-format raw-in-base64-out | base64 --decode</code></pre></li>
                                 <li><p>Clean Up by deleting the log groups and event logs; Delete the lambda function; deleting the stack for lambda role; deleting the stack for SQS queue.</p> <pre><code><br>aws lambda list-event-source-mappings --function-name ProcessSQSRecord<br>aws lambda delete-event-source-mapping --uuid c958b1e9-a4e0-4e74-b606-267bf00cbec1<br>aws lambda delete-function --function-name ProcessSQSRecord<br>aws cloudformation delete-stack --stack-name lambda-sqs-role<br>aws cloudformation delete-stack --stack-name simple-sqs-stack</code></pre></li>
+                                <li><p>Python Setup</p> <pre><code>root directory:mkdir s3_my_function<br>cd s3_my_function<br>Install dependencies in the package directory<br>python3 -m pip install --platform manylinux_2_17_x86_64 --only-binary=:all: --implementation cp --target ./package boto3<br>cd package<br>zip -r ../myFunction.zip .<br>lambda_function.py<br>import json
+import boto3
+
+# Initialize the S3 client outside the handler for better performance
+s3_client = boto3.client('s3')
+
+def lambda_handler(event, context):
+    bucket_name = 'your-bucket-name'
+    file_key = 'data/example_file.json'
+    
+    # Your sample data
+    data_to_write = {
+        "status": "success",
+        "message": "Hello from AWS Lambda!"
+    }
+    
+    try:
+        # Convert dictionary to a JSON formatted string and upload
+        s3_client.put_object(
+            Bucket=bucket_name,
+            Key=file_key,
+            Body=json.dumps(data_to_write)
+        )
+        
+        return {
+            'statusCode': 200,
+            'body': json.dumps('File uploaded successfully!')
+        }
+        
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return {
+            'statusCode': 500,
+            'body': json.dumps('File upload failed.')
+        }
+<br>zip myFunction.zip lambda_function.py<br>aws lambda create-function --function-name myFunction \
+--runtime python3.14 --handler lambda_function.lambda_handler \
+--role arn:aws:iam::xx:role/lambda-sqs-role \
+--zip-file fileb://myFunction.zip</code></pre></li>
                             </ol>
                         </li></p>    
                     </ul>
