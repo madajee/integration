@@ -538,26 +538,160 @@ Resources:
                                <li><p>Clean Up by deleting the log groups and event logs; Delete the lambda function; deleting the stack for lambda role</p> <pre><code>aws lambda delete-function --function-name myFunction<br>aws cloudformation delete-stack --stack-name lambda-sqs-role</code></pre></li>
                             </ol>
                     </li></p>
-                    <p><li><strong>Task-11: </strong>SAM Templates<a href="https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-example-s3.html" target="_blank">cookiecutter-aws-sam-s3-rekognition-dynamodb-python</a></p>
+                    <p><li><strong>Task-11: </strong>SAM Templates <a href="https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-example-s3.html" target="_blank">cookiecutter-aws-sam-s3-rekognition-dynamodb-python</a></p>
                             <ol>
                               <li><p>Deploy the cookiecutter SAM template for s3-rekognition-dynamodb</p> <pre><code>Install the SAM CLI: SAM CLI, version 1.162.0<br>sam init \
 --location https://github.com/aws-samples/cookiecutter-aws-sam-s3-rekognition-dynamodb-python \
 --no-input<br>Create bucket: aws s3 mb s3://aws-sam-ocr-learn-sam-cookie-cutter-test-1<br>cd aws_sam_ocr<br>sam package \
     --template-file template.yaml \
     --output-template-file packaged.yaml \
-    --s3-bucket aws-sam-ocr-learn-sam-cookie-cutter-test-1<br>generated packaged.yaml has runtime as 3.6, change that to 3.14<br>Runtime: python3.14
+    --s3-bucket aws-sam-ocr-learn-sam-cookie-cutter-test-1<br>generated packaged.yaml has runtime as 3.6, change that to 3.14
+Runtime: python3.14
       CodeUri: s3://aws-sam-ocr-learn-sam-cookie-cutter-test-1/ad30b6e5b3be9eb6bcbd29a4b723fe2c
       Description: Uses Rekognition APIs to detect text in S3 Objects and stores the
         text and labels in DynamoDB.<br>sam deploy \
     --template-file packaged.yaml \
-    --stack-name aws-sam-ocr \
+    --stack-name aws-sam-eb \
     --capabilities CAPABILITY_IAM \
     --region us-east-2<br>aws-sam-ocr stack provision the source image bucket, lamdba and dynamodb table with CREATE_COMPETE status.</code></pre></li>
                                <li><p>Upload this image in the source image bucket and explore dynamo db table items.</p> <pre><code><img ng-src="images/solution-view-iot-v1.png" alt="solution-view-iot-v1" width="1000" height="400"></code></pre></li>
                               <li><p>An item should get inserted into the DynamoDB table with a successful lambda invocation.</p> <pre><code><img ng-src="images/aws_sam_ocr_test_1.png" alt="aws_sam_ocr_test_1" width="1000" height="400"><br>[ { "S" : "IOT Offering on Public Cloud Or Custom Solution on Public Cloud" }, { "S" : "IOT Devices" }, { "S" : "IOT Analytics" }, { "S" : "Messaging /Streaming" }, { "S" : "Platform" }, { "S" : "DataLake (S3)" }, { "S" : "IOT Core (Device" }, { "S" : "MQTT over" }, { "S" : "Topic Subscription" }, { "S" : "Streaming and" }, { "S" : "Connectivity and" }, { "S" : "Kinesis / Kafka Y" }, { "S" : "TLS 1.2" }, { "S" : "Transformation" }, { "S" : "Management)" }, { "S" : "Pub-Sub" }, { "S" : "Pipes" }, { "S" : "No SQL DB" }, { "S" : "(DynamoDB)" }, { "S" : "Bridge" }, { "S" : "Middleware and Databases" }, { "S" : "Gateway (REST APIs)" }, { "S" : "Front End Apps (Single Page, Portals, Mobile Apps)" }, { "S" : "IOT" }, { "S" : "Offering" }, { "S" : "on" }, { "S" : "Public" }, { "S" : "Cloud" }, { "S" : "Or" }, { "S" : "Custom" }, { "S" : "Solution" }, { "S" : "on" }, { "S" : "Public" }, { "S" : "Cloud" }, { "S" : "IOT" }, { "S" : "Devices" }, { "S" : "IOT" }, { "S" : "Analytics" }, { "S" : "Messaging" }, { "S" : "/Streaming" }, { "S" : "Platform" }, { "S" : "DataLake" }, { "S" : "(S3)" }, { "S" : "IOT" }, { "S" : "Core" }, { "S" : "(Device" }, { "S" : "MQTT" }, { "S" : "over" }, { "S" : "Topic" }, { "S" : "Subscription" }, { "S" : "Streaming" }, { "S" : "and" }, { "S" : "Connectivity" }, { "S" : "and" }, { "S" : "Kinesis / Kafka" }, { "S" : "Y" }, { "S" : "TLS" }, { "S" : "1.2" }, { "S" : "Transformation" }, { "S" : "Management)" }, { "S" : "Pub-Sub" }, { "S" : "Pipes" }, { "S" : "No" }, { "S" : "SQL" }, { "S" : "DB" }, { "S" : "(DynamoDB)" }, { "S" : "Bridge" }, { "S" : "Middleware" }, { "S" : "and" }, { "S" : "Databases" }, { "S" : "Gateway" }, { "S" : "(REST" }, { "S" : "APIs)" }, { "S" : "Front" }, { "S" : "End" }, { "S" : "Apps" }, { "S" : "(Single" }, { "S" : "Page," }, { "S" : "Portals," }, { "S" : "Mobile" }, { "S" : "Apps)" } ]</code></pre></li>
                               <li><p>Cleanup</p> <pre><code>aws s3 rm s3://aws-sam-ocr-sourceimagebucket-zxxqkwcqge4y/solution-view-iot-v1.png<br>aws s3 rb s3://aws-sam-ocr-sourceimagebucket-zxxqkwcqge4y<br>aws cloudformation delete-stack --stack-name aws-sam-ocr<br>aws s3 rm s3://aws-sam-ocr-learn-sam-cookie-cutter-test-1/ad30b6e5b3be9eb6bcbd29a4b723fe2c<br>aws s3 rb s3://aws-sam-ocr-learn-sam-cookie-cutter-test-1<br>rm -rf aws_sam_ocr</code></pre></li>
                             </ol>
-                        </li></p>    
+                        </li></p> 
+                         <p><li><strong>Task-12: </strong>SAM Templates <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-tutorial-get-started.html" target="_blank">amazon-eventbridge-producer-consumer-example</a></p>
+                            <ol>
+                              <li><p>Deploy the eventbridge SAM template for amazon-eventbridge-producer-consumer-example</p> <pre><code>git clone https://github.com/aws-samples/amazon-eventbridge-producer-consumer-example.git<br>Create bucket: aws s3 mb s3://aws-sam-ocr-learn-sam-cookie-cutter-test-1<br>cd amazon-eventbridge-producer-consumer-example<br>rename both atmConsumer/handler.js and atmProducer/handler.js to .mjs extension: handler.mjs<br>atmProducer/index.mjs<br>/*
+  Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+  Permission is hereby granted, free of charge, to any person obtaining a copy of this
+  software and associated documentation files (the "Software"), to deal in the Software
+  without restriction, including without limitation the rights to use, copy, modify,
+  merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
+  permit persons to whom the Software is furnished to do so.
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+
+import { EventBridgeClient, PutEventsCommand } from "@aws-sdk/client-eventbridge";
+
+
+// Initializing the S3 client outside the handler allows connection reuse across invocations.
+const client = new EventBridgeClient({});
+
+export const lambdaHandler = async (event, context) => {
+  console.log("EVENT: \n" + JSON.stringify(event, null, 2));
+  try {
+    const params = {
+      Entries: [
+        {
+            // Event envelope fields
+            Source: 'custom.myATMapp',
+            EventBusName: 'default',
+            DetailType: 'transaction',
+            Time: new Date(),
+
+            // Main event body
+            Detail: JSON.stringify({
+                action: 'withdrawal',
+                location: 'MA-BOS-01',
+                amount: 300,
+                result: 'approved',
+                transactionId: '123456',
+                cardPresent: true,
+                partnerBank: 'Example Bank',
+                remainingFunds: 722.34,
+                timestamp: new Date().toISOString()
+            })
+        },
+        {
+          // Event envelope fields
+          Source: 'custom.myATMapp',
+          EventBusName: 'default',
+          DetailType: 'transaction',
+          Time: new Date(),
+
+          // Main event body
+          Detail: JSON.stringify({
+            action: 'withdrawal',
+            location: 'NY-NYC-001',
+            amount: 20,
+            result: 'approved',
+            transactionId: '123457',
+            cardPresent: true,
+            partnerBank: 'Example Bank',
+            remainingFunds: 212.52
+          })
+        },
+        {
+          // Event envelope fields
+          Source: 'custom.myATMapp',
+          EventBusName: 'default',
+          DetailType: 'transaction',
+          Time: new Date(),
+
+          // Main event body
+          Detail: JSON.stringify({
+            action: 'withdrawal',
+            location: 'NY-NYC-002',
+            amount: 60,
+            result: 'denied',
+            transactionId: '123458',
+            cardPresent: true,
+            remainingFunds: 5.77
+          })
+        }
+      ]
+    };
+
+    //const { params } = events;
+
+    // Instantiate and send the command
+    const command = new PutEventsCommand(params);
+    const response = await client.send(command);
+
+    console.log("Event successfully sent:", response);
+    
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ message: "Event sent successfully", response }),
+    };
+    
+  } catch (error) {
+    console.error("Error sending event to EventBridge:", error);
+    throw error;
+  }
+};<br>atmConsumer/index.mjs<br>
+export const case1Handler = async (event, context) => {
+  console.log('--- Approved transactions ---')
+  console.log(JSON.stringify(event, null, 2))
+}
+
+export const case2Handler = async (event, context) => {
+  console.log('--- NY location transactions ---')
+  console.log(JSON.stringify(event, null, 2))
+}
+
+export const case3Handler = async (event, context) => {
+  console.log('--- Unapproved transactions ---')
+  console.log(JSON.stringify(event, null, 2))
+}
+<br>
+sam package \
+    --template-file template.yaml \
+    --output-template-file packaged.yaml \
+    --s3-bucket aws-sam-ocr-learn-sam-cookie-cutter-test-1<br>generated packaged.yaml<br>sam deploy \
+    --template-file packaged.yaml \
+    --stack-name aws-sam-eb \
+    --capabilities CAPABILITY_IAM \
+    --region us-east-2<br>aws-sam-eb provision the lamdba and rules in the default event bus with CREATE_COMPETE status.</code></pre></li>
+                               <li><p>Test the producer Lambda fucntion and check the logs.</p> <pre><code><img ng-src="images/aws-event-bridge-test.png" alt="aws-event-bridge-test" width="1000" height="400"></code></pre></li>
+                              <li><p>Cleanup</p> <pre><code>aws cloudformation delete-stack --stack-name aws-sam-eb<br>aws s3 rm s3://aws-sam-ocr-learn-sam-cookie-cutter-test-1/682b501e5f113dee9a0d89f1b2fd3f1a<br>aws s3 rm s3://aws-sam-ocr-learn-sam-cookie-cutter-test-1/b97e88e5f68c58c340c1b0ffd6e69a0d<br>aws s3 rb s3://aws-sam-ocr-learn-sam-cookie-cutter-test-1<br>rm -rf amazon-eventbridge-producer-consumer-example</code></pre></li>
+                            </ol>
+                        </li></p>   
             </div>
              <div class="grooveborder">
                 <h4>KNOW-HOW (June-2026)</h4>
