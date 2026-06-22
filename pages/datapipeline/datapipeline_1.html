@@ -64,6 +64,14 @@ rm -rf story1-key.pem</code></pre></li>
                               <li><p>Running the lead data pipe.</p><img ng-src="images/lead_pipe_run_view_1.png" alt="mvc_express" width="1000" height="600"><br><img ng-src="images/lead_pipe_run_view_2.png" alt="mvc_express" width="800" height="200"></li>
                             </ol>
                         </li>
+                         <p><li><strong>Story-3_Reliable Data Pipeline from SFDC to S3 for Accounts and Leads: </strong>Enable Publish Subscribe reliable asynchronous processing with SQS.</p>
+                            <ol>
+                              <li><p>Create the SQS queue </p> <pre><code>aws cloudformation create-stack --stack-name simple-sqs-stack --template-body file://template-sqs.yaml</code></pre></li>
+                              <li><p>Implement the flows. </p> <img ng-src="images/datapipeline-sfdc-sqs-s3-papiFlow.png" alt="datapipeline-sfdc-sqs-s3-papiFlow" width="1000" height="200"><br><img ng-src="images/datapipeline-send-message-to-queueSub_Flow.png" alt="datapipeline-send-message-to-queueSub_Flow" width="1000" height="200"><img ng-src="images/datapipeline-receive-message-from-queue-flow.png" alt="datapipeline-receive-message-from-queue-flow" width="1000" height="200"><br><img ng-src="images/datapipeline-subflow.png" alt="datapipeline-subflow" width="1200" height="200"></li>
+
+                            </ol>
+                        </li>
+                        
             </div>
             <div class="grooveborder">
                 <h4>TASKS (June-2026)</h4>
