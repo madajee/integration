@@ -1,0 +1,73 @@
+<div class = "container-fluid mt-2">
+    <div class="row">
+        <integration-side-menu></integration-side-menu>
+        <div class="col-md-10">
+            <h6 class="grooveheader">Get Ready for Data Pipelines</h6>
+            <a href="#!/integration/122" class="nav-link">Integration-122</a>
+            <div class="grooveborder">
+                <ul>
+                  <li><a href="#!/sprint/3" target="_blank" class="nav-link">datapipeline-sprint</a></li> 
+                  <li><a href="#!/datapipeline/2" target="_blank" class="nav-link">datapipeline-write-up</a></li>
+                </ul>
+            </div>
+            <div class="grooveborder">
+                <h4>STORIES (July-2026)</h4>
+                         <p><li><strong>Story-3_Reliable Data Pipeline from SFDC to S3 for Accounts and Leads: </strong>Enable Publish Subscribe reliable asynchronous processing with SQS.</p>
+                            <ol>
+                              <li><p><pre>template-sqs.yaml<br>AWSTemplateFormatVersion: '2010-09-09'
+Description: 'A simple CloudFormation template to create a standard Amazon SQS queue.'
+
+Resources:
+  MySimpleQueue:
+    Type: 'AWS::SQS::Queue'
+    Properties:
+      QueueName: 'my-simple-standard-queue'
+
+Outputs:
+  QueueUrl:
+    Description: 'The URL of the created SQS queue.'
+    Value: !Ref MySimpleQueue
+  QueueArn:
+    Description: 'The ARN of the created SQS queue.'
+    Value: !GetAtt MySimpleQueue.Arn<code></code></pre></p></li>
+                              <li><p>Create the SQS queue </p> <pre><code>aws cloudformation create-stack --stack-name simple-sqs-stack --template-body file://template-sqs.yaml</code></pre></li>
+                              <li><p>Implement the flows. </p> <img ng-src="images/datapipeline-sfdc-sqs-s3-papiFlow.png" alt="datapipeline-sfdc-sqs-s3-papiFlow" width="1000" height="200"><br><img ng-src="images/datapipeline-send-message-to-queueSub_Flow.png" alt="datapipeline-send-message-to-queueSub_Flow" width="1000" height="200"><img ng-src="images/datapipeline-receive-message-from-queue-flow.png" alt="datapipeline-receive-message-from-queue-flow" width="1000" height="200"><br><img ng-src="images/datapipeline-subflow.png" alt="datapipeline-subflow" width="1200" height="200"></li>
+
+                            </ol>
+                        </li>  
+            </div>
+            <div class="grooveborder">
+                <h4>TASKS (June-2026)</h4>
+                    <ul>
+                        <p><li><strong>Task-1: </strong>CREATE BUCKET Interface with Mulesoft S3 Connector.</p>
+                            <img ng-src="images/aws-s3-createbucketFlow.png" alt="mvc_express" width="400" height="200">  
+                        </li></p>
+                        <p><li><strong>Task-2: </strong>CONNECT RDS and EC2 instance on AWS free-tier account.</p>
+                            <ol>
+                               <li><p>Create the Key Pair</p> <pre><code>aws ec2 create-key-pair --key-name MyKeyPair --query 'KeyMaterial' --output text > MyKeyPair.pem</code></pre></li>
+                               <li><p>Add the security group</p> <pre><code>aws ec2 create-security-group --group-name my-sg --description "My security group" --vpc-id vpc-xxxxxxxxxxxxxxxxx</code></pre></li>
+                               <li><p>Add the ingress rule for SSH</p> <pre><code>aws ec2 authorize-security-group-ingress --group-id sg-xxxxxxxxxxxxxxxx --protocol tcp --port 22 --cidr xx.xx.xx.xx/32</code></pre></li>
+                               <li><p>Create the EC2 Instance and conncet to instance with ssh</p> <pre><code>aws ec2 run-instances --image-id ami-078f95be0757084a3 --count 1 --instance-type t3.micro --key-name MyKeyPair --security-group-ids sg-xxxxxxxxxxxxxxxx --subnet-id subnet-xxxxxxxxxxxxxxxx<br>aws ec2-instance-connect ssh --instance-id i-xxxxxxxxxxxxxxx</code></pre></li>
+                               <li><p>Create the RDS database instances</p> <pre><code>aws rds create-db-instance --db-instance-identifier MySQLForLambda --db-instance-class db.t4g.micro --engine mysql --allocated-storage 20 --master-username admin --master-user-password mypassword --db-name ExampleDB --availability-zone us-east-2b</code></pre></li>
+                               <li><p>Setup EC2 connection to RDS Database.</p> <pre><code>This will add 2 more security groups, one for RDS as rds-ec2-1 and other for EC@ as ec2-rds-1</code></pre></li>
+                               <li><p>Delete the RDS database instance.</p> <pre><code>aws rds delete-db-instance --db-instance-identifier MySQLForLambda --skip-final-snapshot</code></pre></li>
+                               <li><p>Termimate the EC2 instance.</p> <pre><code>aws ec2 terminate-instances --instance-ids i-09a93622030d6fc5e</code></pre></li>
+                               <li><p>Delete all 3 security groups.</p> <pre><code>aws ec2 delete-security-group --group-id sg-008fe68dc13dd2c06</code></pre></li>
+                               <li><p>Delete the Key Pair</p> <pre><code>aws ec2 delete-key-pair --key-name MyKeyPair</code></pre></li>
+                            </ol>
+                        </li></p>
+                    </ul>
+            </div>
+             <div class="grooveborder">
+                <h4>KNOW-HOW (July-2026)</h4>
+                <ul>
+                 <li><h5>Steps to delete a role</h5> <pre><code>
+                    <ol>
+                      <li>List instance profiles: aws iam list-instance-profiles-for-role --role-name MyRoleName</li>
+                    </ol>
+                    </code></pre></li> 
+                  </ul>
+            </div>
+        </div>
+    </div>
+</div>
