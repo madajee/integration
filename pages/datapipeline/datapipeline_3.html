@@ -12,17 +12,28 @@
             </div>
             <div class="grooveborder">
                 <h4>STORIES (July-2026)</h4>
-                         <p><li><strong>Story-3_Reliable Data Pipeline from SFDC to S3 for Accounts and Leads: </strong>Enable Publish Subscribe reliable asynchronous processing with SQS.</p>
-                            <ol>
-                              <li><p><pre>template-sqs.yaml<br>AWSTemplateFormatVersion: '2010-09-09'<code></code></pre></p></li>
-                            </ol>
-                        </li>  
+                 <p><li><strong>Story-4_Upload Receipts in S3: </strong>
+                    <ul>
+                      <li>In June sprint, we have deployed a "cookiecutter SAM template for s3-rekognition-dynamodb" artifact. When we upload an image in the bucket, the deployed artifact uses the Amazon Rekognition to insert the detected labels and text in the dynamoDB table.</li>
+                      <li>Create an endpoint with a mule flow that uploads receipt image from John Doe and Jane Doe into the S3 bucket. The upload will trigger the cookiecutter and the detected labels and text from both receipts will be inserted into the dynamoDB table.</li>
+                      <li>Create another endpoint with mule flowthat will scan the dynamoDB table and create a csv record for each receipt with Name, Receipt Number, Receipt Date and Receipt Amount.</li>
+                       <li>Plug in this functionality in the reliable data pipeline for leads and accounts.</li>
+                    </ul>
+                </p>  
+                <p><li><strong>Story-5_Event Logs in RDS Table:: </strong>
+                    <ul>
+                      <li>In June sprint, we have created a reliable pipeline from SFDC to S3.</li>
+                      <li>Provision the RDS instance, create the datapipeline_event_log table.</li>
+                      <li>Add a flow to insert event logs into the RDS table. Call this flow in the asynchronous scope after the pipeline completes for each object.</li>
+                    </ul>
+                </p>
+                  
             </div>
             <div class="grooveborder">
                 <h4>TASKS (July-2026)</h4>
-                  <p><li><strong>Task-2: </strong>CONNECT RDS and EC2 instance on AWS free-tier account.</p>
+                  <p><li><strong>Task-13: </strong><a href="https://docs.aws.amazon.com/glue/latest/dg/streaming-tutorial-studio.html" target="_blank">Build your first streaming workload using AWS Glue Studio</a></p>
                       <ol>
-                          <li><p>Create the Key Pair</p> <pre><code>aws ec2 create-key-pair --key-name MyKeyPair --query 'KeyMaterial' --output text > MyKeyPair.pem</code></pre></li>
+                          <li><p><a href="https://aws-data-analytics-workshops.s3.amazonaws.com/aws_glue/aws_glue_streaming/docs/glue-stream.yaml" target="_blank">Glue Stream CloudFormation Template</a></p></li>
                   </li></p>
             </div>
              <div class="grooveborder">

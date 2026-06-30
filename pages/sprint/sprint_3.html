@@ -33,10 +33,11 @@
                 <h4>Sprint (July-2026)</h4>
                  <a href="#!/datapipeline/3" class="nav-link">TASK AND STORIES VIEW</a>
                     <ul>
-                         <li><strong>Card-11: </strong><a href="https://docs.aws.amazon.com/glue/latest/dg/streaming-tutorial-studio.html" target="_blank">AWS Glue and Kinesis Stream</a></li>
+                         <li><strong>Card-11: </strong><a href="https://docs.aws.amazon.com/glue/latest/dg/streaming-tutorial-studio.html" target="_blank">Build your first streaming workload using AWS Glue Studio</a></li>
                     </ul>
                      <ul>
-                        <li><strong>Story-4_Reliable Data Pipeline with Event Logs in RDS Table: </strong>Add successful event with run duration message to RDS table for Accounts and Leads pipelines. Add this behavior to the existing pipeline artifacts in Asynchronous scope.</li>
+                         <p><li><strong>Story-4_Upload Receipts in S3: </strong>Leads will upload the receipt images to the S3 bucket. Each receipt image will be create a record in the dynamoDB table. A csv file wth receipts records will be upload into the Datalake bucket.</p>
+                         <p><li><strong>Story-5_Event Logs in RDS Table: </strong>When each datapipeline object like Leads or Accounts completes, the success event record with duration should be inserted into the RDS table. Use Asynchronous scope for this insert flow.</li></p>
                     </ul>
             </div>
         </div>
