@@ -14,10 +14,27 @@
                 <h4>STORIES (July-2026)</h4>
                  <p><li><strong>Story-4_Upload Receipts in S3: </strong>
                     <ul>
-                      <li>In June sprint, we have deployed a "cookiecutter SAM template for s3-rekognition-dynamodb" artifact. When we upload an image in the bucket, the deployed artifact uses the Amazon Rekognition to insert the detected labels and text in the dynamoDB table.</li>
-                      <li>Create an endpoint with a mule flow that uploads receipt image from John Doe and Jane Doe into the S3 bucket. The upload will trigger the cookiecutter and the detected labels and text from both receipts will be inserted into the dynamoDB table.</li>
-                      <li>Create another endpoint with mule flowthat will scan the dynamoDB table and create a csv record for each receipt with Name, Receipt Number, Receipt Date and Receipt Amount.</li>
-                       <li>Plug in this functionality in the reliable data pipeline for leads and accounts.</li>
+                      <li>In June sprint, we have deployed a "cookiecutter SAM template for s3-rekognition-dynamodb" artifact. When we upload an image in the bucket, the deployed artifact uses the Amazon Rekognition to insert the detected labels and text in the dynamoDB table.
+                        <pre><code>Follow along Task 11 in June Sprint and deploy the aws_sam_ocr stacka.<br>Copy the source image S3 bucket: aws-sam-ocr-sourceimagebucket-pzjrzwsnhgen</code></pre>
+                      </li>
+                      <li>Create an endpoint with a mule flow that uploads receipt image from John Doe and Jane Doe into the S3 bucket. The upload will trigger the cookiecutter and the detected labels and text from both receipts will be inserted into the dynamoDB table.
+                        <pre><code>curl --location 'http://localhost:8081/upload-receipts' \
+--header 'Content-Type: application/json' \
+--data '{
+    "uploadsrcfolder": "uploadreceipts",
+    "srcimagebucketname": "aws-sam-ocr-sourceimagebucket-pzjrzwsnhgen"
+}'</code></pre>
+                      </li>
+                      <li>Create another endpoint with mule flowthat will scan the dynamoDB table and create a csv record for each receipt with Name, Receipt Number, Receipt Date and Receipt Amount.
+                         <pre><code>curl --location 'http://localhost:8081/get-receipt-dynamodb' \
+--header 'Content-Type: application/json' \
+--data '{
+    "dynamotablename": "aws-sam-ocr-ResultsTable-W4MJJOH5ZA32",
+    "bucketname": "s3bucketmuleuser-1",
+    "objectname": "receipt"
+}'</code></pre>
+                      </li>
+                       <li>Plug in this functionality in Story-3_Reliable Data Pipeline from SFDC to S3 for Accounts and Leads implemented in June-Sprint.</li>
                     </ul>
                 </p>  
                 <p><li><strong>Story-5_Event Logs in RDS Table:: </strong>

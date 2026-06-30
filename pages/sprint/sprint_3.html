@@ -36,7 +36,14 @@
                          <li><strong>Card-11: </strong><a href="https://docs.aws.amazon.com/glue/latest/dg/streaming-tutorial-studio.html" target="_blank">Build your first streaming workload using AWS Glue Studio</a></li>
                     </ul>
                      <ul>
-                         <p><li><strong>Story-4_Upload Receipts in S3: </strong>Leads will upload the receipt images to the S3 bucket. Each receipt image will be create a record in the dynamoDB table. A csv file wth receipts records will be upload into the Datalake bucket.</p>
+                         <p><li><strong>Story-4_Upload Receipts in S3: </strong>Leads will upload the receipt images to the S3 bucket. Each receipt image will be create a record in the dynamoDB table. A csv file wth receipts records will be upload into the Datalake bucket.
+                            <ul>
+                                <li>In June sprint, we have deployed a "cookiecutter SAM template for s3-rekognition-dynamodb" artifact. When we upload an image in the bucket, the deployed artifact uses the Amazon Rekognition to insert the detected labels and text in the dynamoDB table.</li>
+                                <li>Create an endpoint with a mule flow that uploads receipt image from John Doe and Jane Doe into the S3 bucket. The upload will trigger the cookiecutter and the detected labels and text from both receipts will be inserted into the dynamoDB table.</li>
+                                <li>Create another endpoint with mule flowthat will scan the dynamoDB table and create a csv record for each receipt with Name, Receipt Number, Receipt Date and Receipt Amount.</li>
+                                <li>Plug in this functionality in the reliable data pipeline for leads and accounts.</li>
+                            </ul>
+                        </li></p>
                          <p><li><strong>Story-5_Event Logs in RDS Table: </strong>When each datapipeline object like Leads or Accounts completes, the success event record with duration should be inserted into the RDS table. Use Asynchronous scope for this insert flow.</li></p>
                     </ul>
             </div>

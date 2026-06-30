@@ -734,7 +734,7 @@ Runtime: python3.14
       Description: Uses Rekognition APIs to detect text in S3 Objects and stores the
         text and labels in DynamoDB.<br>sam deploy \
     --template-file packaged.yaml \
-    --stack-name aws-sam-eb \
+    --stack-name aws-sam-ocr \
     --capabilities CAPABILITY_IAM \
     --region us-east-2<br>aws-sam-ocr stack provision the source image bucket, lamdba and dynamodb table with CREATE_COMPETE status.</code></pre></li>
                                <li><p>Upload this image in the source image bucket and explore dynamo db table items.</p> <pre><code><img ng-src="images/solution-view-iot-v1.png" alt="solution-view-iot-v1" width="1000" height="400"></code></pre></li>
