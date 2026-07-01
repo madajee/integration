@@ -43,6 +43,18 @@
                                 <li>Create another endpoint with mule flowthat will scan the dynamoDB table and create a csv record for each receipt with Name, Receipt Number, Receipt Date and Receipt Amount.</li>
                                 <li>Plug in this functionality in the reliable data pipeline for leads and accounts.</li>
                             </ul>
+                            <ul>
+                                <li><a target= "_blank" href="https://youtu.be/ZFBEHYPYQWc?si=5AXjp93Rz5tqqVHm" class="nav-link">demo</a></li>
+                                <li>Step 1: Go to June Sprint and deploy the s3-rekognition-dynamodb cookiecutter.</li>
+                                <li>Step 2: Go to AWS Console and note down the soureceimage bucket name and dynamoDB table.</li>
+                                <li>Step 3: In the local drive, create 2 receipt images for John and Jane in the uploadreceipts folder.</li>
+                                <li>Step 4: Start the mule application. Copy the sourceimage bucket name, and pass in the request to upload-receipts endpoint.</li>
+                                <li>Step 5:  This will upload the receipts image and deployed cookiecutter will create 2 records in the dynamodb table. Explore the records in the console.</li>
+                                <li>Step 6: Copy the dynamodb table name and pass in the request to the get-receipt-dynamodb endpoint along with the bucketname to which receipt csv file will be uploaded.</li>
+                                <li>Step 7: This mule flow will scan the records from dynamodb table, transform and upload the csv in the bucket.</li>
+                                <li>Step 8: Go to bucket on the console, download the receipt.csv file which should have 2 receipt records, one for John and another one for Jane.</li>
+                                <li>Step 9: Clean up: Remove the receipts images from the source bucket, and delete the cloudformation stack for cookiecutter. Stop the mule application. Remove the receipt.csv from the bucket.<br>aws s3 rm s3://aws-sam-ocr-sourceimagebucket-kcp4fwnkmvh5 --recursive<br>Clean Up Complete and Demo Done. Thanks.</li>
+                            </ul>
                         </li></p>
                          <p><li><strong>Story-5_Event Logs in RDS Table: </strong>When each datapipeline object like Leads or Accounts completes, the success event record with duration should be inserted into the RDS table. Use Asynchronous scope for this insert flow.</li></p>
                     </ul>
