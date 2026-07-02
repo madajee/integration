@@ -48,10 +48,9 @@
             </div>
             <div class="grooveborder">
                 <h4>TASKS (July-2026)</h4>
-                  <p><li><strong>Task-13: </strong><a href="https://docs.aws.amazon.com/glue/latest/dg/streaming-tutorial-studio.html" target="_blank">Build your first streaming workload using AWS Glue Studio</a></p>
-                      <ol>
-                          <li><p><a href="https://aws-data-analytics-workshops.s3.amazonaws.com/aws_glue/aws_glue_streaming/docs/glue-stream.yaml" target="_blank">Glue Stream CloudFormation Template</a></p></li>
-                  </li></p>
+                  <p><li><strong>Task-13: </strong><a href="https://docs.aws.amazon.com/glue/latest/dg/streaming-tutorial-studio.html" target="_blank">Build your first streaming workload using AWS Glue Studio</a>
+                    <pre><code>mkdir test-card-11<br>Download glue-stream.yaml and copy in the card directory<br><a href="https://aws-data-analytics-workshops.s3.amazonaws.com/aws_glue/aws_glue_streaming/docs/glue-stream.yaml" target="_blank">Glue Stream CloudFormation Template</a><br>aws cloudformation create-stack --stack-name aws-glue-stream --template-body file://glue-stream.yaml --parameters ParameterKey=Username,ParameterValue=awsgluestreamuser ParameterKey=Password,ParameterValue=mySecurePassword123 --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM<br>lead-1.json<br>{{"firstname":"John","lastname":"Doe","company":"XYZEnterprise","status":"Open","title":"Account Executive"}<br>aws kinesis put-record --stream-name GlueStreamTest-859196001802 --partition-key key1 --data file://lead-1.json --cli-binary-format raw-in-base64-out<br>Create a glue job reading lead data in Kinesis, applying transform or firstname to fname and lastname to lname. Add the target for to S3 and create glue table in demo database upon completion. When you run the job, it should create a parquet lead file in target bucket and run the query in Athena table to retrive the record. Check the screenshot below.<br><img ng-src="images/aws-glue-tutorial-run.png" alt="aws-glue-tutorial-run" width="1200" height="400"><br>Clean up<br>aws s3 rm s3://streaming-tutorial-s3-target-859196001802 --recursive<br>aws s3 rm s3://aws-glue-stream-stagings3bucket-rdnenadyadk0 --recursive<br>aws cloudformation delete-stack --stack-name aws-glue-stream<br>Delete the Glue Job.</code></pre>  
+                  </p>
             </div>
              <div class="grooveborder">
                 <h4>KNOW-HOW (July-2026)</h4>
