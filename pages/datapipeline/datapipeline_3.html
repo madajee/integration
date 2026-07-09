@@ -93,7 +93,7 @@ sentimentscore.mixed AS mixed,
 sentimentscore.negative AS negative,
 sentimentscore.neutral AS neutral,
 sentimentscore.positive AS positive
-FROM sentiment_results</code></pre> 
+FROM sentiment_results<br>Clean Up<br>aws iam detach-role-policy --role-name AmazonComprehendServiceRole-access-role --policy-arn arn:aws:iam::859196001802:policy/comprehend-access-policy<br>aws iam delete-policy --policy-arn arn:aws:iam::859196001802:policy/comprehend-access-policy<br>aws iam detach-user-policy --user-name s3bucketmuleuser --policy-arn arn:aws:iam::859196001802:policy/MyCustomPolicy<br>aws iam detach-user-policy --user-name s3bucketmuleuser --policy-arn arn:aws:iam::aws:policy/AWSGlueConsoleFullAccess<br>aws iam detach-user-policy --user-name s3bucketmuleuser --policy-arn arn:aws:iam::aws:policy/service-role/AWSQuicksightAthenaAccess<br>aws iam delete-policy --policy-arn arn:aws:iam::859196001802:policy/MyCustomPolicy<br>aws s3 rm s3://s3bucketmuleuser-comprehend --recursive<br>aws s3 rb s3://s3bucketmuleuser-comprehend</code></pre> 
                   </p>
             </div>
              <div class="grooveborder">
