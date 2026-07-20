@@ -25,7 +25,7 @@
     "srcimagebucketname": "aws-sam-ocr-sourceimagebucket-pzjrzwsnhgen"
 }'</code></pre>
                       </li>
-                      <li>Create another endpoint with mule flowthat will scan the dynamoDB table and create a csv record for each receipt with Name, Receipt Number, Receipt Date and Receipt Amount.
+                      <li>Create another endpoint with mule flow that will scan the dynamoDB table and create a csv record for each receipt with Name, Receipt Number, Receipt Date and Receipt Amount.
                          <pre><code>curl --location 'http://localhost:8081/get-receipt-dynamodb' \
 --header 'Content-Type: application/json' \
 --data '{
@@ -36,15 +36,7 @@
                       </li>
                        <li>Plug in this functionality in Story-3_Reliable Data Pipeline from SFDC to S3 for Accounts and Leads implemented in June-Sprint.</li>
                     </ul>
-                </p>  
-                <p><li><strong>Story-5_Event Logs in RDS Table:: </strong>
-                    <ul>
-                      <li>In June sprint, we have created a reliable pipeline from SFDC to S3.</li>
-                      <li>Provision the RDS instance, create the datapipeline_event_log table.</li>
-                      <li>Add a flow to insert event logs into the RDS table. Call this flow in the asynchronous scope after the pipeline completes for each object.</li>
-                    </ul>
                 </p>
-                  
             </div>
             <div class="grooveborder">
                 <h4>TASKS (July-2026)</h4>
@@ -94,6 +86,46 @@ sentimentscore.negative AS negative,
 sentimentscore.neutral AS neutral,
 sentimentscore.positive AS positive
 FROM sentiment_results<br>Clean Up<br>aws iam detach-role-policy --role-name AmazonComprehendServiceRole-access-role --policy-arn arn:aws:iam::859196001802:policy/comprehend-access-policy<br>aws iam delete-policy --policy-arn arn:aws:iam::859196001802:policy/comprehend-access-policy<br>aws iam detach-user-policy --user-name s3bucketmuleuser --policy-arn arn:aws:iam::859196001802:policy/MyCustomPolicy<br>aws iam detach-user-policy --user-name s3bucketmuleuser --policy-arn arn:aws:iam::aws:policy/AWSGlueConsoleFullAccess<br>aws iam detach-user-policy --user-name s3bucketmuleuser --policy-arn arn:aws:iam::aws:policy/service-role/AWSQuicksightAthenaAccess<br>aws iam delete-policy --policy-arn arn:aws:iam::859196001802:policy/MyCustomPolicy<br>aws s3 rm s3://s3bucketmuleuser-comprehend --recursive<br>aws s3 rb s3://s3bucketmuleuser-comprehend</code></pre> 
+                  </p>
+                  <p><strong>Task-15: </strong><a href="https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-create-api-as-simple-proxy-for-lambda.html" target="_blank">Amazon API Gateway Tutorial: Create a REST API with a Lambda proxy integration</a>
+                    <pre><code>mkdir rest-api-with-lambda-proxy<br>cd rest-api-with-lambda-proxy<br><a href="https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integration-using-cli.html" target="_blank">Set up Lambda proxy integration for API Gateway using the AWS CLI</a><br>touch index.mjs<br>Copy the greeter function from the AWS documentation using the tutorial link.<br>touch lambda-role.yaml<br>AWSTemplateFormatVersion: '2010-09-09'
+Description: IAM role for Lambda function to read from SQS queue.
+
+Resources:
+  LambdaSQSRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: GetStartedLambdaBasicExecutionRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole<br>touch input.json<br>{
+    "greeter": "John"
+        }<br>aws cloudformation create-stack --stack-name lambda-apigateway-role --template-body file://lambda-apigateway-role.yaml --capabilities CAPABILITY_NAMED_IAM<br>zip GetStartedLambdaProxyIntegration.zip index.mjs<br>aws lambda create-function --function-name GetStartedLambdaProxyIntegration \
+--zip-file fileb://GetStartedLambdaProxyIntegration.zip --handler index.handler --runtime nodejs24.x \
+--role arn:aws:iam::859196001802:role/GetStartedLambdaBasicExecutionRole<br>aws lambda invoke --function-name GetStartedLambdaProxyIntegration --payload file://input.json out --log-type Tail \
+--query 'LogResult' --output text --cli-binary-format raw-in-base64-out | base64 --decode<br>aws apigateway create-rest-api \
+    --name "LambdaProxyAPI" \
+    --description "This is my Greeter REST API Tutorial" \
+    --endpoint-configuration types=REGIONAL<br>Note Down API ID and Root Resource ID: apiId: o4jad41t0b, rootResourceId: n7gncx2j6e<br>aws apigateway create-resource \
+      --rest-api-id o4jad41t0b \
+      --parent-id n7gncx2j6e \
+      --path-part helloWorld<br>Note Down the Resource ID: pki3uj<br>aws apigateway put-method --rest-api-id o4jad41t0b \
+       --resource-id pki3uj \
+       --http-method ANY \
+       --authorization-type "NONE"<br>Put the Lambda Integration Type mapped to the GetStartedLambdaProxyIntegration to the ANY method from the console.<br>Test the API with following Curl Commands.<br>curl -X GET 'https://nvf97wlgvf.execute-api.us-east-2.amazonaws.com/test/helloworld?greeter=John'<br>curl -X GET https://nvf97wlgvf.execute-api.us-east-2.amazonaws.com/test/helloworld \
+  -H 'content-type: application/json' \
+  -H 'greeter: John'<br>curl -X POST https://nvf97wlgvf.execute-api.us-east-2.amazonaws.com/test/helloworld \
+  -H 'content-type: application/json' \
+  -d '{ "greeter": "John" }'<br>Clean-up<br>aws apigateway delete-rest-api \
+    --rest-api-id "o4jad41t0b"<br>aws lambda delete-function --function-name GetStartedLambdaProxyIntegration<br>aws cloudformation delete-stack --stack-name lambda-apigateway-role</code></pre>  
                   </p>
             </div>
              <div class="grooveborder">
