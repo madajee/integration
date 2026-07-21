@@ -88,7 +88,7 @@ sentimentscore.positive AS positive
 FROM sentiment_results<br>Clean Up<br>aws iam detach-role-policy --role-name AmazonComprehendServiceRole-access-role --policy-arn arn:aws:iam::859196001802:policy/comprehend-access-policy<br>aws iam delete-policy --policy-arn arn:aws:iam::859196001802:policy/comprehend-access-policy<br>aws iam detach-user-policy --user-name s3bucketmuleuser --policy-arn arn:aws:iam::859196001802:policy/MyCustomPolicy<br>aws iam detach-user-policy --user-name s3bucketmuleuser --policy-arn arn:aws:iam::aws:policy/AWSGlueConsoleFullAccess<br>aws iam detach-user-policy --user-name s3bucketmuleuser --policy-arn arn:aws:iam::aws:policy/service-role/AWSQuicksightAthenaAccess<br>aws iam delete-policy --policy-arn arn:aws:iam::859196001802:policy/MyCustomPolicy<br>aws s3 rm s3://s3bucketmuleuser-comprehend --recursive<br>aws s3 rb s3://s3bucketmuleuser-comprehend</code></pre> 
                   </p>
                   <p><strong>Task-15: </strong><a href="https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-create-api-as-simple-proxy-for-lambda.html" target="_blank">Amazon API Gateway Tutorial: Create a REST API with a Lambda proxy integration</a>
-                    <pre><code>mkdir rest-api-with-lambda-proxy<br>cd rest-api-with-lambda-proxy<br><a href="https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integration-using-cli.html" target="_blank">Set up Lambda proxy integration for API Gateway using the AWS CLI</a><br>touch index.mjs<br>Copy the greeter function from the AWS documentation using the tutorial link.<br>touch lambda-role.yaml<br>AWSTemplateFormatVersion: '2010-09-09'
+                    <pre><code>mkdir rest-api-with-lambda-proxy<br>cd rest-api-with-lambda-proxy<br><a href="https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integration-using-cli.html" target="_blank">Set up Lambda proxy integration for API Gateway using the AWS CLI</a><br>touch index.mjs<br>Copy the greeter function from the AWS documentation using the tutorial link.<br>touch lambda-apigateway-role.yaml<br>AWSTemplateFormatVersion: '2010-09-09'
 Description: IAM role for Lambda function to read from SQS queue.
 
 Resources:
@@ -124,8 +124,15 @@ Resources:
   -H 'content-type: application/json' \
   -H 'greeter: John'<br>curl -X POST https://nvf97wlgvf.execute-api.us-east-2.amazonaws.com/test/helloworld \
   -H 'content-type: application/json' \
-  -d '{ "greeter": "John" }'<br>Clean-up<br>aws apigateway delete-rest-api \
-    --rest-api-id "o4jad41t0b"<br>aws lambda delete-function --function-name GetStartedLambdaProxyIntegration<br>aws cloudformation delete-stack --stack-name lambda-apigateway-role</code></pre>  
+  -d '{ "greeter": "John" }'<br>********** for python function ***********************
+touch getstartedlambdaproxyintegration.py
+zip GetStartedLambdaProxyIntegration.zip getstartedlambdaproxyintegration.py
+
+aws lambda create-function --function-name GetStartedLambdaProxyIntegration \
+--zip-file fileb://GetStartedLambdaProxyIntegration.zip --handler getstartedlambdaproxyintegration.lambda_handler --runtime python3.14 \
+--role arn:aws:iam::859196001802:role/GetStartedLambdaBasicExecutionRole
+********** for python function ***********************<br>Clean-up<br>aws apigateway delete-rest-api \
+    --rest-api-id "o4jad41t0b"<br>aws lambda delete-function --function-name GetStartedLambdaProxyIntegration<br>aws cloudformation delete-stack --stack-name lambda-apigateway-role<br><a href="https://stackoverflow.com/questions/39655048/missing-authentication-token-while-accessing-api-gateway" target="_blank">Missing Authentication Token </a>In between I got this {"message":"Missing Authentication Token"} and resolved it with some manual intervention by deleting and creating the resource manually.</code></pre>  
                   </p>
             </div>
              <div class="grooveborder">
