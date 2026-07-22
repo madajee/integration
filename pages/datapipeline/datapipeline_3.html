@@ -233,7 +233,65 @@ export const handler = async(event) => {
 
   // Return a greeting to the caller
   return {"lead data": lead_data}
-};<br>touch index-sqs.mjs<br>touch input.json<br>{
+};<br>touch index-sqs.mjs<br>'use strict';
+import { SendMessageCommand, SQSClient } from "@aws-sdk/client-sqs";
+// Initializing the S3 client outside the handler allows connection reuse across invocations.
+const sqsClient = new SQSClient({});
+const SQS_QUEUE_URL = "https://sqs.us-east-2.amazonaws.com/859196001802/my-simple-standard-queue";
+
+
+export const handler = async(event) => {
+  console.log(event);
+  // Parse the input for the name, company property values
+  let name = event.name === null || event.name === undefined || event.name === "" ? 'John Doe' : event.name;
+  let company = event.company === null || event.company === undefined || event.company === "" ? 'John Doe Company' : event.company;
+  let lead_data = name + ', ' + company;
+  
+//   // Log the lead data to CloudWatch
+  console.log('lead data: ', lead_data);
+
+
+//   // Define the content payload you want to write
+    const payload = {
+        message: lead_data,
+        timestamp: new Date().toISOString(),
+    };
+
+    try {
+            const messageBody = {
+                status: "processed",
+                data: payload
+            };
+
+            const command = new SendMessageCommand({
+                QueueUrl: SQS_QUEUE_URL,
+                MessageBody: JSON.stringify(messageBody),
+            });
+
+            const response = await sqsClient.send(command);
+
+            return {
+                statusCode: 200,
+                body: JSON.stringify({
+                    message: "Message sent successfully",
+                    messageId: response.MessageId,
+                }),
+            };
+            
+        } catch (error) {
+            console.error(error);
+            return {
+                statusCode: 500,
+                body: JSON.stringify({ error: "Failed to send message" }),
+            };
+        }
+
+  // Return a greeting to the caller
+  //return {"lead data": lead_data}
+};<br>aws lambda create-function --function-name GetStartedLambdaNonProxySQSIntegration \
+--zip-file fileb://GetStartedLambdaNonProxySQSIntegration.zip --handler index-sqs.handler --runtime nodejs24.x \
+--role arn:aws:iam::859196001802:role/GetStartedLambdaBasicExecutionRole<br>aws lambda invoke --function-name GetStartedLambdaNonProxySQSIntegration --payload file://lead-input.json out --log-type Tail \
+--query 'LogResult' --output text --cli-binary-format raw-in-base64-out | base64 --decode<br>touch input.json<br>{
     "greeter": "John"
 }<br>touch lead-input.json<br>{
     "name": "Jane Doe",
@@ -245,9 +303,24 @@ zip GetStartedLambdaNonProxyIntegration.zip index-tutorial.mjs<br>aws lambda cre
 --query 'LogResult' --output text --cli-binary-format raw-in-base64-out | base64 --decode<br>zip GetStartedLambdaNonProxyS3Integration.zip index-s3.mjs<br>aws lambda create-function --function-name GetStartedLambdaNonProxyS3Integration \
 --zip-file fileb://GetStartedLambdaNonProxyS3Integration.zip --handler index-s3.handler --runtime nodejs24.x \
 --role arn:aws:iam::859196001802:role/GetStartedLambdaBasicExecutionRole<br>aws s3 mb s3://datapipe-test-bucket-1<br>aws lambda invoke --function-name GetStartedLambdaNonProxyS3Integration --payload file://lead-input.json out --log-type Tail \
---query 'LogResult' --output text --cli-binary-format raw-in-base64-out | base64 --decode<br>Clean-up<br>aws lambda delete-function --function-name GetStartedLambdaNonProxyIntegration<br>aws s3 rm s3://datapipe-test-bucket-1 --recursive<br>aws s3 rb s3://datapipe-test-bucket-1<br>aws lambda delete-function --function-name GetStartedLambdaNonProxyS3Integration<br>aws cloudformation delete-stack --stack-name lambda-apigateway-role<br>
+--query 'LogResult' --output text --cli-binary-format raw-in-base64-out | base64 --decode<br>aws lambda create-function --function-name GetStartedLambdaNonProxySQSIntegration \
+--zip-file fileb://GetStartedLambdaNonProxySQSIntegration.zip --handler index-sqs.handler --runtime nodejs24.x \
+--role arn:aws:iam::859196001802:role/GetStartedLambdaBasicExecutionRole<br>aws lambda invoke --function-name GetStartedLambdaNonProxySQSIntegration --payload file://lead-input.json out --log-type Tail \
+--query 'LogResult' --output text --cli-binary-format raw-in-base64-out | base64 --decode<br>Clean-up<br>aws lambda delete-function --function-name GetStartedLambdaNonProxyIntegration<br>aws s3 rm s3://datapipe-test-bucket-1 --recursive<br>aws s3 rb s3://datapipe-test-bucket-1<br>aws lambda delete-function --function-name GetStartedLambdaNonProxyS3Integration<br>aws lambda delete-function --function-name GetStartedLambdaNonProxySQSIntegration<br>aws cloudformation delete-stack --stack-name lambda-apigateway-role<br>
                     </code></pre>
-
+                    <pre><code>Create an Lead API in AWS API Gateway<br>aws apigateway create-rest-api \
+    --name "LambdaNonProxyLeadAPI" \
+    --description "This is my Greeter REST API Tutorial" \
+    --endpoint-configuration types=REGIONAL<br>Create a lead resource using the console.<br>Create the ANY method mapped to the lambda function.<br>Add the template on request: #set($inputRoot = $input.path('$'))
+{
+  "name": "$inputRoot.name",
+  "company": "$inputRoot.company"
+}<br>Deploy the API to test stage<br>Note down the link from deployment and test the api with ths curl<br>curl -X POST https://39iq72vmuc.execute-api.us-east-2.amazonaws.com/test/lead \
+    -H 'content-type: application/json' \
+    -d '{ "name": "Jane Doe", "company": "Jane Doe Company" }'<br>With successful invoation to lambda, the message should be produced in the queue. Use the Poll for messages option after clicking Send/Receive tab in AWS SQS portal.</pre></code>
+            <pre><code>Lets review with video, checkout lambda, checkout sqs with no messages, checout the API in the gateway, call the endpoint and check the message in the queue.
+                <a target= "_blank" href="https://youtu.be/Atr2-uj3TCY" class="nav-link">demo</a>
+            </code></pre>
             </div>
              <div class="grooveborder">
                 <h4>KNOW-HOW (July-2026)</h4>
