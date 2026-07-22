@@ -134,6 +134,120 @@ aws lambda create-function --function-name GetStartedLambdaProxyIntegration \
 ********** for python function ***********************<br>Clean-up<br>aws apigateway delete-rest-api \
     --rest-api-id "o4jad41t0b"<br>aws lambda delete-function --function-name GetStartedLambdaProxyIntegration<br>aws cloudformation delete-stack --stack-name lambda-apigateway-role<br><a href="https://stackoverflow.com/questions/39655048/missing-authentication-token-while-accessing-api-gateway" target="_blank">Missing Authentication Token </a>In between I got this {"message":"Missing Authentication Token"} and resolved it with some manual intervention by deleting and creating the resource manually.</code></pre>  
                   </p>
+                   <p><strong>Task-16: </strong><a href="https://docs.aws.amazon.com/apigateway/latest/developerguide/getting-started-lambda-non-proxy-integration.html" target="_blank">Amazon API Gateway: Create a REST API with a Lambda non-proxy integration.</a>
+                    <pre><code>mkdir rest-api-with-leadlambda-nonproxy<br>cd rest-api-with-leadlambda-nonproxy<br>touch lambda-apigateway-role.yaml<br>AWSTemplateFormatVersion: '2010-09-09'
+Description: IAM role for Lambda function to read from SQS queue.
+
+Resources:
+  LambdaSQSRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: GetStartedLambdaBasicExecutionRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess
+        - arn:aws:iam::aws:policy/AmazonSQSFullAccess
+        <br>touch index-tutorial.mjs<br>//copyright (c) 2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+'use strict';
+var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];            
+var times = ['morning', 'afternoon', 'evening', 'night', 'day'];
+
+export const handler = async(event) => {
+  console.log(event);
+  // Parse the input for the name, city, time and day property values
+  let name = event.name === null || event.name === undefined || event.name === "" ? 'you' : event.name;
+  let city = event.city === undefined ? 'World' : event.city;
+  let time = times.indexOf(event.time)<0 ? 'day' : event.time;
+  let day = days.indexOf(event.day)<0 ? null : event.day;
+
+  // Generate a greeting
+  let greeting = 'Good ' + time + ', ' + name + ' of ' + city + '. ';
+  if (day) greeting += 'Happy ' + day + '!';
+  
+  // Log the greeting to CloudWatch
+  console.log('Hello: ', greeting);
+  
+  // Return a greeting to the caller
+  return {"greeting": greeting}
+};<br>touch index-s3.mjs<br>'use strict';
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+// Initializing the S3 client outside the handler allows connection reuse across invocations.
+const s3Client = new S3Client({}); 
+
+
+export const handler = async(event) => {
+  console.log(event);
+  // Parse the input for the name, company property values
+  let name = event.name === null || event.name === undefined || event.name === "" ? 'John Doe' : event.name;
+  let company = event.company === null || event.company === undefined || event.company === "" ? 'John Doe Company' : event.company;
+  let lead_data = name + ', ' + company;
+  // Generate a greeting
+  
+  // Log the lead data to CloudWatch
+  console.log('lead data: ', lead_data);
+
+  const bucketName = "datapipe-test-bucket-1";
+  const fileKey = "data/example-file.json";
+
+  // Define the content payload you want to write
+    const payload = {
+        message: lead_data,
+        timestamp: new Date().toISOString(),
+    };
+
+    const params = {
+        Bucket: bucketName,
+        Key: fileKey,
+        Body: JSON.stringify(payload),
+        ContentType: "application/json"
+    };
+
+    try {
+        // Execute the upload via SDK v3 commands
+        const response = await s3Client.send(new PutObjectCommand(params));
+        
+        return {
+            statusCode: 200,
+            body: JSON.stringify({
+                message: `Successfully uploaded data to ${bucketName}/${fileKey}`,
+                requestId: response.$metadata.requestId
+            }),
+        };
+    } catch (error) {
+        console.error("Error uploading object to S3:", error);
+        
+        return {
+            statusCode: 500,
+            body: JSON.stringify({ message: "Failed to upload data to S3", error: error.message }),
+        };
+    }
+
+  // Return a greeting to the caller
+  return {"lead data": lead_data}
+};<br>touch index-sqs.mjs<br>touch input.json<br>{
+    "greeter": "John"
+}<br>touch lead-input.json<br>{
+    "name": "Jane Doe",
+    "company": "Jane Doe Company"
+}<br>aws cloudformation create-stack --stack-name lambda-apigateway-role --template-body file://lambda-apigateway-role.yaml --capabilities CAPABILITY_NAMED_IAM<br>* Non Proxy API with AWS Gateway ***********************************
+zip GetStartedLambdaNonProxyIntegration.zip index-tutorial.mjs<br>aws lambda create-function --function-name GetStartedLambdaNonProxyIntegration \
+--zip-file fileb://GetStartedLambdaNonProxyIntegration.zip --handler index-tutorial.handler --runtime nodejs24.x \
+--role arn:aws:iam::859196001802:role/GetStartedLambdaBasicExecutionRole<br>aws lambda invoke --function-name GetStartedLambdaNonProxyIntegration --payload file://input.json out --log-type Tail \
+--query 'LogResult' --output text --cli-binary-format raw-in-base64-out | base64 --decode<br>zip GetStartedLambdaNonProxyS3Integration.zip index-s3.mjs<br>aws lambda create-function --function-name GetStartedLambdaNonProxyS3Integration \
+--zip-file fileb://GetStartedLambdaNonProxyS3Integration.zip --handler index-s3.handler --runtime nodejs24.x \
+--role arn:aws:iam::859196001802:role/GetStartedLambdaBasicExecutionRole<br>aws s3 mb s3://datapipe-test-bucket-1<br>aws lambda invoke --function-name GetStartedLambdaNonProxyS3Integration --payload file://lead-input.json out --log-type Tail \
+--query 'LogResult' --output text --cli-binary-format raw-in-base64-out | base64 --decode<br>Clean-up<br>aws lambda delete-function --function-name GetStartedLambdaNonProxyIntegration<br>aws s3 rm s3://datapipe-test-bucket-1 --recursive<br>aws s3 rb s3://datapipe-test-bucket-1<br>aws lambda delete-function --function-name GetStartedLambdaNonProxyS3Integration<br>aws cloudformation delete-stack --stack-name lambda-apigateway-role<br>
+                    </code></pre>
+
             </div>
              <div class="grooveborder">
                 <h4>KNOW-HOW (July-2026)</h4>
