@@ -306,7 +306,7 @@ zip GetStartedLambdaNonProxyIntegration.zip index-tutorial.mjs<br>aws lambda cre
 --query 'LogResult' --output text --cli-binary-format raw-in-base64-out | base64 --decode<br>aws lambda create-function --function-name GetStartedLambdaNonProxySQSIntegration \
 --zip-file fileb://GetStartedLambdaNonProxySQSIntegration.zip --handler index-sqs.handler --runtime nodejs24.x \
 --role arn:aws:iam::859196001802:role/GetStartedLambdaBasicExecutionRole<br>aws lambda invoke --function-name GetStartedLambdaNonProxySQSIntegration --payload file://lead-input.json out --log-type Tail \
---query 'LogResult' --output text --cli-binary-format raw-in-base64-out | base64 --decode<br>Clean-up<br>aws lambda delete-function --function-name GetStartedLambdaNonProxyIntegration<br>aws s3 rm s3://datapipe-test-bucket-1 --recursive<br>aws s3 rb s3://datapipe-test-bucket-1<br>aws lambda delete-function --function-name GetStartedLambdaNonProxyS3Integration<br>aws lambda delete-function --function-name GetStartedLambdaNonProxySQSIntegration<br>aws cloudformation delete-stack --stack-name lambda-apigateway-role<br>
+--query 'LogResult' --output text --cli-binary-format raw-in-base64-out | base64 --decode
                     </code></pre>
                     <pre><code>Create an Lead API in AWS API Gateway<br>aws apigateway create-rest-api \
     --name "LambdaNonProxyLeadAPI" \
@@ -319,8 +319,178 @@ zip GetStartedLambdaNonProxyIntegration.zip index-tutorial.mjs<br>aws lambda cre
     -H 'content-type: application/json' \
     -d '{ "name": "Jane Doe", "company": "Jane Doe Company" }'<br>With successful invoation to lambda, the message should be produced in the queue. Use the Poll for messages option after clicking Send/Receive tab in AWS SQS portal.</pre></code>
             <pre><code>Lets review with video, checkout lambda, checkout sqs with no messages, checout the API in the gateway, call the endpoint and check the message in the queue.
-                <a target= "_blank" href="https://youtu.be/Atr2-uj3TCY" class="nav-link">demo</a>
+                <a target= "_blank" href="https://youtu.be/Atr2-uj3TCY" class="nav-link">demo</a><br><br>Clean-up<br>aws lambda delete-function --function-name GetStartedLambdaNonProxyIntegration<br>aws s3 rm s3://datapipe-test-bucket-1 --recursive<br>aws s3 rb s3://datapipe-test-bucket-1<br>aws lambda delete-function --function-name GetStartedLambdaNonProxyS3Integration<br>aws lambda delete-function --function-name GetStartedLambdaNonProxySQSIntegration<br>aws cloudformation delete-stack --stack-name lambda-apigateway-role<br>aws apigateway delete-rest-api \
+    --rest-api-id "o4jad41t0b"
             </code></pre>
+            <p><strong>Task-16: </strong></strong><a href="https://docs.aws.amazon.com/appsync/latest/devguide/what-is-appsync.html" target="_blank">AWS APPSync: GraphQL And DynamoDB</a>
+              <pre><code>mkdir appsync-graphql-dynamodb<br>cd appsync-graphql-dynamodb<br>touch appsync-graphql-dynamodb.yaml<br>AWSTemplateFormatVersion: '2010-09-09'
+Description: 'AWS CloudFormation Example for AWS AppSync with a DynamoDB Data Source'
+
+Resources:
+  # 1. Create the AppSync GraphQL API
+  MyAppSyncApi:
+    Type: 'AWS::AppSync::GraphQLApi'
+    Properties:
+      Name: 'MySampleGraphQLApi'
+      AuthenticationType: 'API_KEY'
+
+  # 2. Assign an API Key for authentication
+  MyAppSyncApiKey:
+    Type: 'AWS::AppSync::ApiKey'
+    Properties:
+      ApiId: !GetAtt MyAppSyncApi.ApiId
+      Description: 'Default API Key for client authentication'
+
+# 3. Define the GraphQL Schema
+  MyAppSyncSchema:
+    Type: 'AWS::AppSync::GraphQLSchema'
+    Properties:
+      ApiId: !GetAtt MyAppSyncApi.ApiId
+      Definition: |
+        type Todo {
+          id: ID!
+          title: String!
+          completed: Boolean!
+        }
+        type Query {
+          getTodo(id: ID!): Todo
+        }
+        type Mutation {
+          createTodo(id: ID!, title: String!, completed: Boolean!): Todo
+        }
+        schema {
+          query: Query
+          mutation: Mutation
+        }
+
+  # 4. Create the underlying DynamoDB Table
+  MyTodoDynamoDBTable:
+    Type: 'AWS::DynamoDB::Table'
+    Properties:
+      TableName: 'AppSyncTodoTable'
+      BillingMode: 'PAY_PER_REQUEST'
+      AttributeDefinitions:
+        - AttributeName: 'id'
+          AttributeType: 'S'
+      KeySchema:
+        - AttributeName: 'id'
+          KeyType: 'HASH'
+
+  # 5. Create an IAM Service Role for AppSync to access DynamoDB
+  AppSyncDynamoDBServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: AppSyncTutorialAmazonDynamoDBRole
+      ManagedPolicyArns:
+        - Ref: AppSyncTutorialAmazonDynamoDBPolicy
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - sts:AssumeRole
+            Principal:
+              Service:
+                - appsync.amazonaws.com
+    DependsOn:
+      - AppSyncTutorialAmazonDynamoDBPolicy
+
+  AppSyncTutorialAmazonDynamoDBPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Description: Managed policy to allow AWS AppSync to access the tables created by this template.
+      Path: /deepdish/
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - dynamodb:GetItem
+              - dynamodb:PutItem
+              - dynamodb:DeleteItem
+              - dynamodb:UpdateItem
+              - dynamodb:Query
+              - dynamodb:Scan
+              - dynamodb:BatchGetItem
+              - dynamodb:BatchWriteItem
+            Resource:
+              - Fn::Join:
+                - ""
+                - - Fn::GetAtt: MyTodoDynamoDBTable.Arn
+                  - "*"
+  # 6. Connect the DynamoDB Table as an AppSync Data Source
+  MyDynamoDBDataSource:
+    Type: 'AWS::AppSync::DataSource'
+    Properties:
+      ApiId: !GetAtt MyAppSyncApi.ApiId
+      Name: 'TodoDynamoDBDataSource'
+      Type: 'AMAZON_DYNAMODB'
+      ServiceRoleArn: !GetAtt AppSyncDynamoDBServiceRole.Arn
+      DynamoDBConfig:
+        TableName: !Ref MyTodoDynamoDBTable
+        AwsRegion: !Ref 'AWS::Region'
+
+  # 7. Attach a Resolver to handle the getTodo query
+  GetTodoResolver:
+    Type: 'AWS::AppSync::Resolver'
+    DependsOn: 'MyAppSyncSchema'
+    Properties:
+      ApiId: !GetAtt MyAppSyncApi.ApiId
+      TypeName: 'Query'
+      FieldName: 'getTodo'
+      DataSourceName: !GetAtt MyDynamoDBDataSource.Name
+      RequestMappingTemplate: |
+        {
+          "version": "2017-02-28",
+          "operation": "GetItem",
+          "key": {
+            "id": $util.dynamodb.toDynamoDBJson($ctx.args.id)
+          }
+        }
+      ResponseMappingTemplate: |
+        $util.toJson($ctx.result)
+  # 8. Attach a Resolver to handle the createTodo mutation
+  PutTodoResolver:
+    Type: 'AWS::AppSync::Resolver'
+    DependsOn: 'MyAppSyncSchema'
+    Properties:
+      ApiId: !GetAtt MyAppSyncApi.ApiId
+      TypeName: 'Mutation'
+      FieldName: 'createTodo'
+      DataSourceName: !GetAtt MyDynamoDBDataSource.Name
+      RequestMappingTemplate: |
+        {
+          "version": "2017-02-28",
+          "operation": "PutItem",
+          "key": {
+            "id": $util.dynamodb.toDynamoDBJson($ctx.args.id)
+          },
+          "attributeValues" : {
+            "title" : $util.dynamodb.toDynamoDBJson($ctx.args.title),
+            "completed" : $util.dynamodb.toDynamoDBJson($ctx.args.completed)
+            }
+        }
+      ResponseMappingTemplate: |
+        $util.toJson($ctx.result)
+
+Outputs:
+  GraphQLUrl:
+    Description: 'The endpoint for the GraphQL API'
+    Value: !GetAtt MyAppSyncApi.GraphQLUrl
+
+  ApiKey:
+    Description: 'The API Key to access the endpoint'
+    Value: !GetAtt MyAppSyncApiKey.ApiKey<br>aws cloudformation create-stack --stack-name appsync-graphql-dynamodb --template-body file://appsync-graphql-dynamodb.yaml --capabilities CAPABILITY_NAMED_IAM<br>note down the url and api key from the outputs tab of cloudformation stack.<br>Test Mutation (put Item) with curl<br>curl --request POST \
+  --url "YOUR_GRAPHQL_URL_OUTPUT" \
+  --header "Content-Type: application/json" \
+  --header "x-api-key: YOUR_API_KEY_OUTPUT" \
+  --data '{"query": "mutation CreateMyTodo { createTodo(id: \"123\", title: \"Finish AppSync Task\", completed: false) { id title completed } }"}'<br>Test Query(get Item) with curl<br>curl --request POST \
+  --url "YOUR_GRAPHQL_URL_OUTPUT" \
+  --header "Content-Type: application/json" \
+  --header "x-api-key: YOUR_API_KEY_OUTPUT" \
+  --data '{"query": "query GetMyTodo { getTodo(id: \"123\") { id title completed } }"}'<br>Clean-up<br>aws cloudformation delete-stack --stack-name appsync-graphql-dynamodb<br>cd ..<br>rm -rf appsync-graphql-dynamodb
+              </code></pre>
+            </p>
             </div>
              <div class="grooveborder">
                 <h4>KNOW-HOW (July-2026)</h4>

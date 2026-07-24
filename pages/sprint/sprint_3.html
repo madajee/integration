@@ -40,6 +40,7 @@
                         <li><strong>Card-13: </strong><a href="#!/datapipeline/4" target="_blank">AWS Cloud Practitioner Write Up (AWS Skill Builder)</a></li>
                         <li><strong>Card-14: </strong><a href="https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-create-api-as-simple-proxy-for-lambda.html" target="_blank">Amazon API Gateway: Create a REST API with a Lambda proxy integration</a></li>
                         <li><strong>Card-15: </strong><a href="https://docs.aws.amazon.com/apigateway/latest/developerguide/getting-started-lambda-non-proxy-integration.html" target="_blank">Amazon API Gateway: Create a REST API with a Lambda non-proxy integration. </a>In the tutorial the API input are city, time, day and name but we need an API resource that creates a lead. So we will pass name and company as input to API resource. Name can be path parameter just like {city} in the tutorial and company will be URL query string parameter in the request. We will refactor the mapping template and lamdbda from the tutorial for lead input.</li>
+                        <li><strong>Card-16: </strong><a href="https://docs.aws.amazon.com/appsync/latest/devguide/what-is-appsync.html" target="_blank">AWS APPSync: GraphQL And DynamoDB</a></li>
                     </ul>
                      <ul>
                          <p><li><strong>Story-4_Upload Receipts in S3: </strong>Leads will upload the receipt images to the S3 bucket. Each receipt image will be create a record in the dynamoDB table. A csv file wth receipts records will be upload into the Datalake bucket.
@@ -69,16 +70,22 @@
             <div class="grooveborder">
                 <h4>Sprint (August-2026)</h4>
                  <a href="#!/datapipeline/3" class="nav-link">TASK AND STORIES VIEW</a>
-                 <ul>
-                    <p><li><strong>Story-5_Event Logs in RDS Table: </strong>When each datapipeline object like Leads or Accounts completes, the success event record with duration should be inserted into the RDS table. Use Asynchronous scope for this insert flow.</li></p>
-                    <p><li><strong>Story-5_Event Logs in RDS Table:: </strong>
                     <ul>
-                      <li>In June sprint, we have created a reliable pipeline from SFDC to S3.</li>
-                      <li>Provision the RDS instance, create the datapipeline_event_log table.</li>
-                      <li>Add a flow to insert event logs into the RDS table. Call this flow in the asynchronous scope after the pipeline completes for each object.</li>
+                        <li> <p><strong>Story-5_Create an API Endpoint to create lead in salesfoorce playground org</strong>
+                            <ul>
+                                <li>Step 1: Create the queue and Lambda that publishes the message to the queue. Either follow Task-15 or use the <a href="https://github.com/aws-samples/serverless-patterns/blob/main/lambda-sqs/src/app.js" target= "_blank" class="nav-link">serverless template</a> </li>
+                                <li>Step 2: Create a non-proxy api endpoint with the lambda integration. Follow Task-15 or reference the <a href="https://docs.aws.amazon.com/apigateway/latest/developerguide/getting-started-lambda-non-proxy-integration.html" target="_blank" class="nav-link">AWS Gateway documentation</a></li>
+                                <li>Step 3: Create a Mule flow with SQS listener and Salesforce connector.</li>
+                            </ul>
+                        </p></li>
+                        <li> <p><strong>Story-6_Event Logs in RDS Table: </strong>When each datapipeline object like Leads or Accounts completes, the success event record with duration should be inserted into the RDS table. Use Asynchronous scope for this insert flow.
+                            <ul>
+                                <li>In June sprint, we have created a reliable pipeline from SFDC to S3.</li>
+                                <li>Provision the RDS instance, create the datapipeline_event_log table.</li>
+                                <li>Add a flow to insert event logs into the RDS table. Call this flow in the asynchronous scope after the pipeline completes for each object.</li>
+                            </ul>
+                        </p></li>
                     </ul>
-                </p>
-                 </ul>
             </div>     
         </div>
     </div>
