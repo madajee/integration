@@ -139,6 +139,10 @@ aws lambda create-function --function-name GetStartedLambdaProxyIntegration \
 Description: IAM role for Lambda function to read from SQS queue.
 
 Resources:
+  MySimpleQueue:
+    Type: 'AWS::SQS::Queue'
+    Properties:
+      QueueName: 'my-simple-standard-queue'
   LambdaSQSRole:
     Type: AWS::IAM::Role
     Properties:
@@ -154,8 +158,17 @@ Resources:
               - sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole
         - arn:aws:iam::aws:policy/AmazonS3FullAccess
         - arn:aws:iam::aws:policy/AmazonSQSFullAccess
+
+Outputs:
+  QueueUrl:
+    Description: 'The URL of the created SQS queue.'
+    Value: !Ref MySimpleQueue
+  QueueArn:
+    Description: 'The ARN of the created SQS queue.'
+    Value: !GetAtt MySimpleQueue.Arn
         <br>touch index-tutorial.mjs<br>//copyright (c) 2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 'use strict';
 var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];            

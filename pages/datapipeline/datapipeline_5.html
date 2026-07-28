@@ -1,0 +1,142 @@
+<div class = "container-fluid mt-2">
+    <div class="row">
+        <integration-side-menu></integration-side-menu>
+        <div class="col-md-10">
+            <h6 class="grooveheader">Get Ready for Data Pipelines</h6>
+            <a href="#!/integration/122" class="nav-link">Integration-122</a>
+            <div class="grooveborder">
+                <ul>
+                  <li><a href="#!/sprint/3" target="_blank" class="nav-link">datapipeline-sprint</a></li> 
+                  <li><a href="#!/datapipeline/4" target="_blank" class="nav-link">aws-cloud-practitioner-writeup</a></li>
+                </ul>
+            </div>
+            <div class="grooveborder">
+                <h4>STORIES (August-2026)</h4>
+                 <p><strong>Story-5_Create an API Endpoint to create lead in salesfoorce playground org</strong>
+                    <ul>
+                      <li>Step 1: Create the queue and Lambda that publishes the message to the queue
+                        <pre><code>mkdir story-5_create_lead_endpoint_to_salesforce<br>cd story-5_create_lead_endpoint_to_salesforce<br>touch lambda-apigateway-role.yaml<br>AWSTemplateFormatVersion: '2010-09-09'
+Description: IAM role for Lambda function to read from SQS queue.
+
+Resources:
+  MySimpleQueue:
+    Type: 'AWS::SQS::Queue'
+    Properties:
+      QueueName: 'my-simple-standard-queue'
+  LambdaSQSRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: GetStartedLambdaBasicExecutionRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess
+        - arn:aws:iam::aws:policy/AmazonSQSFullAccess
+
+Outputs:
+  QueueUrl:
+    Description: 'The URL of the created SQS queue.'
+    Value: !Ref MySimpleQueue
+  QueueArn:
+    Description: 'The ARN of the created SQS queue.'
+    Value: !GetAtt MySimpleQueue.Arn<br>touch index-sqs.mjs<br>'use strict';
+import { SendMessageCommand, SQSClient } from "@aws-sdk/client-sqs";
+// Initializing the S3 client outside the handler allows connection reuse across invocations.
+const sqsClient = new SQSClient({});
+const SQS_QUEUE_URL = "https://sqs.us-east-2.amazonaws.com/859196001802/my-simple-standard-queue";
+
+
+export const handler = async(event) => {
+  console.log(event);
+  // Parse the input for the name, company property values
+  let name = event.name === null || event.name === undefined || event.name === "" ? 'John Doe' : event.name;
+  let company = event.company === null || event.company === undefined || event.company === "" ? 'John Doe Company' : event.company;
+  let lead_data = name + ', ' + company;
+  
+//   // Log the lead data to CloudWatch
+  console.log('lead data: ', lead_data);
+
+
+//   // Define the content payload you want to write
+    const payload = {
+        message: lead_data,
+        timestamp: new Date().toISOString(),
+    };
+
+    try {
+            const messageBody = {
+                status: "processed",
+                data: payload
+            };
+
+            const command = new SendMessageCommand({
+                QueueUrl: SQS_QUEUE_URL,
+                MessageBody: JSON.stringify(messageBody),
+            });
+
+            const response = await sqsClient.send(command);
+
+            return {
+                statusCode: 200,
+                body: JSON.stringify({
+                    message: "Message sent successfully",
+                    messageId: response.MessageId,
+                }),
+            };
+            
+        } catch (error) {
+            console.error(error);
+            return {
+                statusCode: 500,
+                body: JSON.stringify({ error: "Failed to send message" }),
+            };
+        }
+
+  // Return a greeting to the caller
+  //return {"lead data": lead_data}
+};<br><br>touch lead-input.json<br>{
+    "name": "Jane Doe",
+    "company": "Jane Doe Company"
+}<br>aws lambda create-function --function-name GetStartedLambdaNonProxySQSIntegration \
+--zip-file fileb://GetStartedLambdaNonProxySQSIntegration.zip --handler index-sqs.handler --runtime nodejs24.x \
+--role arn:aws:iam::859196001802:role/GetStartedLambdaBasicExecutionRole<br>aws lambda invoke --function-name GetStartedLambdaNonProxySQSIntegration --payload file://lead-input.json out --log-type Tail \
+--query 'LogResult' --output text --cli-binary-format raw-in-base64-out | base64 --decode</code></pre>
+                      </li>
+                      <li>Step 2: Create a non-proxy api endpoint with the lambda integration
+                        <pre><code>Create an Lead API in AWS API Gateway<br>aws apigateway create-rest-api \
+    --name "LambdaNonProxyLeadAPI" \
+    --description "This is my Greeter REST API Tutorial" \
+    --endpoint-configuration types=REGIONAL<br>Create a lead resource using the console.<br>Create the ANY method mapped to the lambda function.<br>Add the template on request: #set($inputRoot = $input.path('$'))
+{
+  "name": "$inputRoot.name",
+  "company": "$inputRoot.company"
+}<br>Deploy the API to test stage<br>Note down the link from deployment and test the api with ths curl<br>curl -X POST https://39iq72vmuc.execute-api.us-east-2.amazonaws.com/test/lead \
+    -H 'content-type: application/json' \
+    -d '{ "name": "Jane Doe", "company": "Jane Doe Company" }'<br>With successful invoation to lambda, the message should be produced in the queue. Use the Poll for messages option after clicking Send/Receive tab in AWS SQS portal.</pre></code>
+                      </li>
+                      <li>Step 3: Create a Mule flow with SQS listener and Salesforce connector.
+                        <pre><code>mkdir rest-api-with-leadlambda-nonproxy<br>cd rest-api-with-leadlambda-nonproxy</code></pre>
+                      </li>
+                      <li>Step 4: Clean-up
+                        <pre><code>aws lambda delete-function --function-name GetStartedLambdaNonProxySQSIntegration<br>aws cloudformation delete-stack --stack-name lambda-apigateway-role<br>aws apigateway delete-rest-api \
+    --rest-api-id "o4jad41t0b"</code></pre>
+                      </li>
+                    </ul>
+                </p>
+                    
+            </div>
+             <div class="grooveborder">
+                <h4>KNOW-HOW (July-2026)</h4>
+            </div>
+        </div>
+    </div>
+</div>
