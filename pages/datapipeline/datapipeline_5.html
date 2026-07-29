@@ -15,7 +15,7 @@
                  <p><strong>Story-5_Create an API Endpoint to create lead in salesfoorce playground org</strong>
                     <ul>
                       <li>Step 1: Create the queue and Lambda that publishes the message to the queue
-                        <pre><code>mkdir story-5_create_lead_endpoint_to_salesforce<br>cd story-5_create_lead_endpoint_to_salesforce<br>touch lambda-apigateway-role.yaml<br>AWSTemplateFormatVersion: '2010-09-09'
+                        <pre><code>mkdir story-5_create_lead_endpoint_to_salesforce<br>cd story-5_create_lead_endpoint_to_salesforce<br>touch story-5_create_lead_endpoint_to_salesforce.yaml<br>AWSTemplateFormatVersion: '2010-09-09'
 Description: IAM role for Lambda function to read from SQS queue.
 
 Resources:
@@ -106,7 +106,7 @@ export const handler = async(event) => {
 };<br><br>touch lead-input.json<br>{
     "name": "Jane Doe",
     "company": "Jane Doe Company"
-}<br>aws lambda create-function --function-name GetStartedLambdaNonProxySQSIntegration \
+}<br>aws cloudformation create-stack --stack-name story-create-lead-in-salesforce --template-body file://story-5_create_lead_endpoint_to_salesforce.yaml --capabilities CAPABILITY_NAMED_IAM<br>zip GetStartedLambdaNonProxySQSIntegration.zip index-sqs.mjs<br>aws lambda create-function --function-name GetStartedLambdaNonProxySQSIntegration \
 --zip-file fileb://GetStartedLambdaNonProxySQSIntegration.zip --handler index-sqs.handler --runtime nodejs24.x \
 --role arn:aws:iam::859196001802:role/GetStartedLambdaBasicExecutionRole<br>aws lambda invoke --function-name GetStartedLambdaNonProxySQSIntegration --payload file://lead-input.json out --log-type Tail \
 --query 'LogResult' --output text --cli-binary-format raw-in-base64-out | base64 --decode</code></pre>
@@ -114,7 +114,7 @@ export const handler = async(event) => {
                       <li>Step 2: Create a non-proxy api endpoint with the lambda integration
                         <pre><code>Create an Lead API in AWS API Gateway<br>aws apigateway create-rest-api \
     --name "LambdaNonProxyLeadAPI" \
-    --description "This is my Greeter REST API Tutorial" \
+    --description "This is Lead API Endpoint" \
     --endpoint-configuration types=REGIONAL<br>Create a lead resource using the console.<br>Create the ANY method mapped to the lambda function.<br>Add the template on request: #set($inputRoot = $input.path('$'))
 {
   "name": "$inputRoot.name",
@@ -124,10 +124,21 @@ export const handler = async(event) => {
     -d '{ "name": "Jane Doe", "company": "Jane Doe Company" }'<br>With successful invoation to lambda, the message should be produced in the queue. Use the Poll for messages option after clicking Send/Receive tab in AWS SQS portal.</pre></code>
                       </li>
                       <li>Step 3: Create a Mule flow with SQS listener and Salesforce connector.
-                        <pre><code>mkdir rest-api-with-leadlambda-nonproxy<br>cd rest-api-with-leadlambda-nonproxy</code></pre>
+                        <p><img ng-src="images/story-5-create-lead-in-salesforce-listener-flow.png" alt="story-5-create-lead-in-salesforce" width="600" height="200"></p>
+                        <p><img ng-src="images/story-5-create-lead-in-salesforce-impl-flow.png" alt="story-5-create-lead-in-salesforce-impl-flow" width="1000" height="200"></p>
+                      </li>
+                      <li>Step 4: Test Acceptance
+                        <pre><code>Test 1: Lead Bertha Johnson already exists in the Salesforce Playground Org. Call the Lead endpoint for Bertha Johnson, the mule flow will check that lead already exists after dequeuing the message and log the same.<br>curl -X POST https://9nfq3pzqz6.execute-api.us-east-2.amazonaws.com/test/lead \
+    -H 'content-type: application/json' \
+    -d '{ "name": "Bertha Boxer", "company": "Farmers Coop. of Florida" }'<br>Lead Jane Doe don't exist in the Salesforce Playground Org. Call the Lead endpoint for Jane Doe, the mule flow will create a new lead and log the same.<br>curl -X POST https://9nfq3pzqz6.execute-api.us-east-2.amazonaws.com/test/lead \
+    -H 'content-type: application/json' \
+    -d '{ "name": "Jane Doe", "company": "Jane Doe Company" }'</code></pre>
+                        <pre><code>Lets review with video, checkout lambda, checkout sqs with no messages, checout the API in the gateway, check for lead Bertha Johnson in salesforce org, call the endpoint with the message for Berth Johnson, check mule log that lead already exists, check again for Jane Doe in salesforce org, call the endpoint with the message for Jane Doe, check mule log that lead doesn't exist message, check again for Jane Doe in salesforce org and see the new lead created.
+                          <a target= "_blank" href="https://youtu.be/g0Na86oE3kI" class="nav-link">demo</a>
+                        </code></pre>
                       </li>
                       <li>Step 4: Clean-up
-                        <pre><code>aws lambda delete-function --function-name GetStartedLambdaNonProxySQSIntegration<br>aws cloudformation delete-stack --stack-name lambda-apigateway-role<br>aws apigateway delete-rest-api \
+                        <pre><code>aws lambda delete-function --function-name GetStartedLambdaNonProxySQSIntegration<br>aws cloudformation delete-stack --stack-name story-create-lead-in-salesforce<br>aws apigateway delete-rest-api \
     --rest-api-id "o4jad41t0b"</code></pre>
                       </li>
                     </ul>
