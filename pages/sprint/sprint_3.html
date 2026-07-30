@@ -78,7 +78,15 @@
                                 <li>Step 3: Create a Mule flow with SQS listener and Salesforce connector.</li>
                             </ul>
                         </p></li>
-                        <li> <p><strong>Story-6_Event Logs in RDS Table: </strong>When each datapipeline object like Leads or Accounts completes, the success event record with duration should be inserted into the RDS table. Use Asynchronous scope for this insert flow.
+                        <li> <p><strong>Story-6_Create a pipeline in Databricks that creates a Lead Delta Table.</strong>
+                            <ul>
+                                <li>Step 1: Story-3_Reliable Data Pipeline from SFDC to S3 for Accounts and Leads has cretaed a full load lead file with 22 lead records.</li>
+                                <li>Step 2: Story-5_Lead Endpoint can be used to create 5 more leads. Each lead message can create a delta file.</li>
+                                <li>Step 3: Create a lead folder in the myfiles volume that is configured with the Free Edition. Create full and delta subfolders in lead folder. Upload the brz-lead_full.csv with 22 records in lead/full folder. Upload rz-lead_delta_1.csv, rz-lead_delta_2.csv, rz-lead_delta_3.csv, rz-lead_delta_4.csv, rz-lead_delta_5.csv with each lead record in the lead/delta folder</li>
+                                <li>Step 4: Create a notebook in Databricks that creates a Lead Delta Table with the brz-lead_full.csv and then uses the COPY INTO to create lead records from delta files.</li>
+                            </ul>
+                        </p></li>
+                        <li> <p><strong>Story-7_Event Logs in RDS Table: </strong>When each datapipeline object like Leads or Accounts completes, the success event record with duration should be inserted into the RDS table. Use Asynchronous scope for this insert flow.
                             <ul>
                                 <li>In June sprint, we have created a reliable pipeline from SFDC to S3.</li>
                                 <li>Provision the RDS instance, create the datapipeline_event_log table.</li>

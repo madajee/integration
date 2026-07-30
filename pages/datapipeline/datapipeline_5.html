@@ -143,7 +143,65 @@ export const handler = async(event) => {
                       </li>
                     </ul>
                 </p>
-                    
+                 <p><strong>Story-6_Create a pipeline in Databricks that creates a Lead Delta Table.</strong>
+                    <ul>
+                      <li><p>Setup: Upload the brz-lead_full.csv file to the Databricks file system. Upload the delta files to the corresponding subfolder. </p>
+                         <p><img ng-src="images/story-6_lead_full_and_delta_files.png" alt="story-6_lead_full_and_delta_files" width="600" height="600"></p>
+                         <p><img ng-src="images/story-6_lead_full_and_delta_files_data.png" alt="story-6_lead_full_and_delta_files_data" width="600" height="600"></p>
+                      </li>
+                      <li>
+                        <p>Lead Pipeline in Databricks</p>
+                        <pre><code>
+%sql
+USE CATALOG dbacademy;
+USE SCHEMA get_started_de;
+SELECT current_catalog(), current_schema();<br>
+%sql
+DROP TABLE IF EXISTS Lead;<br>
+%sql
+SHOW TABLES;<br>
+%sql
+SHOW VOLUMES;<br>
+%sql
+LIST '/Volumes/dbacademy/get_started_de/myfiles/lead';<br>
+%sql
+SELECT * FROM read_files('/Volumes/dbacademy/get_started_de/myfiles/lead/full/brz-lead_full.csv');<br>
+%sql
+SELECT * FROM read_files('/Volumes/dbacademy/get_started_de/myfiles/lead/delta');<br>
+%sql
+CREATE TABLE IF NOT EXISTS lead
+AS SELECT * FROM read_files('/Volumes/dbacademy/get_started_de/myfiles/lead/full/brz-lead_full.csv');<br>
+%sql
+DESCRIBE HISTORY lead;<br>Version 0 is created with 22 records from the full load file.<br>
+%sql
+SELECT * FROM lead;<br>
+result = spark.sql(f"""
+    COPY INTO lead
+    FROM '/Volumes/dbacademy/get_started_de/myfiles/lead/delta'
+    FILEFORMAT = CSV
+    FORMAT_OPTIONS ('header' = 'true', 'inferSchema' = 'true')
+""")
+result.display()<br>
+%sql
+SELECT * FROM lead;<br>With 5 more lead records from the delta files, the lead table should have 27 records now.<br>
+%sql
+DESCRIBE HISTORY lead;<br>Version 0 is created with 27 records from the full load and delta files. The history shows 2 recoords, one from CREATE TABLE AS SELECT operation and one from COPY INTO operation.<br>
+result = spark.sql(f"""
+    COPY INTO lead
+    FROM '/Volumes/dbacademy/get_started_de/myfiles/lead/delta'
+    FILEFORMAT = CSV
+    FORMAT_OPTIONS ('header' = 'true', 'inferSchema' = 'true')
+""")
+result.display()<br> As no new delta files are added, the COPY INTO operation shouldn't affect any rows and no new versions will be created.<br>
+%sql
+DESCRIBE HISTORY lead;<br>The history shows same 2 recoords.
+                        </code></pre>
+                        <pre><code>Lets review with video.
+                          <a target= "_blank" href="https://youtu.be/0n-eI-BU28E" class="nav-link">demo</a>
+                        </code></pre>
+                      </li>
+                    </ul>
+                </p>
             </div>
              <div class="grooveborder">
                 <h4>KNOW-HOW (July-2026)</h4>
