@@ -72,6 +72,7 @@
                  <a href="#!/datapipeline/5" class="nav-link">TASK AND STORIES VIEW</a>
                      <ul>
                         <li><strong>Card-17: </strong><a href="https://docs.aws.amazon.com/apigateway/latest/developerguide/getting-started-with-private-integration.html" target="_blank">Tutorial: Create a REST API with a private integration</a></li>
+                        <li><strong>Card-17: </strong><a href="https://docs.aws.amazon.com/batch/latest/userguide/getting-started-with-fargate-using-the-aws-cli.html" target="_blank">Getting started with AWS Batch and Fargate using the AWS CLI</a></li>
                     </ul>
                     <ul>
                         <li> <p><strong>Story-5_Create an API Endpoint to create lead in salesfoorce playground org</strong>
@@ -79,6 +80,7 @@
                                 <li>Step 1: Create the queue and Lambda that publishes the message to the queue. Either follow Task-15 or use the <a href="https://github.com/aws-samples/serverless-patterns/blob/main/lambda-sqs/src/app.js" target= "_blank" class="nav-link">serverless template</a> </li>
                                 <li>Step 2: Create a non-proxy api endpoint with the lambda integration. Follow Task-15 or reference the <a href="https://docs.aws.amazon.com/apigateway/latest/developerguide/getting-started-lambda-non-proxy-integration.html" target="_blank" class="nav-link">AWS Gateway documentation</a></li>
                                 <li>Step 3: Create a Mule flow with SQS listener and Salesforce connector.</li>
+                                <li><a target= "_blank" href="https://youtu.be/g0Na86oE3kI" class="nav-link">demo</a></li>
                             </ul>
                         </p></li>
                         <li> <p><strong>Story-6_Create a pipeline in Databricks that creates a Lead Delta Table.</strong>
@@ -87,6 +89,7 @@
                                 <li>Step 2: Story-5_Lead Endpoint can be used to create 5 more leads. Each lead message can create a delta file.</li>
                                 <li>Step 3: Create a lead folder in the myfiles volume that is configured with the Free Edition. Create full and delta subfolders in lead folder. Upload the brz-lead_full.csv with 22 records in lead/full folder. Upload rz-lead_delta_1.csv, rz-lead_delta_2.csv, rz-lead_delta_3.csv, rz-lead_delta_4.csv, rz-lead_delta_5.csv with each lead record in the lead/delta folder</li>
                                 <li>Step 4: Create a notebook in Databricks that creates a Lead Delta Table with the brz-lead_full.csv and then uses the COPY INTO to create lead records from delta files.</li>
+                                <li><a target= "_blank" href="https://youtu.be/g0Na86oE3kI" class="nav-link">demo</a></li>
                             </ul>
                         </p></li>
                         <li> <p><strong>Story-7_Event Logs in RDS Table: </strong>When each datapipeline object like Leads or Accounts completes, the success event record with duration should be inserted into the RDS table. Use Asynchronous scope for this insert flow.

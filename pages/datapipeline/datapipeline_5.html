@@ -427,6 +427,184 @@ Outputs:
           - DNSName<br>aws cloudformation create-stack --stack-name rest-api-private-integration-tutorial --template-body file://rest-api-private-integration-template.yaml --capabilities CAPABILITY_IAM<br>Follow the tutorial to create the VPC Link and API in API Gateway. Deploy and Test.<br>Cleanup<br>aws cloudformation delete-stack --stack-name rest-api-private-integration-tutorial
                   </code> </pre>
                 </p> 
+                <p><strong>Task-17: </strong><a href="https://docs.aws.amazon.com/batch/latest/userguide/getting-started-with-fargate-using-the-aws-cli.html" target="_blank">Getting started with AWS Batch and Fargate using the AWS CLI</a>
+                  <pre><code>mkdir test-aws-batch-and-fargate<br>cd test-aws-batch-and-fargate<br>touch aws-batch-and-fargate-template.yaml<br>AWSTemplateFormatVersion: '2010-09-09'
+Description: Updated VPC template matching your sequential AWS CLI provisioning steps.
+
+Parameters:
+  SSHLocation:
+    Type: String
+    Description: The CIDR block allowed to SSH into the environment (e.g., 203.0.113.50/32).
+    Default: 0.0.0.0/0
+    AllowedPattern: '(\d{1,3}\.){3}\d{1,3}/\d{1,2}'
+    ConstraintDescription: Must be a valid IP CIDR range of the form x.x.x.x/x.
+
+Resources:
+  # aws ec2 create-vpc --cidr-block 10.0.0.0/16
+  # aws ec2 modify-vpc-attribute --enable-dns-support / --enable-dns-hostnames
+  MyVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
+      Tags:
+        - Key: Name
+          Value: MyVPC
+
+  # aws ec2 create-subnet --cidr-block 10.0.0.0/24 --availability-zone us-east-2a
+  # aws ec2 modify-subnet-attribute --map-public-ip-on-launch
+  PublicSubnetAZ1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref MyVPC
+      CidrBlock: 10.0.0.0/24
+      AvailabilityZone: us-east-2a
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: Public-Subnet-AZ1
+
+  # aws ec2 create-internet-gateway
+  MyIGW:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: MyIGW
+
+  # aws ec2 attach-internet-gateway
+  VGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref MyVPC
+      InternetGatewayId: !Ref MyIGW
+
+  # aws ec2 create-route-table
+  PublicRT:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref MyVPC
+      Tags:
+        - Key: Name
+          Value: Public-RT
+
+  # aws ec2 create-route --destination-cidr-block 0.0.0.0/0
+  PublicRoute:
+    Type: AWS::EC2::Route
+    DependsOn: VGatewayAttachment
+    Properties:
+      RouteTableId: !Ref PublicRT
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref MyIGW
+
+  # aws ec2 associate-route-table
+  SubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnetAZ1
+      RouteTableId: !Ref PublicRT
+
+  # aws ec2 create-security-group --group-name WebServerSG
+  # aws ec2 authorize-security-group-ingress (Ports 80, 443, 22)
+  WebServerSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group for web servers
+      VpcId: !Ref MyVPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: !Ref SSHLocation
+      Tags:
+        - Key: Name
+          Value: WebServerSG
+
+Outputs:
+  VPCId:
+    Description: The ID of the created VPC
+    Value: !Ref MyVPC
+  SubnetId:
+    Description: The ID of the public subnet in us-east-2a
+    Value: !Ref PublicSubnetAZ1
+  SecurityGroupId:
+    Description: The ID of the Web Server Security Group
+    Value: !Ref WebServerSG<br>aws cloudformation create-stack --stack-name aws-batch-and-fargate --template-body file://aws-batch-and-fargate-template.yaml --parameters ParameterKey=SSHLocation,ParameterValue=xx.xx.xx.xx/32<br>touch batch-execution-role-trust-policy.json<br>{
+  "Version":"2012-10-17",
+  "Statement": [
+    {
+      "Sid": "",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "ecs-tasks.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+  }<br>aws iam create-role \
+    --role-name BatchEcsTaskExecutionRoleTutorial \
+    --assume-role-policy-document file://batch-execution-role-trust-policy.json<br>aws iam attach-role-policy \
+    --role-name BatchEcsTaskExecutionRoleTutorial \
+    --policy-arn arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy<br>update the subnet and security before crearing compute-environment<br>aws batch create-compute-environment \
+    --compute-environment-name my-fargate-compute-env \
+    --type MANAGED \
+    --state ENABLED \
+    --compute-resources type=FARGATE,maxvCpus=128,subnets=subnet-a123456b,securityGroupIds=sg-a12b3456<br>aws batch describe-compute-environments \
+    --compute-environments my-fargate-compute-env \
+    --query 'computeEnvironments[0].status'<br>aws batch create-job-queue \
+    --job-queue-name my-fargate-job-queue \
+    --state ENABLED \
+    --priority 900 \
+    --compute-environment-order order=1,computeEnvironment=my-fargate-compute-env<br>aws batch describe-job-queues \
+    --job-queues my-fargate-job-queue \
+    --query 'jobQueues[0].state' "ENABLED"<br>aws batch register-job-definition \
+    --job-definition-name my-fargate-job-def \
+    --type container \
+    --platform-capabilities FARGATE \
+    --container-properties '{
+        "image": "busybox",
+        "resourceRequirements": [
+            {"type": "VCPU", "value": "0.25"},
+            {"type": "MEMORY", "value": "512"}
+        ],
+        "command": ["echo", "hello world"],
+        "networkConfiguration": {
+            "assignPublicIp": "ENABLED"
+        },
+        "executionRoleArn": "arn:aws:iam::859196001802:role/BatchEcsTaskExecutionRoleTutorial"
+    }'<br>aws batch submit-job \
+    --job-name my-hello-world-job \
+    --job-queue my-fargate-job-queue \
+    --job-definition my-fargate-job-def<br>aws batch describe-jobs --jobs 1509xmpl-4224-4da6-9ba9-1d1acc96431a<br>aws batch describe-jobs --jobs 1509xmpl-4224-4da6-9ba9-1d1acc96431a \
+    --query 'jobs[0].attempts[0].containers[0].logStreamName' \
+    --output text<br>aws logs get-log-events \
+    --log-group-name /aws/batch/job \
+    --log-stream-name my-fargate-job-def/default/1509xmpl-4224-4da6-9ba9-1d1acc96431a \
+    --query 'events[*].message' \
+    --output text<br>Cleanup<br>aws batch update-job-queue \
+    --job-queue my-fargate-job-queue \
+    --state DISABLED<br>aws batch delete-job-queue \
+    --job-queue my-fargate-job-queue<br>aws batch update-compute-environment \
+    --compute-environment my-fargate-compute-env \
+    --state DISABLED<br>aws batch delete-compute-environment \
+    --compute-environment my-fargate-compute-env<br>aws iam detach-role-policy \
+    --role-name BatchEcsTaskExecutionRoleTutorial \
+    --policy-arn arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy<br>aws iam delete-role \
+    --role-name BatchEcsTaskExecutionRoleTutorial<br>rm batch-execution-role-trust-policy.json<br>aws cloudformation delete-stack --stack-name aws-batch-and-fargate
+                  </code></pre>
+                   <pre><code>Lets review with video. Already created the VPC and Subnet with Cloudformation, role, compute environment, job queue. Let's register the job-definition, check logs and peform cleanup.<br>
+                      <a target= "_blank" href="https://youtu.be/LmyO8H1ZtN4" class="nav-link">demo</a>
+                    </code></pre>
+                </p>
                 <p><strong>Story-5_Create an API Endpoint to create lead in salesfoorce playground org</strong>
                     <ul>
                       <li>Step 1: Create the queue and Lambda that publishes the message to the queue
