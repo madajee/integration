@@ -605,6 +605,18 @@ Outputs:
                       <a target= "_blank" href="https://youtu.be/LmyO8H1ZtN4" class="nav-link">demo</a>
                     </code></pre>
                 </p>
+                <p><strong>Task-18: </strong><a href="https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-gs.html" target="_blank">Getting started with Amazon EMR</a>
+                  <pre><code>mkdir test-emr-cluster-setup<br>cd test-emr-cluster-setup<br>Download the health_violations.py and food_establishment_data.csv<br>aws s3 mb s3://aws-emr-gs-test-1<br>aws s3 cp health_violations.py s3://aws-emr-gs-test-1/<br>aws s3 cp food_establishment_data.csv s3://aws-emr-gs-test-1/<br>aws ec2 create-key-pair --key-name MyKeyPair --query 'KeyMaterial' --output text > MyKeyPair.pem<br>aws emr create-cluster \
+--name "aws-emr-gs-test-1" \
+--release-label emr-5.36.2 \
+--applications Name=Spark \
+--ec2-attributes KeyName=MyKeyPair \
+--instance-type m5.xlarge \
+--instance-count 3 \
+--use-default-roles<br>aws emr describe-cluster --cluster-id j-3BQHXGFHWDKKG<br>Added the Step from console passing these arguments --data_source s3://aws-emr-gs-test-1/food_establishment_data.csv --output_uri s3://aws-emr-gs-test-1/MyOutputFolder to run the spark job<br>Clean Up<<br>aws emr terminate-clusters --cluster-ids j-3BQHXGFHWDKKG<br>aws s3 rm s3://aws-emr-gs-test-1 --recursive<br>aws s3 rb s3://aws-emr-gs-test-1<br>aws ec2 delete-key-pair --key-name MyKeyPair
+                  </code></pre>
+                   <img ng-src="images/emr-cluster-setup.png" alt="emr-cluster-setup" width="1000 height="200">
+                </p>
                 <p><strong>Story-5_Create an API Endpoint to create lead in salesfoorce playground org</strong>
                     <ul>
                       <li>Step 1: Create the queue and Lambda that publishes the message to the queue
