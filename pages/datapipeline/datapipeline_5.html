@@ -12,7 +12,7 @@
             </div>
             <div class="grooveborder">
                 <h4>STORIES (August-2026)</h4>
-                <p><strong>Task-16: </strong><a href="https://docs.aws.amazon.com/apigateway/latest/developerguide/getting-started-with-private-integration.html" target="_blank">Tutorial: Create a REST API with a private integration</a>
+                <p><strong>Task-16 (Card-17-Sprint_August_2026): </strong><a href="https://docs.aws.amazon.com/apigateway/latest/developerguide/getting-started-with-private-integration.html" target="_blank">Tutorial: Create a REST API with a private integration</a>
                   <pre><code>mkdir rest-api-private-integration<br>rest-api-private-integration<br>touch rest-api-private-integration-template.yaml<br>Resources:
   RestApiTutorialVPCD20D58E8:
     Type: 'AWS::EC2::VPC'
@@ -427,7 +427,7 @@ Outputs:
           - DNSName<br>aws cloudformation create-stack --stack-name rest-api-private-integration-tutorial --template-body file://rest-api-private-integration-template.yaml --capabilities CAPABILITY_IAM<br>Follow the tutorial to create the VPC Link and API in API Gateway. Deploy and Test.<br>Cleanup<br>aws cloudformation delete-stack --stack-name rest-api-private-integration-tutorial
                   </code> </pre>
                 </p> 
-                <p><strong>Task-17: </strong><a href="https://docs.aws.amazon.com/batch/latest/userguide/getting-started-with-fargate-using-the-aws-cli.html" target="_blank">Getting started with AWS Batch and Fargate using the AWS CLI</a>
+                <p><strong>Task-17 (Card-18-Sprint_August_2026): </strong><a href="https://docs.aws.amazon.com/batch/latest/userguide/getting-started-with-fargate-using-the-aws-cli.html" target="_blank">Getting started with AWS Batch and Fargate using the AWS CLI</a>
                   <pre><code>mkdir test-aws-batch-and-fargate<br>cd test-aws-batch-and-fargate<br>touch aws-batch-and-fargate-template.yaml<br>AWSTemplateFormatVersion: '2010-09-09'
 Description: Updated VPC template matching your sequential AWS CLI provisioning steps.
 
@@ -605,7 +605,7 @@ Outputs:
                       <a target= "_blank" href="https://youtu.be/LmyO8H1ZtN4" class="nav-link">demo</a>
                     </code></pre>
                 </p>
-                <p><strong>Task-18: </strong><a href="https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-gs.html" target="_blank">Getting started with Amazon EMR</a>
+                <p><strong>Task-18 (Card-19-Sprint_August_2026): </strong><a href="https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-gs.html" target="_blank">Getting started with Amazon EMR</a>
                   <pre><code>mkdir test-emr-cluster-setup<br>cd test-emr-cluster-setup<br>Download the health_violations.py and food_establishment_data.csv<br>aws s3 mb s3://aws-emr-gs-test-1<br>aws s3 cp health_violations.py s3://aws-emr-gs-test-1/<br>aws s3 cp food_establishment_data.csv s3://aws-emr-gs-test-1/<br>aws ec2 create-key-pair --key-name MyKeyPair --query 'KeyMaterial' --output text > MyKeyPair.pem<br>aws emr create-cluster \
 --name "aws-emr-gs-test-1" \
 --release-label emr-5.36.2 \
@@ -807,6 +807,244 @@ DESCRIBE HISTORY lead;<br>The history shows same 2 recoords.
                       </li>
                     </ul>
                 </p>
+               <p><strong>Task-19 (Card-20-Sprint_August_2026): </strong><a href="https://docs.aws.amazon.com/redshift/latest/gsg/new-user-serverless.html" target="_blank">Get started with Amazon Redshift Serverless data warehouses</a><br>A Namespace is a collection of database objects and users. Namespaces group together all of the resources you use in Redshift Serverless, such as schemas, tables, users, datashares, and snapshots.
+
+A Workgroup is a collection of compute resources. Workgroups house compute resources that Redshift Serverless uses to run computational tasks.
+                  <pre><code>mkdir redshift-serverless<br>cd redshift-serverless<br>Download <a href="https://docs.aws.amazon.com/redshift/latest/gsg/cm-dev-t-load-sample-data.html">tickitdb.zip</a> in the downloads folder and extract the zip file<br>aws s3 mb s3://redshift-serverless-tickitdb-1<br>aws s3 cp /Users/home/Downloads/tickitdb s3://redshift-serverless-tickitdb-1 --recursive<br>touch redshift-serverless-template.yaml<br>AWSTemplateFormatVersion: '2010-09-09'
+Description: "Redshift Serverless with VPC, Subnets, and associated networking components."
+
+Parameters:
+  AdminPassword:
+    Type: String
+    NoEcho: true
+    Default: "MyRedShiftPassword123!"
+    Description: "The master password for the Redshift Serverless admin user."
+
+Resources:
+  # ==========================================
+  # NETWORKING: VPC & SUBNETS
+  # ==========================================
+  RedshiftVpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: redshift-vpc
+
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: redshift-igw
+
+  VpcGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref RedshiftVpc
+      InternetGatewayId: !Ref InternetGateway
+
+  # Public Subnet (Required to host the NAT Gateway for S3/External access)
+  PublicSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref RedshiftVpc
+      CidrBlock: 10.0.4.0/24
+      AvailabilityZone: !Select [0, !GetAZs ""]
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: redshift-public-sn-1
+
+  NatEip:
+    Type: AWS::EC2::EIP
+    DependsOn: VpcGatewayAttachment
+    Properties:
+      Domain: vpc
+
+  NatGateway:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId: !GetAtt NatEip.AllocationId
+      SubnetId: !Ref PublicSubnet1
+      Tags:
+        - Key: Name
+          Value: redshift-nat-gw
+
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref RedshiftVpc
+      Tags:
+        - Key: Name
+          Value: redshift-public-rt
+
+  PublicRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+
+  PublicSubnet1RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet1
+      RouteTableId: !Ref PublicRouteTable
+
+  # Three Private Subnets (Redshift Serverless requires at least 3 AZs)
+  PrivateSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref RedshiftVpc
+      CidrBlock: 10.0.1.0/24
+      AvailabilityZone: !Select [0, !GetAZs ""]
+      Tags:
+        - Key: Name
+          Value: redshift-private-sn-1
+
+  PrivateSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref RedshiftVpc
+      CidrBlock: 10.0.2.0/24
+      AvailabilityZone: !Select [1, !GetAZs ""]
+      Tags:
+        - Key: Name
+          Value: redshift-private-sn-2
+
+  PrivateSubnet3:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref RedshiftVpc
+      CidrBlock: 10.0.3.0/24
+      AvailabilityZone: !Select [2, !GetAZs ""]
+      Tags:
+        - Key: Name
+          Value: redshift-private-sn-3
+
+  PrivateRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref RedshiftVpc
+      Tags:
+        - Key: Name
+          Value: redshift-private-rt
+
+  PrivateRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId: !Ref NatGateway
+
+  PrivateSubnet1Association:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnet1
+      RouteTableId: !Ref PrivateRouteTable
+
+  PrivateSubnet2Association:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnet2
+      RouteTableId: !Ref PrivateRouteTable
+
+  PrivateSubnet3Association:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnet3
+      RouteTableId: !Ref PrivateRouteTable
+
+  # ==========================================
+  # SECURITY & IAM ROLES
+  # ==========================================
+  RedshiftSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Redshift Serverless Security Group
+      VpcId: !Ref RedshiftVpc
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 5439
+          ToPort: 5439
+          CidrIp: 10.0.0.0/16
+
+  RedshiftRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - redshift.amazonaws.com
+                - redshift-serverless.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
+        - arn:aws:iam::aws:policy/AmazonRedshiftAllCommandsFullAccess
+
+  # ==========================================
+  # REDSHIFT SERVERLESS RESOURCES
+  # ==========================================
+  RedshiftServerlessNamespace:
+    Type: AWS::RedshiftServerless::Namespace
+    Properties:
+      NamespaceName: analytics
+      AdminUsername: admin
+      AdminUserPassword: !Ref AdminPassword
+      DbName: analytics_db
+      DefaultIamRoleArn: !GetAtt RedshiftRole.Arn
+      IamRoles:
+        - !GetAtt RedshiftRole.Arn
+
+  RedshiftServerlessWorkgroup:
+    Type: AWS::RedshiftServerless::Workgroup
+    Properties:
+      WorkgroupName: analytics-workgroup
+      NamespaceName: !Ref RedshiftServerlessNamespace
+      BaseCapacity: 32
+      EnhancedVpcRouting: true
+      SubnetIds:
+        - !Ref PrivateSubnet1
+        - !Ref PrivateSubnet2
+        - !Ref PrivateSubnet3
+      SecurityGroupIds:
+        - !Ref RedshiftSecurityGroup
+      PubliclyAccessible: false
+
+Outputs:
+  Endpoint:
+    Value: !Sub "${RedshiftServerlessWorkgroup.Workgroup.Endpoint.Address}"
+  Port:
+    Value: "5439"
+  VpcId:
+    Value: !Ref RedshiftVpc<br>aws cloudformation create-stack --stack-name redshift-serverless --template-body file://redshift-serverless-template.yaml --capabilities CAPABILITY_IAM<br>Load Sample Data with query editor v2<br>Edit Connections to use the master user and password from template<br>SELECT usecreatedb, usesuper FROM pg_user WHERE usename = CURRENT_USER;<br>CREATE DATABASE salesdb;<br>CREATE SCHEMA SALES;<br>select * from pg_namespace;<br>CREATE TABLE SALES.DEMO (PersonID int, City varchar (255));<br>INSERT INTO SALES.DEMO VALUES (781, 'San Jose'), (990, 'Palo Alto');<br>SELECT * from SALES.DEMO;<br>DROP TABLE SALES.DEMO;<br>drop table if exists SALES.demosales;
+   create table SALES.demosales(
+	salesid integer not null,
+	listid integer not null distkey,
+	sellerid integer not null,
+	buyerid integer not null,
+	eventid integer not null,
+	dateid smallint not null sortkey,
+	qtysold smallint not null,
+	pricepaid decimal(8,2),
+	commission decimal(8,2),
+	saletime timestamp);<br>COPY SALES.demosales
+    FROM 's3://redshift-serverless-tickitdb-1/sales_tab.txt' 
+    DELIMITER '\t' 
+    TIMEFORMAT 'MM/DD/YYYY HH:MI:SS' 
+    REGION 'us-east-2'
+    IAM_ROLE default;<br>SELECT eventid, sum(pricepaid) total_price
+             FROM   SALES.demosales
+             GROUP BY eventid<br>DROP DATABASE salesdb;<br>CleanUp<br>aws s3 rm s3://redshift-serverless-tickitdb-1 --recursive<br>aws s3 rb s3://redshift-serverless-tickitdb-1<br>aws cloudformation delete-stack --stack-name redshift-serverless
+                  </code></pre>
+               </p>
             </div>
              <div class="grooveborder">
                 <h4>KNOW-HOW (July-2026)</h4>
