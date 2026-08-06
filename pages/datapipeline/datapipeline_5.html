@@ -617,196 +617,6 @@ Outputs:
                   </code></pre>
                    <img ng-src="images/emr-cluster-setup.png" alt="emr-cluster-setup" width="1000 height="200">
                 </p>
-                <p><strong>Story-5_Create an API Endpoint to create lead in salesfoorce playground org</strong>
-                    <ul>
-                      <li>Step 1: Create the queue and Lambda that publishes the message to the queue
-                        <pre><code>mkdir story-5_create_lead_endpoint_to_salesforce<br>cd story-5_create_lead_endpoint_to_salesforce<br>touch story-5_create_lead_endpoint_to_salesforce.yaml<br>AWSTemplateFormatVersion: '2010-09-09'
-Description: IAM role for Lambda function to read from SQS queue.
-
-Resources:
-  MySimpleQueue:
-    Type: 'AWS::SQS::Queue'
-    Properties:
-      QueueName: 'my-simple-standard-queue'
-  LambdaSQSRole:
-    Type: AWS::IAM::Role
-    Properties:
-      RoleName: GetStartedLambdaBasicExecutionRole
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - lambda.amazonaws.com
-            Action:
-              - sts:AssumeRole
-      ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-        - arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole
-        - arn:aws:iam::aws:policy/AmazonS3FullAccess
-        - arn:aws:iam::aws:policy/AmazonSQSFullAccess
-
-Outputs:
-  QueueUrl:
-    Description: 'The URL of the created SQS queue.'
-    Value: !Ref MySimpleQueue
-  QueueArn:
-    Description: 'The ARN of the created SQS queue.'
-    Value: !GetAtt MySimpleQueue.Arn<br>touch index-sqs.mjs<br>'use strict';
-import { SendMessageCommand, SQSClient } from "@aws-sdk/client-sqs";
-// Initializing the S3 client outside the handler allows connection reuse across invocations.
-const sqsClient = new SQSClient({});
-const SQS_QUEUE_URL = "https://sqs.us-east-2.amazonaws.com/859196001802/my-simple-standard-queue";
-
-
-export const handler = async(event) => {
-  console.log(event);
-  // Parse the input for the name, company property values
-  let name = event.name === null || event.name === undefined || event.name === "" ? 'John Doe' : event.name;
-  let company = event.company === null || event.company === undefined || event.company === "" ? 'John Doe Company' : event.company;
-  let lead_data = name + ', ' + company;
-  
-//   // Log the lead data to CloudWatch
-  console.log('lead data: ', lead_data);
-
-
-//   // Define the content payload you want to write
-    const payload = {
-        message: lead_data,
-        timestamp: new Date().toISOString(),
-    };
-
-    try {
-            const messageBody = {
-                status: "processed",
-                data: payload
-            };
-
-            const command = new SendMessageCommand({
-                QueueUrl: SQS_QUEUE_URL,
-                MessageBody: JSON.stringify(messageBody),
-            });
-
-            const response = await sqsClient.send(command);
-
-            return {
-                statusCode: 200,
-                body: JSON.stringify({
-                    message: "Message sent successfully",
-                    messageId: response.MessageId,
-                }),
-            };
-            
-        } catch (error) {
-            console.error(error);
-            return {
-                statusCode: 500,
-                body: JSON.stringify({ error: "Failed to send message" }),
-            };
-        }
-
-  // Return a greeting to the caller
-  //return {"lead data": lead_data}
-};<br><br>touch lead-input.json<br>{
-    "name": "Jane Doe",
-    "company": "Jane Doe Company"
-}<br>aws cloudformation create-stack --stack-name story-create-lead-in-salesforce --template-body file://story-5_create_lead_endpoint_to_salesforce.yaml --capabilities CAPABILITY_NAMED_IAM<br>zip GetStartedLambdaNonProxySQSIntegration.zip index-sqs.mjs<br>aws lambda create-function --function-name GetStartedLambdaNonProxySQSIntegration \
---zip-file fileb://GetStartedLambdaNonProxySQSIntegration.zip --handler index-sqs.handler --runtime nodejs24.x \
---role arn:aws:iam::859196001802:role/GetStartedLambdaBasicExecutionRole<br>aws lambda invoke --function-name GetStartedLambdaNonProxySQSIntegration --payload file://lead-input.json out --log-type Tail \
---query 'LogResult' --output text --cli-binary-format raw-in-base64-out | base64 --decode</code></pre>
-                      </li>
-                      <li>Step 2: Create a non-proxy api endpoint with the lambda integration
-                        <pre><code>Create an Lead API in AWS API Gateway<br>aws apigateway create-rest-api \
-    --name "LambdaNonProxyLeadAPI" \
-    --description "This is Lead API Endpoint" \
-    --endpoint-configuration types=REGIONAL<br>Create a lead resource using the console.<br>Create the ANY method mapped to the lambda function.<br>Add the template on request: #set($inputRoot = $input.path('$'))
-{
-  "name": "$inputRoot.name",
-  "company": "$inputRoot.company"
-}<br>Deploy the API to test stage<br>Note down the link from deployment and test the api with ths curl<br>curl -X POST https://39iq72vmuc.execute-api.us-east-2.amazonaws.com/test/lead \
-    -H 'content-type: application/json' \
-    -d '{ "name": "Jane Doe", "company": "Jane Doe Company" }'<br>With successful invoation to lambda, the message should be produced in the queue. Use the Poll for messages option after clicking Send/Receive tab in AWS SQS portal.</pre></code>
-                      </li>
-                      <li>Step 3: Create a Mule flow with SQS listener and Salesforce connector.
-                        <p><img ng-src="images/story-5-create-lead-in-salesforce-listener-flow.png" alt="story-5-create-lead-in-salesforce" width="600" height="200"></p>
-                        <p><img ng-src="images/story-5-create-lead-in-salesforce-impl-flow.png" alt="story-5-create-lead-in-salesforce-impl-flow" width="1000" height="200"></p>
-                      </li>
-                      <li>Step 4: Test Acceptance
-                        <pre><code>Test 1: Lead Bertha Johnson already exists in the Salesforce Playground Org. Call the Lead endpoint for Bertha Johnson, the mule flow will check that lead already exists after dequeuing the message and log the same.<br>curl -X POST https://9nfq3pzqz6.execute-api.us-east-2.amazonaws.com/test/lead \
-    -H 'content-type: application/json' \
-    -d '{ "name": "Bertha Boxer", "company": "Farmers Coop. of Florida" }'<br>Lead Jane Doe don't exist in the Salesforce Playground Org. Call the Lead endpoint for Jane Doe, the mule flow will create a new lead and log the same.<br>curl -X POST https://9nfq3pzqz6.execute-api.us-east-2.amazonaws.com/test/lead \
-    -H 'content-type: application/json' \
-    -d '{ "name": "Jane Doe", "company": "Jane Doe Company" }'</code></pre>
-                        <pre><code>Lets review with video, checkout lambda, checkout sqs with no messages, checout the API in the gateway, check for lead Bertha Johnson in salesforce org, call the endpoint with the message for Berth Johnson, check mule log that lead already exists, check again for Jane Doe in salesforce org, call the endpoint with the message for Jane Doe, check mule log that lead doesn't exist message, check again for Jane Doe in salesforce org and see the new lead created.
-                          <a target= "_blank" href="https://youtu.be/g0Na86oE3kI" class="nav-link">demo</a>
-                        </code></pre>
-                      </li>
-                      <li>Step 4: Clean-up
-                        <pre><code>aws lambda delete-function --function-name GetStartedLambdaNonProxySQSIntegration<br>aws cloudformation delete-stack --stack-name story-create-lead-in-salesforce<br>aws apigateway delete-rest-api \
-    --rest-api-id "o4jad41t0b"</code></pre>
-                      </li>
-                    </ul>
-                </p>
-                 <p><strong>Story-6_Create a pipeline in Databricks that creates a Lead Delta Table.</strong>
-                    <ul>
-                      <li><p>Setup: Upload the brz-lead_full.csv file to the Databricks file system. Upload the delta files to the corresponding subfolder. </p>
-                         <p><img ng-src="images/story-6_lead_full_and_delta_files.png" alt="story-6_lead_full_and_delta_files" width="600" height="600"></p>
-                         <p><img ng-src="images/story-6_lead_full_and_delta_files_data.png" alt="story-6_lead_full_and_delta_files_data" width="600" height="600"></p>
-                      </li>
-                      <li>
-                        <p>Lead Pipeline in Databricks</p>
-                        <pre><code>
-%sql
-USE CATALOG dbacademy;
-USE SCHEMA get_started_de;
-SELECT current_catalog(), current_schema();<br>
-%sql
-DROP TABLE IF EXISTS Lead;<br>
-%sql
-SHOW TABLES;<br>
-%sql
-SHOW VOLUMES;<br>
-%sql
-LIST '/Volumes/dbacademy/get_started_de/myfiles/lead';<br>
-%sql
-SELECT * FROM read_files('/Volumes/dbacademy/get_started_de/myfiles/lead/full/brz-lead_full.csv');<br>
-%sql
-SELECT * FROM read_files('/Volumes/dbacademy/get_started_de/myfiles/lead/delta');<br>
-%sql
-CREATE TABLE IF NOT EXISTS lead
-AS SELECT * FROM read_files('/Volumes/dbacademy/get_started_de/myfiles/lead/full/brz-lead_full.csv');<br>
-%sql
-DESCRIBE HISTORY lead;<br>Version 0 is created with 22 records from the full load file.<br>
-%sql
-SELECT * FROM lead;<br>
-result = spark.sql(f"""
-    COPY INTO lead
-    FROM '/Volumes/dbacademy/get_started_de/myfiles/lead/delta'
-    FILEFORMAT = CSV
-    FORMAT_OPTIONS ('header' = 'true', 'inferSchema' = 'true')
-""")
-result.display()<br>
-%sql
-SELECT * FROM lead;<br>With 5 more lead records from the delta files, the lead table should have 27 records now.<br>
-%sql
-DESCRIBE HISTORY lead;<br>Version 0 is created with 27 records from the full load and delta files. The history shows 2 recoords, one from CREATE TABLE AS SELECT operation and one from COPY INTO operation.<br>
-result = spark.sql(f"""
-    COPY INTO lead
-    FROM '/Volumes/dbacademy/get_started_de/myfiles/lead/delta'
-    FILEFORMAT = CSV
-    FORMAT_OPTIONS ('header' = 'true', 'inferSchema' = 'true')
-""")
-result.display()<br> As no new delta files are added, the COPY INTO operation shouldn't affect any rows and no new versions will be created.<br>
-%sql
-DESCRIBE HISTORY lead;<br>The history shows same 2 recoords.
-                        </code></pre>
-                        <pre><code>Lets review with video.
-                          <a target= "_blank" href="https://youtu.be/0n-eI-BU28E" class="nav-link">demo</a>
-                        </code></pre>
-                      </li>
-                    </ul>
-                </p>
                <p><strong>Task-19 (Card-20-Sprint_August_2026): </strong><a href="https://docs.aws.amazon.com/redshift/latest/gsg/new-user-serverless.html" target="_blank">Get started with Amazon Redshift Serverless data warehouses</a><br>A Namespace is a collection of database objects and users. Namespaces group together all of the resources you use in Redshift Serverless, such as schemas, tables, users, datashares, and snapshots.
 
 A Workgroup is a collection of compute resources. Workgroups house compute resources that Redshift Serverless uses to run computational tasks.
@@ -1044,7 +854,200 @@ Outputs:
              FROM   SALES.demosales
              GROUP BY eventid<br>DROP DATABASE salesdb;<br>CleanUp<br>aws s3 rm s3://redshift-serverless-tickitdb-1 --recursive<br>aws s3 rb s3://redshift-serverless-tickitdb-1<br>aws cloudformation delete-stack --stack-name redshift-serverless
                   </code></pre>
+                   <pre><code>Lets review with video.
+                      <a target= "_blank" href="https://youtu.be/_PXVFpESWlo" class="nav-link">demo</a>
+                   </code></pre>
                </p>
+                <p><strong>Story-5_Create an API Endpoint to create lead in salesfoorce playground org</strong>
+                    <ul>
+                      <li>Step 1: Create the queue and Lambda that publishes the message to the queue
+                        <pre><code>mkdir story-5_create_lead_endpoint_to_salesforce<br>cd story-5_create_lead_endpoint_to_salesforce<br>touch story-5_create_lead_endpoint_to_salesforce.yaml<br>AWSTemplateFormatVersion: '2010-09-09'
+Description: IAM role for Lambda function to read from SQS queue.
+
+Resources:
+  MySimpleQueue:
+    Type: 'AWS::SQS::Queue'
+    Properties:
+      QueueName: 'my-simple-standard-queue'
+  LambdaSQSRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: GetStartedLambdaBasicExecutionRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess
+        - arn:aws:iam::aws:policy/AmazonSQSFullAccess
+
+Outputs:
+  QueueUrl:
+    Description: 'The URL of the created SQS queue.'
+    Value: !Ref MySimpleQueue
+  QueueArn:
+    Description: 'The ARN of the created SQS queue.'
+    Value: !GetAtt MySimpleQueue.Arn<br>touch index-sqs.mjs<br>'use strict';
+import { SendMessageCommand, SQSClient } from "@aws-sdk/client-sqs";
+// Initializing the S3 client outside the handler allows connection reuse across invocations.
+const sqsClient = new SQSClient({});
+const SQS_QUEUE_URL = "https://sqs.us-east-2.amazonaws.com/859196001802/my-simple-standard-queue";
+
+
+export const handler = async(event) => {
+  console.log(event);
+  // Parse the input for the name, company property values
+  let name = event.name === null || event.name === undefined || event.name === "" ? 'John Doe' : event.name;
+  let company = event.company === null || event.company === undefined || event.company === "" ? 'John Doe Company' : event.company;
+  let lead_data = name + ', ' + company;
+  
+//   // Log the lead data to CloudWatch
+  console.log('lead data: ', lead_data);
+
+
+//   // Define the content payload you want to write
+    const payload = {
+        message: lead_data,
+        timestamp: new Date().toISOString(),
+    };
+
+    try {
+            const messageBody = {
+                status: "processed",
+                data: payload
+            };
+
+            const command = new SendMessageCommand({
+                QueueUrl: SQS_QUEUE_URL,
+                MessageBody: JSON.stringify(messageBody),
+            });
+
+            const response = await sqsClient.send(command);
+
+            return {
+                statusCode: 200,
+                body: JSON.stringify({
+                    message: "Message sent successfully",
+                    messageId: response.MessageId,
+                }),
+            };
+            
+        } catch (error) {
+            console.error(error);
+            return {
+                statusCode: 500,
+                body: JSON.stringify({ error: "Failed to send message" }),
+            };
+        }
+
+  // Return a greeting to the caller
+  //return {"lead data": lead_data}
+};<br><br>touch lead-input.json<br>{
+    "name": "Jane Doe",
+    "company": "Jane Doe Company"
+}<br>aws cloudformation create-stack --stack-name story-create-lead-in-salesforce --template-body file://story-5_create_lead_endpoint_to_salesforce.yaml --capabilities CAPABILITY_NAMED_IAM<br>zip GetStartedLambdaNonProxySQSIntegration.zip index-sqs.mjs<br>aws lambda create-function --function-name GetStartedLambdaNonProxySQSIntegration \
+--zip-file fileb://GetStartedLambdaNonProxySQSIntegration.zip --handler index-sqs.handler --runtime nodejs24.x \
+--role arn:aws:iam::859196001802:role/GetStartedLambdaBasicExecutionRole<br>aws lambda invoke --function-name GetStartedLambdaNonProxySQSIntegration --payload file://lead-input.json out --log-type Tail \
+--query 'LogResult' --output text --cli-binary-format raw-in-base64-out | base64 --decode</code></pre>
+                      </li>
+                      <li>Step 2: Create a non-proxy api endpoint with the lambda integration
+                        <pre><code>Create an Lead API in AWS API Gateway<br>aws apigateway create-rest-api \
+    --name "LambdaNonProxyLeadAPI" \
+    --description "This is Lead API Endpoint" \
+    --endpoint-configuration types=REGIONAL<br>Create a lead resource using the console.<br>Create the ANY method mapped to the lambda function.<br>Add the template on request: #set($inputRoot = $input.path('$'))
+{
+  "name": "$inputRoot.name",
+  "company": "$inputRoot.company"
+}<br>Deploy the API to test stage<br>Note down the link from deployment and test the api with ths curl<br>curl -X POST https://39iq72vmuc.execute-api.us-east-2.amazonaws.com/test/lead \
+    -H 'content-type: application/json' \
+    -d '{ "name": "Jane Doe", "company": "Jane Doe Company" }'<br>With successful invoation to lambda, the message should be produced in the queue. Use the Poll for messages option after clicking Send/Receive tab in AWS SQS portal.</pre></code>
+                      </li>
+                      <li>Step 3: Create a Mule flow with SQS listener and Salesforce connector.
+                        <p><img ng-src="images/story-5-create-lead-in-salesforce-listener-flow.png" alt="story-5-create-lead-in-salesforce" width="600" height="200"></p>
+                        <p><img ng-src="images/story-5-create-lead-in-salesforce-impl-flow.png" alt="story-5-create-lead-in-salesforce-impl-flow" width="1000" height="200"></p>
+                      </li>
+                      <li>Step 4: Test Acceptance
+                        <pre><code>Test 1: Lead Bertha Johnson already exists in the Salesforce Playground Org. Call the Lead endpoint for Bertha Johnson, the mule flow will check that lead already exists after dequeuing the message and log the same.<br>curl -X POST https://9nfq3pzqz6.execute-api.us-east-2.amazonaws.com/test/lead \
+    -H 'content-type: application/json' \
+    -d '{ "name": "Bertha Boxer", "company": "Farmers Coop. of Florida" }'<br>Lead Jane Doe don't exist in the Salesforce Playground Org. Call the Lead endpoint for Jane Doe, the mule flow will create a new lead and log the same.<br>curl -X POST https://9nfq3pzqz6.execute-api.us-east-2.amazonaws.com/test/lead \
+    -H 'content-type: application/json' \
+    -d '{ "name": "Jane Doe", "company": "Jane Doe Company" }'</code></pre>
+                        <pre><code>Lets review with video, checkout lambda, checkout sqs with no messages, checout the API in the gateway, check for lead Bertha Johnson in salesforce org, call the endpoint with the message for Berth Johnson, check mule log that lead already exists, check again for Jane Doe in salesforce org, call the endpoint with the message for Jane Doe, check mule log that lead doesn't exist message, check again for Jane Doe in salesforce org and see the new lead created.
+                          <a target= "_blank" href="https://youtu.be/g0Na86oE3kI" class="nav-link">demo</a>
+                        </code></pre>
+                      </li>
+                      <li>Step 4: Clean-up
+                        <pre><code>aws lambda delete-function --function-name GetStartedLambdaNonProxySQSIntegration<br>aws cloudformation delete-stack --stack-name story-create-lead-in-salesforce<br>aws apigateway delete-rest-api \
+    --rest-api-id "o4jad41t0b"</code></pre>
+                      </li>
+                    </ul>
+                </p>
+                 <p><strong>Story-6_Create a pipeline in Databricks that creates a Lead Delta Table.</strong>
+                    <ul>
+                      <li><p>Setup: Upload the brz-lead_full.csv file to the Databricks file system. Upload the delta files to the corresponding subfolder. </p>
+                         <p><img ng-src="images/story-6_lead_full_and_delta_files.png" alt="story-6_lead_full_and_delta_files" width="600" height="600"></p>
+                         <p><img ng-src="images/story-6_lead_full_and_delta_files_data.png" alt="story-6_lead_full_and_delta_files_data" width="600" height="600"></p>
+                      </li>
+                      <li>
+                        <p>Lead Pipeline in Databricks</p>
+                        <pre><code>
+%sql
+USE CATALOG dbacademy;
+USE SCHEMA get_started_de;
+SELECT current_catalog(), current_schema();<br>
+%sql
+DROP TABLE IF EXISTS Lead;<br>
+%sql
+SHOW TABLES;<br>
+%sql
+SHOW VOLUMES;<br>
+%sql
+LIST '/Volumes/dbacademy/get_started_de/myfiles/lead';<br>
+%sql
+SELECT * FROM read_files('/Volumes/dbacademy/get_started_de/myfiles/lead/full/brz-lead_full.csv');<br>
+%sql
+SELECT * FROM read_files('/Volumes/dbacademy/get_started_de/myfiles/lead/delta');<br>
+%sql
+CREATE TABLE IF NOT EXISTS lead
+AS SELECT * FROM read_files('/Volumes/dbacademy/get_started_de/myfiles/lead/full/brz-lead_full.csv');<br>
+%sql
+DESCRIBE HISTORY lead;<br>Version 0 is created with 22 records from the full load file.<br>
+%sql
+SELECT * FROM lead;<br>
+result = spark.sql(f"""
+    COPY INTO lead
+    FROM '/Volumes/dbacademy/get_started_de/myfiles/lead/delta'
+    FILEFORMAT = CSV
+    FORMAT_OPTIONS ('header' = 'true', 'inferSchema' = 'true')
+""")
+result.display()<br>
+%sql
+SELECT * FROM lead;<br>With 5 more lead records from the delta files, the lead table should have 27 records now.<br>
+%sql
+DESCRIBE HISTORY lead;<br>Version 0 is created with 27 records from the full load and delta files. The history shows 2 recoords, one from CREATE TABLE AS SELECT operation and one from COPY INTO operation.<br>
+result = spark.sql(f"""
+    COPY INTO lead
+    FROM '/Volumes/dbacademy/get_started_de/myfiles/lead/delta'
+    FILEFORMAT = CSV
+    FORMAT_OPTIONS ('header' = 'true', 'inferSchema' = 'true')
+""")
+result.display()<br> As no new delta files are added, the COPY INTO operation shouldn't affect any rows and no new versions will be created.<br>
+%sql
+DESCRIBE HISTORY lead;<br>The history shows same 2 recoords.
+                        </code></pre>
+                        <pre><code>Lets review with video.
+                          <a target= "_blank" href="https://youtu.be/0n-eI-BU28E" class="nav-link">demo</a>
+                        </code></pre>
+                      </li>
+                    </ul>
+                </p>
             </div>
              <div class="grooveborder">
                 <h4>KNOW-HOW (July-2026)</h4>
