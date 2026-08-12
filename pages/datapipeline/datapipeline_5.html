@@ -1928,8 +1928,181 @@ aws cloudformation create-stack --stack-name tutorial-sagemaker-domain --templat
 from sagemaker.core.helper.session_helper import Session
 
 session = Session()</code></pre></p>
+ <p><a href="https://www.youtube.com/playlist?list=PLhr1KZpdzukfO6GSXNpOHp5U3rUF5a079" target="_blank">Learn more with AWS Playlist: </a>Amazon SageMaker Unified Studio Tutorials</p>
                   <pre><code>
 Cleanup<br>aws cloudformation delete-stack --stack-name tutorial-sagemaker-domain
+                  </code></pre>
+                </p>
+                <p><strong>Task-21 (Card-22-Sprint_August_2026): </strong>Create a Lambda function that reads a Lead csv file from S3 buckt and creates a Avro file. Reference the Task-10 created in June Sprint.
+                  <pre><code>
+mkdir my_function<br>cd my_function<br>touch lambda-s3-role.yaml<br>AWSTemplateFormatVersion: '2010-09-09'
+Description: IAM role for Lambda function to read from and write to S3.
+
+Resources:
+  LambdaSQSRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: lambda-s3-role
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole<br>Crete a role for lambda.<br>aws cloudformation create-stack --stack-name lambda-s3-role --template-body file://lambda-s3-role.yaml --capabilities CAPABILITY_NAMED_IAM<br>Install the dependencies in the package directory.<br>pip install --target ./package boto3 fastavro<br>cd package<br>zip -r ../my_deployment_package.zip .<br>Create the lambda_function.py.<br>cd ..<br>touch lambda_function.py<br>import csv
+import io
+import boto3
+import fastavro
+import json
+
+s3_client = boto3.client('s3')
+
+# Define Avro schema
+schema = {
+    'doc': 'Lead Records',
+    'name': 'LeadRecord',
+    'type': 'record',
+    'fields': [
+        {'name': 'Status', 'type': 'string'},
+        {'name': 'Company', 'type': 'string'},
+        {'name': 'State', 'type': 'string'},
+        {'name': 'Title', 'type': 'string'},
+        {'name': 'Id', 'type': 'string'},
+        {'name': 'type', 'type': 'string'},
+        {'name': 'Name', 'type': 'string'}
+    ]
+}
+parsed_schema = fastavro.parse_schema(schema)
+
+def lambda_handler(event, context):
+     # Hardcoded bucket and file parameters
+    bucket_name = "s3bucketmuleathenauser-1"
+    source_key = "input_csv/brz-lead_1.csv"
+    destination_key = "output_json/brz-lead_1.avro"
+
+    try:
+        # 2. Download the CSV file from S3
+        csv_obj = s3_client.get_object(Bucket=bucket_name, Key=source_key)
+        csv_content = csv_obj['Body'].read().decode('utf-8')
+        
+        # 3. Read and parse CSV data
+        csv_reader = csv.DictReader(io.StringIO(csv_content))
+        
+        records = []
+        for row in csv_reader:
+            records.append({
+                "Status": row.get("Status", "").strip(),
+                "Company": row.get("Company", "").strip(),
+                "State": row.get("State", "").strip(),
+                "Title": row.get("Title", "").strip(),
+                "Id": row.get("Id", "").strip(),
+                "type": row.get("type", "").strip(),
+                "Name": row.get("Name", "").strip(),
+            })
+
+
+        if not records:
+            return {
+                'statusCode': 200,
+                'body': json.dumps('CSV file was empty. No Avro file created.')
+            }
+
+        # 4. Serialize records into Avro format in an in-memory byte buffer
+        avro_buffer = io.BytesIO()
+        fastavro.writer(avro_buffer, parsed_schema, records)
+        avro_buffer.seek(0)
+        
+        # 5. Upload the binary Avro file back to S3
+        s3_client.put_object(
+            Bucket=bucket_name,
+            Key=destination_key,
+            Body=avro_buffer.getvalue(),
+            ContentType='application/octet-stream'
+        )
+        
+        return {
+            'statusCode': 200,
+            'body': json.dumps(f'Successfully converted {source_key} to {destination_key} in bucket {bucket_name}')
+        }
+        
+    except Exception as e:
+        print(f"Error processing file: {str(e)}")
+        return {
+            'statusCode': 500,
+            'body': json.dumps(f'Error processing file: {str(e)}')
+        }<br>zip my_deployment_package.zip lambda_function.py<br>Create a Lambda function with the role that was created earlier.<br>aws lambda create-function --function-name myFunction \
+--runtime python3.14 --handler lambda_function.lambda_handler \
+--role arn:aws:iam::859196001802:role/lambda-s3-role \
+--zip-file fileb://my_deployment_package.zip<br>Test the lambda with the invoke lambda command<br>aws lambda invoke --function-name myFunction out --log-type Tail \
+--query 'LogResult' --output text --cli-binary-format raw-in-base64-out | base64 --decode<br>Cleanup<br>aws lambda delete-function --function-name myFunction<br>aws cloudformation delete-stack --stack-name lambda-s3-role<br>Delete the Log Group.
+                  </code></pre>
+                  <pre><code>
+                    Version of Lambda Function that reads a Lead csv file from S3 buckt and creates a Json file.<br>import io
+import csv
+import json
+import boto3
+
+s3_client = boto3.client('s3')
+
+def lambda_handler(event, context):
+    # Hardcoded bucket and file parameters
+    bucket_name = "s3bucketmuleathenauser-1"
+    source_key = "input_csv/brz-lead_1.csv"
+    destination_key = "output_json/brz-lead_1.json"
+
+    try:
+        # 1. Download the specific CSV file from S3
+        csv_obj = s3_client.get_object(Bucket=bucket_name, Key=source_key)
+        csv_content = csv_obj['Body'].read().decode('utf-8')
+        
+        # 2. Read and parse CSV data into a list of dictionaries
+        csv_reader = csv.DictReader(io.StringIO(csv_content))
+        
+        records = []
+        for row in csv_reader:
+            records.append({
+                "Status": row.get("Status", "").strip(),
+                "Company": row.get("Company", "").strip(),
+                "State": row.get("State", "").strip(),
+                "Title": row.get("Title", "").strip(),
+                "Id": row.get("Id", "").strip(),
+                "type": row.get("type", "").strip(),
+                "Name": row.get("Name", "").strip(),
+            })
+            
+        if not records:
+            return {
+                'statusCode': 200,
+                'body': json.dumps('CSV file was empty. No JSON file created.')
+            }
+
+        # 3. Serialize records into formatted JSON string
+        json_data = json.dumps(records, indent=4)
+        
+        # 4. Upload the JSON file back to the specified destination
+        s3_client.put_object(
+            Bucket=bucket_name,
+            Key=destination_key,
+            Body=json_data,
+            ContentType='application/json'
+        )
+        
+        return {
+            'statusCode': 200,
+            'body': json.dumps(f'Successfully converted {source_key} to {destination_key} in bucket {bucket_name}')
+        }
+        
+    except Exception as e:
+        print(f"Error processing file: {str(e)}")
+        return {
+            'statusCode': 500,
+            'body': json.dumps(f'Error processing file: {str(e)}')
+        }
                   </code></pre>
                 </p>
                  <p><strong>Story-6_Create a pipeline in Databricks that creates a Lead Delta Table.</strong>
