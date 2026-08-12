@@ -2105,6 +2105,48 @@ def lambda_handler(event, context):
         }
                   </code></pre>
                 </p>
+      <p><strong>Task-22 (Card-23-Sprint_August_2026): </strong>Card-22 has generated the Lead Avro file. Next step is to create a lead_db database  and lead table in Athena to view the data in the Avro file.
+                    <pre><code>mkdir lead-avro-table-in-athena<br>cd lead-avro-table-in-athena<br>touch create-lead-table-query.txt<br>CREATE EXTERNAL TABLE IF NOT EXISTS lead_db.lead (
+        Status STRING,
+	    Company STRING,
+	    State STRING,
+	    Title STRING,
+	    Id STRING,
+	    type STRING,
+	    Name STRING
+    )
+    ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.avro.AvroSerDe'
+    STORED AS INPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat'
+    OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerOutputFormat'
+    LOCATION 's3://s3bucketmuleathenauser-1/output_json/'
+	TBLPROPERTIES (
+		  'avro.schema.literal'='{
+		    "type" : "record", 
+		    "name" : "LeadRecord", 
+		    "doc" : "Lead Records", 
+		    "fields" : [ 
+		      { "name" : "Status", "type" : "string" }, 
+		      { "name" : "Company", "type" : "string" }, 
+		      { "name" : "State", "type" : "string" }, 
+		      { "name" : "Title", "type" : "string" }, 
+		      { "name" : "Id", "type" : "string" }, 
+		      { "name" : "type", "type" : "string" }, 
+		      { "name" : "Name", "type" : "string" } 
+		    ]
+		  }'
+		)<br>
+aws athena start-query-execution \
+    --query-string "CREATE DATABASE IF NOT EXISTS lead_db;" \
+    --result-configuration "OutputLocation=s3://s3bucketmuleathenauser-1/"<br>aws athena start-query-execution \
+    --query-string "file://create-lead-table-query.txt" \
+    --result-configuration "OutputLocation=s3://s3bucketmuleathenauser-1/"<br>Go to Athena Console, confirm that Lead table exists in lead_db database, and open the Query Editor<br>Select * from lead_db.lead<br>Cleanup<br>aws athena start-query-execution \
+    --query-string "DROP TABLE IF EXISTS lead_db.lead;" \
+    --result-configuration "OutputLocation=s3://s3bucketmuleathenauser-1/"<br>aws athena start-query-execution \
+    --query-string "DROP DATABASE IF EXISTS lead_db;" \
+    --result-configuration "OutputLocation=s3://s3bucketmuleathenauser-1/"
+                    </code></pre>
+                    <p><img ng-src="images/avro-lead-table-in-athena.png" alt="avro-lead-table-in-athena" width="1000" height="600"></p>
+                  </p>
                  <p><strong>Story-6_Create a pipeline in Databricks that creates a Lead Delta Table.</strong>
                     <ul>
                       <li><p>Setup: Upload the brz-lead_full.csv file to the Databricks file system. Upload the delta files to the corresponding subfolder. </p>
