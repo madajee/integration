@@ -76,8 +76,8 @@
                         <li><strong>Card-19: </strong><a href="https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-gs.html" target="_blank">Getting started with Amazon EMR</a></li>
                         <li><strong>Card-20: </strong><a href="https://docs.aws.amazon.com/redshift/latest/gsg/new-user-serverless.html" target="_blank">Get started with Amazon Redshift Serverless data warehouses</a></li>
                         <li><strong>Card-21: </strong><a href="https://aws.amazon.com/tutorials/machine-learning-tutorial-label-training-data/" target="_blank">Label Training Data for Machine Learning</a></li>
-                        <li><strong>Card-22: </strong>Create a Lambda function that reads a Lead csv file from S3 buckt and creates a Avro file. Reference the Task-10 created in June Sprint.</li>
-                        <li><strong>Card-23: </strong>Card-22 has generated the Lead Avro file. Next step is to create a lead_db database  and lead table in Athena to view the data in the Avro file.</li>
+                        <li><strong>Card-22: </strong>Create a Lambda function that reads a Lead csv file from S3 bucket and creates a Avro file. Reference the Task-10 created in June Sprint. Create another lambda to create parquet file.</li>
+                        <li><strong>Card-23: </strong>Card-22 has generated the Lead Avro file. Next step is to create a lead_db database  and lead table in Athena to view the data in the Avro and parquet files.</li>
                     </ul>
                     </ul>
                     <ul>
@@ -98,7 +98,14 @@
                                 <li><a target= "_blank" href="https://youtu.be/g0Na86oE3kI" class="nav-link">demo</a></li>
                             </ul>
                         </p></li>
-                        <li> <p><strong>Story-7_Event Logs in RDS Table: </strong>When each datapipeline object like Leads or Accounts completes, the success event record with duration should be inserted into the RDS table. Use Asynchronous scope for this insert flow.
+                         <li> <p><strong>Story-7_Lead_Athena_Table_On_Avro_Parquet_Files: </strong>
+                            <ul>
+                                <li>Story-3_Reliable Data Pipeline from SFDC to S3 creates Lead CSV File.</li>
+                                <li>Card-22 implements Lambda to create Avro and Parquet Lead files.</li>
+                                <li>Card-23 implements Athena table creation for Avro and Parquet files.</li>
+                            </ul>
+                        </p></li>
+                        <li> <p><strong>Story-8_Event Logs in RDS Table: </strong>When each datapipeline object like Leads or Accounts completes, the success event record with duration should be inserted into the RDS table. Use Asynchronous scope for this insert flow.
                             <ul>
                                 <li>In June sprint, we have created a reliable pipeline from SFDC to S3.</li>
                                 <li>Provision the RDS instance, create the datapipeline_event_log table.</li>
