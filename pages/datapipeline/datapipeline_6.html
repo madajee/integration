@@ -11,6 +11,109 @@
                 </ul>
             </div>
             <div class="grooveborder">
+                <h4>AWS Bedrock</h4>
+                <pre><code>
+aws configure get region<br>aws configure set region us-east-1
+                </code></pre>
+                <pre><code>
+mkdir test-aws-bedrock<br>cd test-aws-bedrock<br>touch bedrock-short-term-key.py<br>python bedrock-short-term-key.py<br>export AWS_BEARER_TOKEN_BEDROCK="your-bedrock-api-key"<br>Insatll boto3
+                </code></pre>
+                <pre><code>
+Invoke API with Open AI Models<br>touch invoke-api-with-openai-models.py<br>import boto3
+import json
+
+# Ensure you are targeting a region where the model is hosted (e.g., us-east-1)
+bedrock = boto3.client('bedrock-runtime', region_name='us-east-1')
+
+# 1. Structure the payload with the mandatory 'messages' field
+payload = {
+    "messages": [
+        {
+            "role": "user",
+            "content": "Can you explain the features of Amazon Bedrock?"
+        }
+    ],
+    "max_tokens": 1024
+}
+
+# 2. Invoke the model using the correct structured JSON string
+response = bedrock.invoke_model(
+    modelId='openai.gpt-oss-120b-1:0',
+    body=json.dumps(payload)
+)
+
+# 3. Read and parse the output stream
+response_body = json.loads(response['body'].read().decode('utf-8'))
+print(response_body)<br>python invoke-api-with-openai-models.py
+                </code></pre>
+                <pre><code>
+Invoke API with Amazon Nova AI Models<br>touch invoke-api-with-nova-models.py<br>import boto3
+import json
+
+# Initialize the Bedrock client
+# Nova Micro is fast, lightweight, and widely available across commercial regions
+bedrock = boto3.client('bedrock-runtime', region_name='us-east-1')
+
+# 1. Structure the payload for Amazon Nova's native schema
+payload = {
+    "messages": [
+        {
+            "role": "user",
+            "content": [
+                {
+                    "text": "Can you explain the features of Amazon Bedrock?"
+                }
+            ]
+        }
+    ],
+    "inferenceConfig": {
+        "maxTokens": 1024,
+        "temperature": 0.7
+    }
+}
+
+# 2. Invoke the model using the precise Nova Micro identifier
+response = bedrock.invoke_model(
+    modelId='amazon.nova-micro-v1:0',
+    body=json.dumps(payload)
+)
+
+# 3. Parse and extract the response text cleanly
+response_body = json.loads(response['body'].read().decode('utf-8'))
+print(response_body['output']['message']['content'][0]['text'])<br>python invoke-api-with-nova-models.py
+                </code></pre>
+                <pre><code>
+Coverse API with both different Models<br>touch converse-api-bedrock-models.py<br>import boto3
+import json
+
+client = boto3.client('bedrock-runtime', region_name='us-east-1')
+
+# The Converse API abstraction normalizes your schema across all providers
+response = client.converse(
+    modelId='amazon.nova-micro-v1:0',
+    messages=[
+        {
+            "role": "user", 
+            "content": [{"text": "Can you explain the features of Amazon Bedrock?"}]
+        }
+    ],
+    inferenceConfig={
+        "maxTokens": 1024
+    }
+)
+
+#print(response['output']['message']['content'][0]['text'])
+# 1. Fetch the content blocks array from the Converse response
+content_blocks = response['output']['message']['content']
+
+# 2. Extract only the actual final text block safely
+text_output = "".join([block['text'] for block in content_blocks if 'text' in block])
+
+# 3. Print the result
+print(text_output)<br>Switch models and run the converse API for both OpenAI and Nova Model<br>python converse-api-bedrock-models.py<br>Models: openai.gpt-oss-120b-1:0, amazon.nova-micro-v1:0, us.meta.llama3-3-70b-instruct-v1:0, us.anthropic.claude-sonnet-4-5-20250929-v1:0, google.gemma-3-4b-it, google.gemma-3-12b-it, google.gemma-3-27b-it
+                </code></pre>
+            </div>
+            <div class="grooveborder">
                 <h4>AWS Elastic Container Service  (ECS) Task - Create a Rest API with Private Integration</h4>
                 <p>
                   <ul>
