@@ -2741,6 +2741,220 @@ Go to Airflow console and monitor the dags runs. A transformed file should be sa
 aws s3 rm s3://mwaa-environment-public-network-environmentbucket-27othiwls42i/dags/ --recursive<br>aws cloudformation delete-stack --stack-name mwaa-environment-public-network
                   </code></pre>
                 </p>
+                <p><strong>Task-24 (Card-25-Sprint_August_2026): </strong><a href="https://docs.aws.amazon.com/managed-flink/latest/java/get-started-exercise.html" target="_blank">Get started with Amazon Managed Service for Apache Flink (DataStream API)</a>
+                  <pre><code>mkdir amazon-apache-flink-project<br>cd amazon-apache-flink-project<br>Use the amazon git repo https://github.com/aws-samples/amazon-managed-service-for-apache-flink-examples.git to copy the GettingStarted for the java.<br>Use this version of BasicStreamingJob.java<br>package com.amazonaws.services.msf;
+
+import com.amazonaws.services.kinesisanalytics.runtime.KinesisAnalyticsRuntime;
+import org.apache.flink.api.common.eventtime.WatermarkStrategy;
+import org.apache.flink.api.common.serialization.SimpleStringSchema;
+import org.apache.flink.api.common.typeinfo.TypeInformation;
+import org.apache.flink.connector.kinesis.sink.KinesisStreamsSink;
+import org.apache.flink.connector.kinesis.source.KinesisStreamsSource;
+import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.streaming.api.environment.LocalStreamEnvironment;
+import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.IOException;
+import java.util.Map;
+import java.util.Properties;
+
+/**
+ * A basic Flink Java application to run on Amazon Managed Service for Apache Flink,
+ * with Kinesis Data Streams as source and sink.
+ */
+public class BasicStreamingJob {
+
+    private static final Logger LOGGER = LogManager.getLogger(BasicStreamingJob.class);
+
+    private static KinesisStreamsSource<String> createSource(Properties inputProperties) {
+        return KinesisStreamsSource.<String>builder()
+                .setStreamArn(inputProperties.getProperty("stream.arn"))
+                .setDeserializationSchema(new SimpleStringSchema())
+                .build();
+    }
+
+    private static KinesisStreamsSink<String> createSink(Properties outputProperties) {
+        return KinesisStreamsSink.<String>builder()
+                .setKinesisClientProperties(outputProperties)
+                .setStreamName(outputProperties.getProperty("stream.name"))
+                .setSerializationSchema(new SimpleStringSchema())
+                .setPartitionKeyGenerator(element -> String.valueOf(element.hashCode()))
+                .build();
+    }
+
+    public static void main(String[] args) throws Exception {
+        // Set up the streaming execution environment
+        final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+
+
+        Properties propsinput = new Properties();
+        propsinput.setProperty("stream.arn", "arn:aws:kinesis:us-east-1:859196001802:stream/ExampleInputStream");
+        // Tells Flink where to start reading data (LATEST = new records only, TRIM_HORIZON = oldest available)
+        propsinput.setProperty("flink.stream.initpos", "LATEST"); 
+
+        Properties propsoutput = new Properties();
+        propsoutput.setProperty("stream.name", "ExampleOutputStream");
+        propsoutput.setProperty("aws.region", "us-east-1");
+        propsoutput.setProperty("aws.credentials.provider", "ASSUME_ROLE"); 
+
+       //KinesisStreamsSource<String> source = createSource(applicationParameters.get("InputStream0"));
+        KinesisStreamsSource<String> source = createSource(propsinput);
+        DataStream<String> input = env.fromSource(source, WatermarkStrategy.noWatermarks(), "Kinesis Source", TypeInformation.of(String.class));
+
+        //KinesisStreamsSink<String> sink = createSink(applicationParameters.get("OutputStream0"));
+        KinesisStreamsSink<String> sink = createSink(propsoutput);
+        input.sinkTo(sink);
+
+        env.execute("Flink streaming Java API skeleton");
+    }
+
+}
+<br>cd GettingStarted<br>Build the Jar File with Maven to upload to S3 bucket<br>mvn clean<br>mvn package<br>aws s3 cp target/amazon-msf-java-stream-app-1.0.jar s3://s3bucketmuleathenauser-1<br>Create the ExampleInputStream and ExampleOutputStream Kinesis Data Streams<br>aws kinesis create-stream --stream-name ExampleInputStream --shard-count 1 --region us-east-1<br>aws kinesis create-stream --stream-name ExampleOutputStream --shard-count 1 --region us-east-1</code></pre>
+<pre><code>Now that code is in S3 and Streams are created, we will run the cloudformation to create a Flink Application. Go to the main folder: amazon-apache-flink-project.<br>cd ..<br>touch flinkapp-stream-app-template.yml<br>AWSTemplateFormatVersion: '2010-09-09'
+Description: 'CloudFormation template to deploy an Amazon Managed Service for Apache Flink Application with Logging enabled.'
+
+Parameters:
+  ApplicationName:
+    Type: String
+    Default: 'my-flink1-streaming-app'
+    Description: 'The name of the Apache Flink application'
+  S3BucketName:
+    Type: String
+    Default: 's3bucketmuleathenauser-1'
+    Description: 'The S3 bucket containing the compiled Flink application JAR file'
+  S3ObjectKey:
+    Type: String
+    Default: 'amazon-msf-java-stream-app-1.0.jar'
+    Description: 'The S3 key path to the Flink application JAR file'
+
+Resources:
+  # =========================================================================
+  # 1. CloudWatch Logging Resources
+  # =========================================================================
+  FlinkLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub '/aws/kinesisanalytics/${ApplicationName}'
+      RetentionInDays: 7
+
+  FlinkLogStream:
+    Type: AWS::Logs::LogStream
+    Properties:
+      LogGroupName: !Ref FlinkLogGroup
+      LogStreamName: 'flink-application-log-stream'
+
+  # =========================================================================
+  # 2. IAM Execution Role for the Flink Application
+  # =========================================================================
+  FlinkExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: kinesisanalytics.amazonaws.com
+            Action: sts:AssumeRole
+      Path: /
+      Policies:
+        - PolicyName: FlinkS3AccessPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Sid: ReadCode
+                Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:GetObjectVersion
+                Resource: !Sub 'arn:aws:s3:::${S3BucketName}/${S3ObjectKey}'
+              
+              # DescribeLogGroups must use '*' as the resource
+              - Sid: ListCloudwatchLogGroups
+                Effect: Allow
+                Action:
+                  - logs:DescribeLogGroups
+                Resource: '*'
+              
+              # Dynamically scoped permissions for the created Log Group and Stream
+              - Sid: ListCloudwatchLogStreams
+                Effect: Allow
+                Action:
+                  - logs:DescribeLogStreams
+                Resource: !GetAtt FlinkLogGroup.Arn
+                
+              - Sid: PutCloudwatchLogs
+                Effect: Allow
+                Action:
+                  - logs:PutLogEvents
+                Resource: !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:${FlinkLogGroup}:log-stream:${FlinkLogStream}'
+              
+              - Sid: ReadInputStream
+                Effect: Allow
+                Action: kinesis:*
+                Resource: arn:aws:kinesis:us-east-1:859196001802:stream/ExampleInputStream
+              
+              - Sid: WriteOutputStream
+                Effect: Allow
+                Action: kinesis:*
+                Resource: arn:aws:kinesis:us-east-1:859196001802:stream/ExampleOutputStream
+
+  # =========================================================================
+  # 3. Managed Service for Apache Flink Application Resource
+  # =========================================================================
+  FlinkApplication:
+    Type: AWS::KinesisAnalyticsV2::Application
+    Properties:
+      ApplicationName: !Ref ApplicationName
+      RuntimeEnvironment: 'FLINK-2_3'
+      ServiceExecutionRole: !GetAtt FlinkExecutionRole.Arn
+      ApplicationConfiguration:
+        ApplicationCodeConfiguration:
+          CodeContent:
+            S3ContentLocation:
+              BucketARN: !Sub 'arn:aws:s3:::${S3BucketName}'
+              FileKey: !Ref S3ObjectKey
+          CodeContentType: 'ZIPFILE'
+        
+        # Flink Specific Engine Configurations
+        FlinkApplicationConfiguration:
+          ParallelismConfiguration:
+            ConfigurationType: 'CUSTOM'
+            Parallelism: 2
+            ParallelismPerKPU: 1
+            AutoScalingEnabled: true
+          CheckpointConfiguration:
+            ConfigurationType: 'CUSTOM'
+            CheckpointingEnabled: true
+            CheckpointInterval: 60000
+            MinPauseBetweenCheckpoints: 5000
+          MonitoringConfiguration:
+            ConfigurationType: 'CUSTOM'
+            MetricsLevel: 'APPLICATION'
+            LogLevel: 'INFO'
+
+  # =========================================================================
+  # 4. Attach Logging Option to the Flink Application
+  # =========================================================================
+  FlinkApplicationLoggingOption:
+    Type: AWS::KinesisAnalyticsV2::ApplicationCloudWatchLoggingOption
+    Properties:
+      ApplicationName: !Ref FlinkApplication
+      CloudWatchLoggingOption:
+        LogStreamARN: !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:${FlinkLogGroup}:log-stream:${FlinkLogStream}'
+
+Outputs:
+  ApplicationArn:
+    Description: 'The ARN of the deployed Flink Application'
+    Value: !Ref FlinkApplication
+  LogGroupArn:
+    Description: 'The ARN of the CloudWatch Log Group'
+    Value: !GetAtt FlinkLogGroup.Arn
+    <br>aws cloudformation create-stack --stack-name flinkapp-stream-app --template-body file://flinkapp-stream-app-template.yml --capabilities CAPABILITY_IAM<br>Go to Managed Flink Console to confirm that my-flink1-streaming-app is in Ready State<br>Run the my-flink1-streaming-app and watch the logs. If you run into erros then troubleshoot and resolve it. If there are no errors than the Application will be in green running state.
+    <br>Copy the data-generator from the python folder of the amazon-managed-service-for-apache-flink-examples repo.<br>cd cd data-generator<br>python stock.py<br>The script will start putting the events in the ExampleInputStream data stream which is the source stream for Flink Application will pipe the events to ExampleOutputStream which is a sink stream.<br>Check the records through dataviewer in the Kinesis Console for each of the stream.</code></pre>
+                </p>
                 <p><strong>Story-5_Create an API Endpoint to create lead in salesfoorce playground org</strong>
                     <ul>
                       <li>Step 1: Create the queue and Lambda that publishes the message to the queue
