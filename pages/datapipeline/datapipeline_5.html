@@ -2768,19 +2768,19 @@ public class BasicStreamingJob {
 
     private static final Logger LOGGER = LogManager.getLogger(BasicStreamingJob.class);
 
-    private static KinesisStreamsSource<String> createSource(Properties inputProperties) {
-        return KinesisStreamsSource.<String>builder()
+    private static KinesisStreamsSource&lt;String&gt; createSource(Properties inputProperties) {
+        return KinesisStreamsSource.&lt;String&gt;builder()
                 .setStreamArn(inputProperties.getProperty("stream.arn"))
                 .setDeserializationSchema(new SimpleStringSchema())
                 .build();
     }
 
-    private static KinesisStreamsSink<String> createSink(Properties outputProperties) {
-        return KinesisStreamsSink.<String>builder()
+    private static KinesisStreamsSink&lt;String&gt; createSink(Properties outputProperties) {
+        return KinesisStreamsSink.&lt;String&gt;builder()
                 .setKinesisClientProperties(outputProperties)
                 .setStreamName(outputProperties.getProperty("stream.name"))
                 .setSerializationSchema(new SimpleStringSchema())
-                .setPartitionKeyGenerator(element -> String.valueOf(element.hashCode()))
+                .setPartitionKeyGenerator(element -&gt; String.valueOf(element.hashCode()))
                 .build();
     }
 
@@ -2799,12 +2799,12 @@ public class BasicStreamingJob {
         propsoutput.setProperty("aws.region", "us-east-1");
         propsoutput.setProperty("aws.credentials.provider", "ASSUME_ROLE"); 
 
-       //KinesisStreamsSource<String> source = createSource(applicationParameters.get("InputStream0"));
-        KinesisStreamsSource<String> source = createSource(propsinput);
-        DataStream<String> input = env.fromSource(source, WatermarkStrategy.noWatermarks(), "Kinesis Source", TypeInformation.of(String.class));
+       //KinesisStreamsSource&lt;String&gt; source = createSource(applicationParameters.get("InputStream0"));
+        KinesisStreamsSource&lt;String&gt; source = createSource(propsinput);
+        DataStream&lt;String&gt; input = env.fromSource(source, WatermarkStrategy.noWatermarks(), "Kinesis Source", TypeInformation.of(String.class));
 
-        //KinesisStreamsSink<String> sink = createSink(applicationParameters.get("OutputStream0"));
-        KinesisStreamsSink<String> sink = createSink(propsoutput);
+        //KinesisStreamsSink&lt;String&gt; sink = createSink(applicationParameters.get("OutputStream0"));
+        KinesisStreamsSink&lt;String&gt; sink = createSink(propsoutput);
         input.sinkTo(sink);
 
         env.execute("Flink streaming Java API skeleton");
@@ -2954,6 +2954,7 @@ Outputs:
     Value: !GetAtt FlinkLogGroup.Arn
     <br>aws cloudformation create-stack --stack-name flinkapp-stream-app --template-body file://flinkapp-stream-app-template.yml --capabilities CAPABILITY_IAM<br>Go to Managed Flink Console to confirm that my-flink1-streaming-app is in Ready State<br>Run the my-flink1-streaming-app and watch the logs. If you run into erros then troubleshoot and resolve it. If there are no errors than the Application will be in green running state.
     <br>Copy the data-generator from the python folder of the amazon-managed-service-for-apache-flink-examples repo.<br>cd cd data-generator<br>python stock.py<br>The script will start putting the events in the ExampleInputStream data stream which is the source stream for Flink Application will pipe the events to ExampleOutputStream which is a sink stream.<br>Check the records through dataviewer in the Kinesis Console for each of the stream.</code></pre>
+    <pre><code>Cleanup<br>aws cloudformation delete-stack --stack-name flinkapp-stream-app<br>aws kinesis delete-stream --stream-name ExampleInputStream<br>aws kinesis delete-stream --stream-name ExampleOutputStream<br>aws s3 rm s3://s3bucketmuleathenauser-1/amazon-msf-java-stream-app-1.0.jar</code></pre>
                 </p>
                 <p><strong>Story-5_Create an API Endpoint to create lead in salesfoorce playground org</strong>
                     <ul>
