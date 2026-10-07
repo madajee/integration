@@ -138,6 +138,171 @@
                 <h4>Sprint (October-2026)</h4>
                      <ul>
                          <li><strong>Card-30: </strong><a href="https://achieve.snowflake.com/70c651d7-2079-42dc-a592-94a2cb4071c9#acc.UZTzYJXW" target="_blank">Snowflake Hands-On Essentials: Data Warehousing Workshop</a></li>
+                         <li><strong>Card-31: </strong><a href="https://trailhead.salesforce.com/content/learn/trails/get-to-know-informatica-intelligent-data-management-cloud-idmc" target="_blank">Get to Know Informatica Intelligent Data Management Cloud (IDMC)</a> Completed on October 6, 2026</li>
+                         <li><strong>Card-30: </strong><a href="https://achieve.snowflake.com/70c651d7-2079-42dc-a592-94a2cb4071c9#acc.UZTzYJXW" target="_blank">Collaboration, Marketplace and Cost Estimation Workshop (Badge 2)</a>
+                            <ul>
+                                <li>Step 1: Set Up a New Database Called INTL_DB
+                                    <pre>
+                                        <code>
+use role SYSADMIN;
+create database INTL_DB;
+use schema INTL_DB.PUBLIC;
+
+                                        </code>
+                                    </pre>
+                                </li>
+                                <li>Step 2: Set Up a New Database Called INTL_DB
+                                    <pre>
+                                        <code>
+use role SYSADMIN;
+create warehouse INTL_WH 
+with 
+warehouse_size = 'XSMALL' 
+warehouse_type = 'STANDARD' 
+auto_suspend = 600 --600 seconds/10 mins
+auto_resume = TRUE;
+use warehouse INTL_WH;
+
+                                        </code>
+                                    </pre>
+                                </li>
+                                <li>Step 3: Create Table `INT_STDS_ORG_3166`
+                                    <pre>
+                                        <code>
+create or replace table intl_db.public.INT_STDS_ORG_3166 
+(iso_country_name varchar(100), 
+ country_name_official varchar(200), 
+ sovreignty varchar(40), 
+ alpha_code_2digit varchar(2), 
+ alpha_code_3digit varchar(3), 
+ numeric_country_code integer,
+ iso_subdivision varchar(15), 
+ internet_domain_code varchar(10)
+);
+
+                                        </code>
+                                    </pre>
+                                </li>
+                                <li>Step 4: Create a File Format to Load the Table
+                                    <pre>
+                                        <code>
+create or replace file format util_db.public.PIPE_DBLQUOTE_HEADER_CR 
+  type = 'CSV' --use CSV for any flat file
+  compression = 'AUTO' 
+  field_delimiter = '|' --pipe or vertical bar
+  record_delimiter = '\r' --carriage return
+  skip_header = 1  --1 header row
+  field_optionally_enclosed_by = '\042'  --double quotes
+  trim_space = FALSE;
+
+                                        </code>
+                                    </pre>
+                                </li>
+                                <li>Step 5: Create a External S3 Stage in Util DB Public Schema: Name: MY_EXTERNAL_S3_STAGE_UNIHYPHENCMCW 
+                                    <pre>
+                                        <code>
+URL: S3://uni-cmcw
+list @util_db.public.MY_EXTERNAL_S3_STAGE_UNIHYPHENCMCW;
+Download to local: aws s3 cp s3://uni-cmcw/ISO_Countries_UTF8_pipe.csv .
+                                        </code>
+                                    </pre>
+                                </li>
+                                <li>Step 6: Load the ISO Table Using Your File Format
+                                    <pre>
+                                        <code>
+copy into intl_db.public.INT_STDS_ORG_3166
+from @util_db.public.MY_EXTERNAL_S3_STAGE_UNIHYPHENCMCW 
+files = ( 'ISO_Countries_UTF8_pipe.csv')
+file_format = ( format_name='util_db.public.PIPE_DBLQUOTE_HEADER_CR' );
+                                        </code>
+                                    </pre>
+                                </li>
+                                <li>Step 7: Check That You Created and Loaded the Table Properly
+                                    <pre>
+                                        <code>
+select count(*) as found, '249' as expected 
+from INTL_DB.PUBLIC.INT_STDS_ORG_3166;
+                                        </code>
+                                    </pre>
+                                </li>
+                                <li>Step 8: f there is a Typo, we have to recreate a bit
+                                    <pre>
+                                        <code>
+Just Fix it
+ALTER DATABASE INTRL_DB
+RENAME TO INTL_DB;
+ALTER TABLE INTRL_DB.PUBLIC.INT_3166
+RENAME TO INTL_DB.PUBLIC.INT_STDS_ORG_3166;
+TRUNCATE TABLE INTL_DB.PUBLIC.INT_STDS_ORG_3166;
+
+                                        </code>
+                                    </pre>
+                                </li>
+                                <li>Step 9: How to Test Whether You Set Up Your Table in the Right Place with the Right Name
+                                    <pre>
+                                        <code>
+select count(*) as OBJECTS_FOUND
+from INTL_DB.INFORMATION_SCHEMA.TABLES 
+where table_schema='PUBLIC'
+and table_name= 'INT_STDS_ORG_3166';
+                                        </code>
+                                    </pre>
+                                </li>
+                                <li>Step 10: How to Test That You Loaded the Expected Number of Rows
+                                    <pre>
+                                        <code>
+select row_count
+from INTL_DB.INFORMATION_SCHEMA.TABLES 
+where table_schema='PUBLIC'
+and table_name= 'INT_STDS_ORG_3166';
+                                        </code>
+                                    </pre>
+                                </li>
+                                <li>Step 11: Join Local Data with Shared Data
+                                    <pre>
+                                        <code>
+select  
+     iso_country_name
+    ,country_name_official,alpha_code_2digit
+    ,r_name as region
+from INTL_DB.PUBLIC.INT_STDS_ORG_3166 i
+left join SNOWFLAKE_SAMPLE_DATA.TPCH_SF1.NATION n
+on upper(i.iso_country_name)= n.n_name
+left join SNOWFLAKE_SAMPLE_DATA.TPCH_SF1.REGION r
+on n_regionkey = r_regionkey;
+                                        </code>
+                                    </pre>
+                                </li>
+                                <li>Step 12: Create a View on the SELECT statement
+                                    <pre>
+                                        <code>
+create view intl_db.public.NATIONS_SAMPLE_PLUS_ISO 
+( iso_country_name
+  ,country_name_official
+  ,alpha_code_2digit
+  ,region) AS
+  select  
+     iso_country_name
+    ,country_name_official,alpha_code_2digit
+    ,r_name as region
+from INTL_DB.PUBLIC.INT_STDS_ORG_3166 i
+left join SNOWFLAKE_SAMPLE_DATA.TPCH_SF1.NATION n
+on upper(i.iso_country_name)= n.n_name
+left join SNOWFLAKE_SAMPLE_DATA.TPCH_SF1.REGION r
+on n_regionkey = r_regionkey;
+                                        </code>
+                                    </pre>
+                                </li>
+                                <li>Step 13: Run a SELECT on the View You Created
+                                    <pre>
+                                        <code>
+select *
+from intl_db.public.NATIONS_SAMPLE_PLUS_ISO;
+                                        </code>
+                                    </pre>
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
             </div>       
         </div>
