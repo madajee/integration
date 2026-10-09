@@ -29,6 +29,15 @@ app.directive("homeTimeline", function(){
     }
 });
 
+// Home Page
+app.directive("viewLinkedin", function(){
+    return {
+        restrict: 'E',
+        templateUrl: 'pages/directives/home-lifeline.html',
+        replace: true
+    }
+});
+
 // Testimonial Page
 app.directive("testimonialImgRow", function(){
     return {

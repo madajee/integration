@@ -38,3 +38,6 @@ app.controller('testimonialController', ['$scope',
 app.controller('toolsController', ['$scope',
   function($scope) {
 }]);
+app.controller('homelifelineController', ['$scope',
+  function($scope) {
+}]);

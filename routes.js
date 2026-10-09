@@ -25,6 +25,10 @@ app.config(function ($routeProvider) {
         templateUrl: 'pages/tools.html',
         controller: 'toolsController'
     }).
+    when('/homelifeline', {
+        templateUrl: 'pages/homelifeline.html',
+        controller: 'homelifelineController'
+    }).
     otherwise('/');
     
 });
