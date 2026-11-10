@@ -3147,7 +3147,7 @@ DESCRIBE HISTORY lead;<br>The history shows same 2 recoords.
                     </ul>
                 </p>
                 <p><strong>Story-7_Snowflake_Badges</strong>
-                                             <ul>
+                            <ul><p>Badge-1</p>
                                 <li>Step 1: Set Up a New Database Called INTL_DB
                                     <pre>
                                         <code>
@@ -3309,11 +3309,64 @@ from intl_db.public.NATIONS_SAMPLE_PLUS_ISO;
                                     </pre>
                                 </li>
                             </ul>
+                            <ul><p>Badge-3</p>
+                                <li>SMOOTHIES Database
+                                    <pre>
+                                        <code>
+use role SYSADMIN;
+create database SMOOTHIES;
+
+create file format smoothies.public.two_headerrow_pct_delim
+  type = CSV,
+  skip_header = 2,
+  field_delimiter = '%',
+  trim_space = TRUE
+;
+
+SELECT $1, $2
+FROM @smoothies.public.my_uploaded_files/fruits_available_for_smoothies.txt
+(FILE_FORMAT => smoothies.public.two_headerrow_pct_delim);
+
+COPY INTO smoothies.public.fruit_options
+FROM @smoothies.public.my_uploaded_files
+FILES = ('fruits_available_for_smoothies.txt')
+FILE_FORMAT = (FORMAT_NAME = smoothies.public.two_headerrow_pct_delim)
+ON_ERROR = ABORT_STATEMENT
+VALIDATION_MODE = RETURN_ERRORS
+PURGE = TRUE;
+
+COPY INTO smoothies.public.fruit_options
+FROM (SELECT $2 as FRUID_ID, $1 as FRUIT_NAME
+FROM @smoothies.public.my_uploaded_files/fruits_available_for_smoothies.txt)
+FILE_FORMAT = (FORMAT_NAME = smoothies.public.two_headerrow_pct_delim)
+ON_ERROR = ABORT_STATEMENT
+PURGE = TRUE;
+
+create or replace table SMOOTHIES.public.ORDERS 
+(
+    ingredients varchar(200)
+);
+
+
+                                        </code>
+                                    </pre>
+                                </li>
+                            </ul>
+                </p>
+                <p><strong>Task-34 (Card-34-Sprint_November_2026): </strong><a href="https://learn.databricks.com/course/demo-get-started-with-databricks-for-data-engineering/overview?path=demo-role-data-engineers" target="_blank">Learn with Databricks-1</a>
+                  <ul>
+                      <li>Get pass through initil laps to test the Setup, learn about Unity Catalog, ingest data with CTAS, load data incrementally with COPY INTO, explore version history and time travel.</li>
+                      <li>Focus a bit on demo on building a medallion architecture pipeline and understand how the data in file is transformed into bronze, sliver and gold layers delta tables. Also pay some attention when exploring Lineage, Permissions and insights tab of the Gold Layer table.</li>
+                  </ul>
+<pre><code>
+------------------------------------------------------------------------------
+✅ SETUP COMPLETE!
+------------------------------------------------------------------------------
+</code></pre>
                 </p>
             </div>
-             <div class="grooveborder">
-                <h4>KNOW-HOW (July-2026)</h4>
-            </div>
+            
+    
         </div>
     </div>
 </div>
