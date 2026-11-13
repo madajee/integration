@@ -1,0 +1,54 @@
+<div class = "container-fluid mt-2">
+    <div class="row">
+        <integration-side-menu></integration-side-menu>
+        <div class="col-md-10">
+            <h6 class="grooveheader">Snowflake Skillbuilder<a href="https://www.snowflake.com/en/expedition/ams/agenda/?login=ML" target="_blank" class="nav-link">Snowflake Expedition-2026</a></h6>
+             <div class="grooveborder">
+                <ul>
+                    <li><a href="#!/sprint/3" target="_blank" class="nav-link">datapipeline-sprint</a></li> 
+                    <li><a href="#!/datapipeline/3" target="_blank" class="nav-link">datapipeline-task-view</a></li>
+                </ul>
+            </div>
+            <div class="grooveborder">
+                <h3>PART-1-The Next Frontier: Driving Efficient Intelligence in the Agentic Enterprise</h3>
+                <p>Snowflake’s AI ecosystem is built around four key elements: Governed Enterprise Data and Business Context, AI Model Choice, Software and Application Integration, and an Agentic Control Plane.</p>
+                <p><strong>Enterprise Data and Context layer</strong>
+                  <ul>
+                    <li>The Enterprise Data and Context layer combines Cortex Sense, Semantic Views, and Business Ontology to provide trusted business context. CoCo Agents help create, monitor, repair, and optimize data pipelines with built-in guardrails through restricted session scope, enabling automations that can be triggered on run on schedule and sending notifications through Slack or Github.</li>
+                    <li>Snowflake supports end-to-end data ingestion, transformation, and activation through Postgres Data Mirroring, Kafka streaming, Snowflake Connect for Apache Spark, Iceberg interoperability, WAP branching (Write, Audit, Publish), and Hybrid Tables. nteractive Analytics enables querying mirrored and streamed data without creating additional copies.</li>
+                    <li>These capabilities are underpinned by enterprise-grade security, governance, interoperability, and data sovereignty. </li>
+                  </ul>
+                </p>
+                <p><strong>For AI Model Choice,</strong> Cortex AI Gateway provides access to models from OpenAI, Google, Anthropic, Meta, Moonshot, and xAI, with dynamic model routing, cost governance, secure Cortex Sandboxes, and observability. Cortex Training further enables governed experimentation and fine-tuning of general-purpose models into specialized models.
+                <p><strong>The Software and Application Integration layer </strong>enables zero-copy connectivity with enterprise platforms such as Workday, Salesforce, ServiceNow, IBM, AVEVA, and Oracle, alongside governed MCP integrations that allow AI agents to securely interact with external systems and take actions beyond Snowflake. Developers can also build AI-powered applications on governed data using Snowflake App Runtime, Streamlit in Snowflake, and Snowflake Native Apps.</p>
+                <p><strong>The Agentic Control Plane</strong> brings these capabilities together through Snowflake CoCo, a coding agent for builders, and Snowflake CoWork, a personal agent for knowledge workers. Both support scheduled automations, reusable Skills and Plug-ins, persistent Memory, session portability, and administrator-defined Profiles that govern agent capabilities, tools, and permissions. CoCo Mode in Snowsight provides dedicated sessions for users, agents, and tasks, while CoCo Bots and CoWork Bots execute goal-oriented workflows, such as maintaining pipeline health.</p>
+                <p>Finally, Snowflake Dashboards take an AI-first approach to data visualization, allowing developers to build dashboards through CoCo and enabling knowledge workers to explore insights, trends, and business intelligence through CoWork.</p>
+            </div>
+            <div class="grooveborder">
+                <h3>PART-2-Demo: Preventing Account Churn – End-to-End Workflow</h3>
+                <ol>
+                  <li><strong>Account Health Notification: </strong>Slack MCP integration delivers an automated notification email containing a Snowflake Interactive Dashboard, providing visibility into account health and potential churn risks.</li>
+                  <li><strong>AI-Powered Insights and Analysis: </strong>Snowflake CoWork enables users to interact with the dashboard, run insights, and perform analysis to identify accounts at risk of churn.</li>
+                  <li><strong>Data Auditing and Validation: </strong>Using Snowsight UI Notebooks, developers create a branch, execute an audit that only affects a 14-row record set within the branch, validate the results, and merge the changes back into production data..</li>
+                  <li><strong>Business Ontology and Metrics: </strong>Business Ontology provides clear and consistent definitions of key business metrics, such as Annual Recurring Revenue (ARR) and Monthly Recurring Revenue (MRR), ensuring standardized business insights.</li>
+                  <li><strong>Data Governance and Security: </strong>Notebook governance is enforced through Horizon policies, including Role-Level Access Policies and Masking Policies, to ensure appropriate data access and protection.</li>
+                  <li><strong>Role-Based Access through CoWork: </strong>CoWork uses role-specific profiles, such as Analyst and Manager, to control data visibility. Analysts cannot access customer contact details, while Managers can view masked contact information based on their permissions.</li>
+                  <li><strong>Real-Time Data Ingestion: </strong>The data pipeline is built using CoCo, with customer engagement events such as logins, product usage, and API calls streamed through Kafka clusters..</li>
+                  <li><strong>Automated Pipeline Monitoring: </strong>Scheduled automations send notifications at 6:00 AM, providing updates on pipeline health and ensuring timely visibility into pipeline performance..</li>
+                  <li><strong>AI-Driven Account Health Scoring: </strong>The pipeline builds a Task Graph and leverages AI functions to analyze customer activity and generate an individual Health Score for each account, helping identify accounts at risk of churn.</li>
+                  <li><strong>Retention Offer Generation: </strong>A dedicated CoWork Skill generates personalized retention offers to help retain Financial Services Cloud (FSC) clients and mitigate churn risks.</li>
+                  <li><strong>Agent Mode and Skill Development: </strong>Developers can access Agent Mode in Snowsight through the CoCo button next to Home. Agent Mode enables developers to build reports, AI Skills (such as Offer Generation), and Semantic Views. Completed skills can be published to the Skills Catalog for reuse.</li>
+                  <li><strong>CoCo Developer Experience: </strong>The CoCo interface allows developers to execute skills as commands and select from a range of supported AI models to perform different tasks.</li>
+                  <li><strong>AI Gateway and Cost Management: </strong>AI Gateway provides visibility into token consumption and request-level traces, enabling developers to monitor AI usage, troubleshoot requests, and manage costs.</li>
+                  <li><strong>Next-Best-Action Execution: </strong>CoWork identifies the next best action and enables the immediate delivery of a previously generated retention offer to the respective Account Manager for follow-up.</li>
+                  <li><strong>Hybrid Tables for Real-Time Lookups: </strong>The Skill used to generate retention offers creates a stored procedure that inserts offer records into Snowflake Hybrid Tables. This enables fast data lookups, including during ongoing CoWork conversations.</li>
+                  <li><strong>Retention Offer Agent Registration: </strong>The Skill also registers a Retention Offer Agent in CoWork. The agent queries the Hybrid Tables to answer follow-up questions, such as the savings achieved after a customer accepts a retention offer.</li>
+                  <li><strong>Audit Trail and Governance: </strong>An audit trail is maintained for events and actions performed by CoCo Skills, including the generation and execution of stored procedures, providing traceability and accountability.</li>
+                  <li><strong>Autonomous Retention Workflow with Human Oversight: </strong>The automated retention flow operates end-to-end to: Identify accounts at risk of churn; Generate personalized retention offers; Notify customers about available offers; Track and manage offer acceptance; Provide human oversight, allowing business users to reinforce, review, or correct agent actions when necessary.</li>                  
+                </ol>
+                <p><strong>Overall Demo Outcome: </strong>The demo showcases an end-to-end, AI-powered account retention solution built on Snowflake, combining real-time customer activity ingestion, AI-driven health scoring, governed data access, personalized retention offers, and autonomous agent workflows. By integrating CoWork, CoCo, Hybrid Tables, and AI Gateway, the solution enables proactive churn prevention while maintaining transparency, governance, cost control, and human oversight.</p>
+            </div>
+        </div>
+    </div>
+</div>
+<custom-footer authorname='Jeetan' linkurl='https://www.linkedin.com/in/jeetan-madaan-37aaa113/'></custom-footer>
